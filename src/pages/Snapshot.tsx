@@ -1,52 +1,39 @@
 import { useRef, useCallback, useEffect } from "react";
 import html2canvas from "html2canvas";
+import { useNavigate } from "react-router-dom";
 import { useQueryState } from "nuqs";
-import { sessionParser, nameParser, stepParser } from "../lib/nuqs";
-import { getSnapshotPayload, getSnapshotLinkKey } from "../lib/snapshotStorage";
-import { useIkigaiFormOptional } from "../context/ikigaiFormContextValue";
+import { sessionParser, nameParser, type SnapshotPayload } from "../lib/nuqs";
+import { getSnapshotLinkKey } from "../lib/snapshotStorage";
+import { workshopUrl } from "../lib/routes";
 import SnapshotCard from "../components/SnapshotCard";
 
-function hasPayloadContent(p: { c1: string[]; c2: string[]; c3: string[]; c4: string[]; action: string }): boolean {
-  return (
-    p.c1.length > 0 ||
-    p.c2.length > 0 ||
-    p.c3.length > 0 ||
-    p.c4.length > 0 ||
-    p.action.trim() !== ""
-  );
+interface SnapshotProps {
+  payload: SnapshotPayload;
 }
 
-export default function Snapshot() {
+export default function Snapshot({ payload }: SnapshotProps) {
+  const navigate = useNavigate();
   const [session] = useQueryState("session", sessionParser);
   const [name] = useQueryState("name", nameParser);
-  const [, setStep] = useQueryState("step", stepParser);
-  const formOptional = useIkigaiFormOptional();
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const payloadFromContext = formOptional?.buildPayload(name ?? "") ?? null;
-  const payloadFromStorage = getSnapshotPayload(session ?? "", name ?? "");
-  const payload =
-    payloadFromContext && hasPayloadContent(payloadFromContext)
-      ? payloadFromContext
-      : payloadFromStorage;
-
   const handleBackToLobby = useCallback(() => {
-    setStep("lobby");
-  }, [setStep]);
+    navigate(workshopUrl(session ?? "", name ?? "", "lobby"));
+  }, [navigate, session, name]);
 
   useEffect(() => {
-    if (payload && typeof window !== "undefined" && session && name) {
+    if (typeof window !== "undefined" && session && name) {
       try {
         sessionStorage.setItem(getSnapshotLinkKey(session, name), window.location.href);
       } catch {
         // ignore
       }
     }
-  }, [payload, session, name]);
+  }, [session, name]);
 
   const handleDownload = useCallback(async () => {
     const el = cardRef.current;
-    if (!el || !payload) return;
+    if (!el) return;
     try {
       const canvas = await html2canvas(el, {
         useCORS: true,
@@ -66,20 +53,6 @@ export default function Snapshot() {
   const handleCopyLink = useCallback(() => {
     navigator.clipboard.writeText(window.location.href);
   }, []);
-
-  if (!payload) {
-    return (
-      <div className="w-full max-w-lg px-6 py-12 text-center">
-        <p className="text-spring-muted mb-4">No snapshot data found. Complete the Ikigai flow first.</p>
-        <a
-          href={`${window.location.pathname}?session=${new URLSearchParams(window.location.search).get("session") ?? ""}&name=${encodeURIComponent(name ?? "")}&step=lobby`}
-          className="text-spring-accent underline hover:no-underline"
-        >
-          Back to lobby
-        </a>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full flex flex-col items-center gap-8">

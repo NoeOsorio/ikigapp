@@ -1,5 +1,7 @@
+import { Link } from "react-router-dom";
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser } from "../lib/nuqs";
+import { sessionUrl, workshopUrl } from "../lib/routes";
 import { getSnapshotLinkKey } from "../lib/snapshotStorage";
 import QRCode from "../components/QRCode";
 import { useState, useEffect } from "react";
@@ -24,12 +26,9 @@ export default function Lobby() {
 
   const joinUrl =
     typeof window !== "undefined" && session
-      ? `${window.location.origin}${window.location.pathname}?session=${session}`
+      ? `${window.location.origin}${sessionUrl(session)}`
       : "";
-  const startUrl =
-    typeof window !== "undefined" && session && name
-      ? `${window.location.pathname}?session=${session}&step=1&name=${encodeURIComponent(name)}`
-      : "#";
+  const startUrl = session && name ? workshopUrl(session, name, "1") : "#";
   const sessionLabel = session ? `Session #${session.slice(0, 8).toUpperCase()}` : "";
 
   const copyLink = () => {
@@ -45,12 +44,12 @@ export default function Lobby() {
           </p>
           <h1 className="font-display text-2xl text-spring-dark">Participants</h1>
         </div>
-        <a
-          href={startUrl}
+        <Link
+          to={startUrl}
           className="inline-flex items-center gap-2 py-2.5 px-5 rounded-xl border-[1.5px] border-spring-dark/20 bg-white text-spring-dark font-body text-sm hover:border-spring-accent hover:text-spring-accent transition-colors min-h-[44px]"
         >
           Start My Ikigai →
-        </a>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
