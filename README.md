@@ -1,73 +1,61 @@
-# React + TypeScript + Vite
+# 🌸 Ikigapp
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Tu ikigai, paso a paso.** Una app web que guía el proceso de autoexploración basado en el modelo de los cuatro círculos: lo que amas, en lo que eres bueno, lo que el mundo necesita y por lo que te pueden pagar.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ¿Qué es el Ikigai?
 
-## React Compiler
+*Ikigai* (生き甲斐) es un concepto japonés que suele representarse como la intersección de cuatro áreas. **No es una fórmula rápida**, sino un proceso de clarificación por pasos: exploras cada círculo, identificas intersecciones (pasión, misión, vocación, profesión) y luego formulas una frase de propósito y acciones concretas.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Círculo | Pregunta |
+|--------|----------|
+| 🌸 **Lo que amas** | ¿En qué actividades pierdes la noción del tiempo? ¿De qué no te cansas de hablar? |
+| ☀️ **En lo que eres bueno** | Habilidades técnicas y personales en las que destacas (pide feedback si dudas). |
+| 🍂 **Lo que el mundo necesita** | Problemas o causas que te importan: educación, salud, medio ambiente, comunidad… |
+| ❄️ **Por lo que te pueden pagar** | Lo que ya te pagan o podría razonablemente pagarte: trabajo actual, asesorías, cursos, contenido. |
 
-## Expanding the ESLint configuration
+Las **intersecciones** dan sentido a la búsqueda: **pasión** (amas + eres bueno), **misión** (amas + mundo necesita), **profesión** (eres bueno + te pagan), **vocación** (mundo necesita + te pagan). El ikigai se va refinando con el tiempo; la app te acompaña en esa primera versión y en el siguiente paso: **una acción concreta** para validarlo en la práctica.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Qué hace esta app
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Sin backend:** todo el estado vive en la URL (sesión, nombre, pasos, respuestas). Ideal para talleres o uso individual.
+- **Flujo guiado:** Join → Lobby (con QR para compartir sesión) → 4 pasos de categorías → Paso de acción → Snapshot para ver, descargar o compartir tu tarjeta de resultado.
+- **Estética minimalista:** paleta tipo washi, theming por estación (primavera, verano, otoño, invierno) y tipografía Noto Serif/Sans JP.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Cómo correr el proyecto
+
+```bash
+# Instalar dependencias
+npm install
+
+# Desarrollo (Vite + HMR)
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Abre la URL que muestre Vite (por ejemplo `http://localhost:5173`).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# Build de producción
+npm run build
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Vista previa del build
+npm run preview
+
+# Linter
+npm run lint
 ```
+
+---
+
+## Stack
+
+React 19, TypeScript, Vite, Tailwind CSS v4, **nuqs** (estado en query params), html2canvas (export de snapshot), qrcode.react, nanoid.
+
+---
+
+*El ikigai no se “descubre” un día y ya; se va refinando con autoobservación y pequeños experimentos en la vida real.*
