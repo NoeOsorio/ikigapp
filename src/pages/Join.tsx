@@ -1,32 +1,31 @@
-import { useQueryState, useQueryStates } from "nuqs";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { nanoid } from "nanoid";
-import { sessionParser, nameParser, stepParser } from "../lib/nuqs";
+import { workshopUrl } from "../lib/routes";
 
 export default function Join() {
-  const [session, setSession] = useQueryState("session", sessionParser);
-  const [, setJoinState] = useQueryStates(
-    { session: sessionParser, name: nameParser, step: stepParser },
-    { shallow: false }
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const sessionIdFromUrl = searchParams.get("id") ?? "";
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
   const handleCreateSession = () => {
-    if (!session) setSession(nanoid(10));
+    const newId = nanoid(10);
+    setSearchParams({ id: newId });
   };
 
   const handleJoin = (e: React.FormEvent) => {
     e.preventDefault();
     const name = [firstName.trim(), lastName.trim()].filter(Boolean).join(" ");
     if (!name) return;
-    const newSession = session ?? nanoid(10);
-    setJoinState({ session: newSession, name, step: "lobby" });
+    const session = sessionIdFromUrl || nanoid(10);
+    navigate(workshopUrl(session, name, "lobby"));
   };
 
-  const hasSession = session != null && session !== "";
-  const canJoin = firstName.trim() && lastName.trim();
-  const sessionLabel = session ? `Session #${session.slice(0, 8).toUpperCase()}` : null;
+  const hasSession = sessionIdFromUrl !== "";
+  const canJoin = Boolean(firstName.trim() && lastName.trim());
+  const sessionLabel = hasSession ? `Session #${sessionIdFromUrl.slice(0, 8).toUpperCase()}` : null;
 
   return (
     <div className="w-full max-w-md flex flex-col items-center justify-center gap-0 px-4">

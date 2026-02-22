@@ -1,18 +1,20 @@
+import { useNavigate } from "react-router-dom";
 import { useQueryState } from "nuqs";
 import { useIkigaiForm } from "../context/ikigaiFormContextValue";
 import { setSnapshotPayload } from "../lib/snapshotStorage";
-import { stepParser, nameParser } from "../lib/nuqs";
+import { resultUrl } from "../lib/routes";
+import { sessionParser, nameParser } from "../lib/nuqs";
 
 export default function ActionStep() {
-  const [, setStep] = useQueryState("step", stepParser);
+  const navigate = useNavigate();
+  const [session] = useQueryState("session", sessionParser);
   const [name] = useQueryState("name", nameParser);
   const { action, setAction, buildPayload } = useIkigaiForm();
 
   const handleContinue = () => {
     const payload = buildPayload(name ?? "");
-    const session = new URLSearchParams(window.location.search).get("session") ?? "";
-    setSnapshotPayload(session, name ?? "", payload);
-    setStep("snapshot");
+    setSnapshotPayload(session ?? "", name ?? "", payload);
+    navigate(resultUrl(session ?? "", name ?? ""));
   };
 
   return (

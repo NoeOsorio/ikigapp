@@ -1,7 +1,11 @@
 import { useQueryState } from "nuqs";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { sessionParser, nameParser, stepParser } from "./lib/nuqs";
+import { sessionUrl, workshopUrl } from "./lib/routes";
 import { getCategory, type ThemeKind } from "./constants/categories";
 import { IkigaiFormProvider } from "./context/IkigaiFormContext";
+import { useIkigaiFormOptional } from "./context/ikigaiFormContextValue";
+import { getSnapshotPayload } from "./lib/snapshotStorage";
 import Layout from "./components/Layout";
 import Join from "./pages/Join";
 import Lobby from "./pages/Lobby";
@@ -11,7 +15,7 @@ import Snapshot from "./pages/Snapshot";
 
 type StepForNav = "join" | "lobby" | "1" | "2" | "3" | "4" | "5" | "snapshot";
 
-export default function App() {
+function WorkshopView() {
   const [session] = useQueryState("session", sessionParser);
   const [name] = useQueryState("name", nameParser);
   const [step] = useQueryState("step", stepParser);
@@ -20,35 +24,27 @@ export default function App() {
   const hasName = name != null && name.trim() !== "";
   const effectiveStep = step ?? "lobby";
 
+  if (!hasSession || !hasName) {
+    return <Navigate to={sessionUrl(session ?? undefined)} replace />;
+  }
+
   const navStep: StepForNav =
-    !hasSession || !hasName
-      ? "join"
-      : effectiveStep === "lobby"
-        ? "lobby"
-        : effectiveStep === "snapshot"
-          ? "snapshot"
-          : (effectiveStep as StepForNav);
+    effectiveStep === "lobby"
+      ? "lobby"
+      : (effectiveStep as StepForNav);
 
   const theme: ThemeKind =
-    !hasSession || !hasName
-      ? "dawn"
-      : effectiveStep === "lobby"
-        ? "lobby"
-        : effectiveStep === "snapshot"
-          ? "matcha"
-          : effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4"
-            ? getCategory(effectiveStep)?.season ?? "spring"
-            : "winter";
+    effectiveStep === "lobby"
+      ? "lobby"
+      : effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4"
+        ? getCategory(effectiveStep)?.season ?? "spring"
+        : "winter";
 
   let content: React.ReactNode;
-  if (!hasSession || !hasName) {
-    content = <Join />;
-  } else if (effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4") {
+  if (effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4") {
     content = <CategoryStep step={effectiveStep} />;
   } else if (effectiveStep === "5") {
     content = <ActionStep />;
-  } else if (effectiveStep === "snapshot") {
-    content = <Snapshot />;
   } else {
     content = <Lobby />;
   }
@@ -59,5 +55,60 @@ export default function App() {
         {content}
       </Layout>
     </IkigaiFormProvider>
+  );
+}
+
+function hasPayloadContent(p: { c1: string[]; c2: string[]; c3: string[]; c4: string[]; action: string }): boolean {
+  return (
+    p.c1.length > 0 ||
+    p.c2.length > 0 ||
+    p.c3.length > 0 ||
+    p.c4.length > 0 ||
+    p.action.trim() !== ""
+  );
+}
+
+function ResultView() {
+  const [session] = useQueryState("session", sessionParser);
+  const [name] = useQueryState("name", nameParser);
+  const formOptional = useIkigaiFormOptional();
+  const payloadFromContext = formOptional?.buildPayload(name ?? "") ?? null;
+  const payloadFromStorage = getSnapshotPayload(session ?? "", name ?? "");
+  const payload =
+    payloadFromContext && hasPayloadContent(payloadFromContext)
+      ? payloadFromContext
+      : payloadFromStorage;
+
+  if (!payload) {
+    return (
+      <Navigate
+        to={session && name ? workshopUrl(session, name, "lobby") : sessionUrl()}
+        replace
+      />
+    );
+  }
+
+  return (
+    <Layout step="snapshot" theme="matcha">
+      <Snapshot />
+    </Layout>
+  );
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/session" replace />} />
+      <Route
+        path="/session"
+        element={
+          <Layout step="join" theme="dawn">
+            <Join />
+          </Layout>
+        }
+      />
+      <Route path="/workshop" element={<WorkshopView />} />
+      <Route path="/result" element={<ResultView />} />
+    </Routes>
   );
 }
