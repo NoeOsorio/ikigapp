@@ -6,6 +6,7 @@ import {
   decodeSnapshotPayload,
   sessionParser,
   nameParser,
+  stepParser,
 } from "../lib/nuqs";
 import SnapshotCard from "../components/SnapshotCard";
 
@@ -15,8 +16,13 @@ export default function Snapshot() {
   const [payloadEncoded] = useQueryState("payload", payloadParser);
   const [session] = useQueryState("session", sessionParser);
   const [name] = useQueryState("name", nameParser);
+  const [, setStep] = useQueryState("step", stepParser);
   const cardRef = useRef<HTMLDivElement>(null);
   const payload = decodeSnapshotPayload(payloadEncoded);
+
+  const handleBackToLobby = useCallback(() => {
+    setStep("lobby");
+  }, [setStep]);
 
   useEffect(() => {
     if (payload && typeof window !== "undefined") {
@@ -83,6 +89,13 @@ export default function Snapshot() {
           className="py-3 px-5 border border-[var(--color-border)] bg-[var(--color-surface)] rounded hover:bg-[var(--color-bg-subtle)]"
         >
           Copy share link
+        </button>
+        <button
+          type="button"
+          onClick={handleBackToLobby}
+          className="py-3 px-5 border border-[var(--color-border)] bg-[var(--color-surface)] rounded hover:bg-[var(--color-bg-subtle)] text-[var(--color-ink)]"
+        >
+          Back to lobby
         </button>
       </div>
       <p className="mt-4 text-sm text-[var(--color-ink-muted)]">
