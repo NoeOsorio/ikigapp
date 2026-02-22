@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "html2canvas": "^1.4.1",
+    "nanoid": "^5.0.9",
+    "nuqs": "^2.2.2",
+    "qrcode.react": "^4.1.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
