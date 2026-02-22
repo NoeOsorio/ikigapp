@@ -24,55 +24,71 @@ export default function Lobby() {
     typeof window !== "undefined" && session
       ? `${window.location.origin}${window.location.pathname}?session=${session}`
       : "";
+  const startUrl =
+    typeof window !== "undefined" && session && name
+      ? `${window.location.pathname}?session=${session}&step=1&name=${encodeURIComponent(name)}`
+      : "#";
+  const sessionLabel = session ? `Session #${session.slice(0, 8).toUpperCase()}` : "";
+
+  const copyLink = () => {
+    if (joinUrl) navigator.clipboard.writeText(joinUrl);
+  };
 
   return (
-    <main className="w-full max-w-lg px-6 py-12">
-      <h1 className="text-2xl font-semibold text-[var(--color-ink)] mb-2">
-        Session lobby
-      </h1>
-      <p className="text-[var(--color-ink-muted)] mb-6 text-sm">
-        Share the link or QR code so others can join. When you’re ready, start
-        your Ikigai flow below.
-      </p>
-      <div className="mb-8 p-4 bg-[var(--color-surface)] border border-[var(--color-border)] rounded">
-        <p className="text-sm text-[var(--color-ink-muted)] mb-2">
-          You’re in as <strong className="text-[var(--color-ink)]">{name || "—"}</strong>
-        </p>
-        <ul className="text-sm text-[var(--color-ink-muted)] mb-4">
-          <li>Participants will appear here when real-time sync is enabled.</li>
-          <li>Share the link below so others can join.</li>
-          {mySnapshotLink && (
-            <li>
-              <a href={mySnapshotLink} className="text-[var(--color-accent)] underline">
-                Your Ikigai snapshot
-              </a>
-            </li>
-          )}
-        </ul>
-        <QRCode value={joinUrl} />
-        <div className="mt-4 flex items-center gap-2">
-          <input
-            readOnly
-            value={joinUrl}
-            className="flex-1 py-2 px-3 text-sm border border-[var(--color-border)] bg-white rounded text-[var(--color-ink)]"
-          />
-          <button
-            type="button"
-            onClick={() => {
-              navigator.clipboard.writeText(joinUrl);
-            }}
-            className="py-2 px-4 border border-[var(--color-border)] bg-[var(--color-surface)] rounded text-sm hover:bg-[var(--color-bg-subtle)]"
-          >
-            Copy
-          </button>
+    <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-10 pt-4 pb-10">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-9 animate-fade-up">
+        <div>
+          <p className="text-xs text-spring-muted tracking-[0.1em] uppercase mb-1 font-medium">
+            {sessionLabel}
+          </p>
+          <h1 className="font-display text-2xl text-spring-dark">Participants</h1>
+        </div>
+        <a
+          href={startUrl}
+          className="inline-flex items-center gap-2 py-2.5 px-5 rounded-xl border-[1.5px] border-spring-dark/20 bg-white text-spring-dark font-body text-sm hover:border-spring-accent hover:text-spring-accent transition-colors min-h-[44px]"
+        >
+          Start My Ikigai →
+        </a>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
+        <div className="bg-white rounded-2xl p-5 sm:p-6 border border-spring-accent/10 shadow-sm flex items-center gap-4 animate-fade-up border-dashed bg-spring-bg/30">
+          <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 font-display text-lg text-spring-accent bg-spring-accent/15">
+            {name?.charAt(0) ?? "?"}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-display text-base text-spring-muted mb-1">You</p>
+            <p className="text-[0.72rem] text-spring-muted tracking-wide">Waiting to start...</p>
+          </div>
         </div>
       </div>
-      <a
-        href={typeof window !== "undefined" ? `${window.location.pathname}?session=${session}&step=1&name=${encodeURIComponent(name ?? "")}` : "#"}
-        className="inline-block py-3 px-6 bg-[var(--color-accent)] text-white rounded hover:bg-[var(--color-accent-hover)]"
-      >
-        Start Ikigai flow
-      </a>
-    </main>
+
+      {mySnapshotLink && (
+        <p className="mt-4 text-sm text-spring-muted">
+          <a href={mySnapshotLink} className="text-spring-accent underline hover:no-underline">
+            Your Ikigai snapshot
+          </a>
+        </p>
+      )}
+
+      <div className="mt-6 bg-white rounded-2xl p-7 border border-spring-accent/10 flex flex-col sm:flex-row sm:items-center gap-6 animate-[fade-up_0.8s_ease_0.2s_both]">
+        <div className="w-[90px] h-[90px] rounded-xl bg-spring-bg flex items-center justify-center flex-shrink-0 p-2">
+          <QRCode value={joinUrl} size={74} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h2 className="font-display text-base text-spring-dark mb-1">Invite Others</h2>
+          <p className="text-[0.78rem] text-spring-muted mb-3 break-all font-body">{joinUrl || "—"}</p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={copyLink}
+              className="py-2 px-3.5 rounded-lg border-[1.5px] border-spring-dark/20 bg-white text-spring-dark font-body text-[0.75rem] hover:border-spring-accent hover:text-spring-accent transition-colors"
+            >
+              Copy Link
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

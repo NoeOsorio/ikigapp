@@ -58,49 +58,46 @@ export default function Snapshot() {
 
   if (!payload) {
     return (
-      <main className="w-full max-w-lg px-6 py-12 text-center">
-        <p className="text-[var(--color-ink-muted)] mb-4">
-          No snapshot data found. Complete the Ikigai flow first.
-        </p>
+      <div className="w-full max-w-lg px-6 py-12 text-center">
+        <p className="text-spring-muted mb-4">No snapshot data found. Complete the Ikigai flow first.</p>
         <a
           href={`${window.location.pathname}?session=${new URLSearchParams(window.location.search).get("session") || ""}&step=lobby`}
-          className="text-[var(--color-accent)] underline"
+          className="text-spring-accent underline hover:no-underline"
         >
           Back to lobby
         </a>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="w-full max-w-lg px-6 py-12 flex flex-col items-center">
-      <SnapshotCard ref={cardRef} payload={payload} />
-      <div className="mt-8 flex flex-wrap gap-3 justify-center">
+    <div className="w-full flex flex-col items-center gap-8">
+      <div className="animate-fade-up">
+        <SnapshotCard ref={cardRef} payload={payload} />
+      </div>
+      <div className="flex flex-wrap gap-3 justify-center animate-[fade-up_0.8s_ease_0.2s_both]">
         <button
           type="button"
           onClick={handleDownload}
-          className="py-3 px-5 bg-[var(--color-accent)] text-white rounded hover:bg-[var(--color-accent-hover)]"
+          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-spring-dark text-white font-display text-sm flex items-center justify-center gap-1.5 hover:bg-spring-accent transition-colors"
         >
-          Download as image
+          ⬇ Download Image
         </button>
         <button
           type="button"
           onClick={handleCopyLink}
-          className="py-3 px-5 border border-[var(--color-border)] bg-[var(--color-surface)] rounded hover:bg-[var(--color-bg-subtle)]"
+          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-white text-spring-dark font-display text-sm border-[1.5px] border-spring-dark/15 flex items-center justify-center gap-1.5 hover:border-spring-accent hover:text-spring-accent transition-colors"
         >
-          Copy share link
+          🔗 Copy Share Link
         </button>
         <button
           type="button"
           onClick={handleBackToLobby}
-          className="py-3 px-5 border border-[var(--color-border)] bg-[var(--color-surface)] rounded hover:bg-[var(--color-bg-subtle)] text-[var(--color-ink)]"
+          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-white text-spring-dark font-display text-sm border-[1.5px] border-spring-dark/15 flex items-center justify-center gap-1.5 hover:border-spring-accent hover:text-spring-accent transition-colors"
         >
           Back to lobby
         </button>
       </div>
-      <p className="mt-4 text-sm text-[var(--color-ink-muted)]">
-        Share this link so others can view your Ikigai snapshot.
-      </p>
-    </main>
+    </div>
   );
 }

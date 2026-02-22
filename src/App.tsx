@@ -1,10 +1,14 @@
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser, stepParser } from "./lib/nuqs";
+import { getCategory } from "./constants/categories";
+import Layout from "./components/Layout";
 import Join from "./pages/Join";
 import Lobby from "./pages/Lobby";
 import CategoryStep from "./pages/CategoryStep";
 import ActionStep from "./pages/ActionStep";
 import Snapshot from "./pages/Snapshot";
+
+type StepForNav = "join" | "lobby" | "1" | "2" | "3" | "4" | "5" | "snapshot";
 
 export default function App() {
   const [session] = useQueryState("session", sessionParser);
@@ -15,23 +19,38 @@ export default function App() {
   const hasName = name != null && name.trim() !== "";
   const effectiveStep = step ?? "lobby";
 
-  // No session → Join
-  if (!hasSession) return <Join />;
+  const navStep: StepForNav =
+    !hasSession || !hasName
+      ? "join"
+      : effectiveStep === "lobby"
+        ? "lobby"
+        : effectiveStep === "snapshot"
+          ? "snapshot"
+          : (effectiveStep as StepForNav);
 
-  // Session but no name → Join (enter name to join)
-  if (!hasName) return <Join />;
+  const season =
+    effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4"
+      ? getCategory(effectiveStep)?.season ?? "spring"
+      : effectiveStep === "5"
+        ? "winter"
+        : "spring";
 
-  // Step 1–4 → Category step
-  if (effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4") {
-    return <CategoryStep step={effectiveStep} />;
+  let content: React.ReactNode;
+  if (!hasSession || !hasName) {
+    content = <Join />;
+  } else if (effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4") {
+    content = <CategoryStep step={effectiveStep} />;
+  } else if (effectiveStep === "5") {
+    content = <ActionStep />;
+  } else if (effectiveStep === "snapshot") {
+    content = <Snapshot />;
+  } else {
+    content = <Lobby />;
   }
 
-  // Step 5 → Action step
-  if (effectiveStep === "5") return <ActionStep />;
-
-  // Step snapshot → Snapshot page
-  if (effectiveStep === "snapshot") return <Snapshot />;
-
-  // Lobby (step lobby or default)
-  return <Lobby />;
+  return (
+    <Layout step={navStep} season={season}>
+      {content}
+    </Layout>
+  );
 }

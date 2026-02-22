@@ -1,39 +1,7 @@
 import { useQueryState } from "nuqs";
-import { getCategory } from "../constants/categories";
-import FallingBackground from "../components/FallingBackground";
+import { getCategory, getContinueLabel, SEASON_CLASSES } from "../constants/categories";
 import CategoryInput from "../components/CategoryInput";
-import {
-  stepParser,
-  categoryArrayParser,
-  type StepValue,
-} from "../lib/nuqs";
-
-const SEASON_VARS: Record<string, Record<string, string>> = {
-  spring: {
-    "--color-bg": "var(--season-spring-bg)",
-    "--color-surface": "var(--season-spring-surface)",
-    "--color-ink": "var(--season-spring-ink)",
-    "--color-accent": "var(--season-spring-accent)",
-  },
-  summer: {
-    "--color-bg": "var(--season-summer-bg)",
-    "--color-surface": "var(--season-summer-surface)",
-    "--color-ink": "var(--season-summer-ink)",
-    "--color-accent": "var(--season-summer-accent)",
-  },
-  autumn: {
-    "--color-bg": "var(--season-autumn-bg)",
-    "--color-surface": "var(--season-autumn-surface)",
-    "--color-ink": "var(--season-autumn-ink)",
-    "--color-accent": "var(--season-autumn-accent)",
-  },
-  winter: {
-    "--color-bg": "var(--season-winter-bg)",
-    "--color-surface": "var(--season-winter-surface)",
-    "--color-ink": "var(--season-winter-ink)",
-    "--color-accent": "var(--season-winter-accent)",
-  },
-};
+import { stepParser, categoryArrayParser, type StepValue } from "../lib/nuqs";
 
 export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) {
   const config = getCategory(step);
@@ -48,34 +16,44 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
 
   if (!config) return null;
 
-  const seasonVars = SEASON_VARS[config.season] ?? {};
+  const theme = SEASON_CLASSES[config.season];
   const nextStepNum = Number(step) + 1;
-  const nextStep: StepValue = nextStepNum <= 4 ? String(nextStepNum) as "1" | "2" | "3" | "4" : "5";
+  const nextStep: StepValue =
+    nextStepNum <= 4 ? (String(nextStepNum) as "1" | "2" | "3" | "4") : "5";
 
   const handleContinue = () => setStep(nextStep);
+  const seasonLabel =
+    config.season === "spring"
+      ? "Spring"
+      : config.season === "summer"
+        ? "Summer"
+        : config.season === "autumn"
+          ? "Autumn"
+          : "Winter";
 
   return (
-    <div
-      className="fixed inset-0 min-h-screen flex flex-col items-center justify-center px-4 py-12"
-      style={seasonVars as React.CSSProperties}
-    >
-      <FallingBackground season={config.season} />
-      <div className="relative z-10 w-full flex flex-col items-center">
-        <p className="text-lg mb-2" style={{ color: "var(--color-ink)" }}>
-          {config.emoji} Step {step}
+    <div className="w-full flex flex-col items-center justify-center px-4 py-8">
+      <header className="text-center mb-10 animate-fade-up">
+        <span className="text-4xl block mb-2 animate-float-y">{config.emoji}</span>
+        <p className={`text-[0.72rem] tracking-[0.14em] uppercase ${theme.muted} mb-2`}>
+          {seasonLabel} · Step {step} of 4
         </p>
-        <h1 className="text-2xl font-semibold text-center mb-2" style={{ color: "var(--color-ink)" }}>
+        <h1 className={`font-display text-2xl sm:text-[2.2rem] ${theme.text} mb-3 leading-tight`}>
           {config.title}
         </h1>
-        <p className="text-sm text-center mb-8 opacity-90" style={{ color: "var(--color-ink)" }}>
+        <p className={`text-sm ${theme.muted} max-w-[400px] mx-auto leading-relaxed`}>
           {config.description}
         </p>
+      </header>
+
+      <div className="w-full max-w-[560px] bg-white rounded-[28px] p-8 sm:p-9 shadow-lg border border-spring-accent/10 animate-[fade-up_0.8s_ease_0.1s_both]">
         <CategoryInput
           items={items ?? []}
           onItemsChange={setItems}
           minItems={4}
           onContinue={handleContinue}
-          continueLabel="Continue"
+          continueLabel={getContinueLabel(step)}
+          season={config.season}
         />
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { SEASON_CLASSES, type Season } from "../constants/categories";
 
 interface CategoryInputProps {
   items: string[];
@@ -6,6 +7,7 @@ interface CategoryInputProps {
   minItems?: number;
   onContinue: () => void;
   continueLabel?: string;
+  season?: Season;
 }
 
 export default function CategoryInput({
@@ -14,12 +16,14 @@ export default function CategoryInput({
   minItems = 4,
   onContinue,
   continueLabel = "Continue",
+  season = "spring",
 }: CategoryInputProps) {
   const [inputValue, setInputValue] = useState("");
+  const theme = SEASON_CLASSES[season];
 
   const addItem = useCallback(() => {
     const trimmed = inputValue.trim();
-    if (trimmed && !items.includes(trimmed)) {
+    if (trimmed && !items.includes(trimmed) && items.length < 10) {
       onItemsChange([...items, trimmed]);
       setInputValue("");
     }
@@ -33,53 +37,75 @@ export default function CategoryInput({
   );
 
   const canContinue = items.length >= minItems;
+  const pct = Math.min((items.length / minItems) * 100, 100);
 
   return (
-    <div className="space-y-6 w-full max-w-md">
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addItem())}
-          placeholder="Add an item..."
-          className="flex-1 py-2 px-3 border border-[var(--color-border)] bg-[var(--color-surface)] rounded text-[var(--color-ink)] placeholder:text-[var(--color-ink-muted)]"
-          aria-label="Add item"
-        />
-        <button
-          type="button"
-          onClick={addItem}
-          className="py-2 px-4 border border-[var(--color-border)] bg-[var(--color-surface)] rounded hover:bg-[var(--color-bg-subtle)]"
-        >
-          Add
-        </button>
+    <div className="w-full max-w-[560px] space-y-5">
+      <div className="flex items-center justify-between mb-4">
+        {canContinue ? (
+          <span className={`text-xs ${theme.accent} font-medium`}>Ready! ✓</span>
+        ) : (
+          <span className={`text-xs ${theme.muted} tracking-wide`}>
+            {items.length} of {minItems} minimum
+          </span>
+        )}
       </div>
-      <div className="flex flex-wrap gap-2 min-h-[2.5rem]">
+      <div className="h-1 rounded-full bg-black/10 overflow-hidden mb-6">
+        <div
+          className={`h-full rounded-full bg-gradient-to-r ${theme.progressGradient} transition-[width] duration-300`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+
+      <div
+        className={`flex flex-wrap gap-2.5 min-h-20 rounded-2xl p-4 content-start border-[1.5px] border-dashed ${theme.border} ${theme.inputBg} mb-4`}
+      >
         {items.map((item, i) => (
           <span
             key={`${item}-${i}`}
-            className="inline-flex items-center gap-1 py-1 px-3 rounded-full text-sm border border-[var(--color-border)] bg-[var(--color-surface)]"
+            className={`inline-flex items-center gap-1.5 rounded-full py-1.5 px-3.5 text-sm border ${theme.border} ${theme.inputBg} ${theme.text} animate-pop-in`}
           >
             {item}
             <button
               type="button"
               onClick={() => removeItem(i)}
-              className="ml-1 text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] leading-none"
+              className={`text-xs ${theme.accent} leading-none p-0.5 hover:opacity-80`}
               aria-label={`Remove ${item}`}
             >
-              ×
+              ✕
             </button>
           </span>
         ))}
       </div>
-      <p className="text-sm text-[var(--color-ink-muted)]">
-        Add at least {minItems} items to continue.
-      </p>
+
+      <div className="flex gap-2.5 mb-5">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addItem())}
+          placeholder="e.g. Designing, Teaching, Cooking..."
+          className={`flex-1 py-3 px-4 rounded-xl border-[1.5px] ${theme.border} ${theme.inputBg} ${theme.text} ${theme.placeholder} outline-none ${theme.inputFocus}`}
+          aria-label="Add item"
+        />
+        <button
+          type="button"
+          onClick={addItem}
+          className={`py-3 px-5 rounded-xl ${theme.accentBg} text-white text-lg font-medium hover:opacity-90 transition-opacity flex-shrink-0 min-h-[44px]`}
+        >
+          +
+        </button>
+      </div>
+
       <button
         type="button"
         onClick={onContinue}
         disabled={!canContinue}
-        className="w-full py-3 px-4 bg-[var(--color-accent)] text-white rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--color-accent-hover)]"
+        className={`w-full py-4 rounded-xl font-display text-base flex items-center justify-center gap-2 transition-all min-h-[44px] ${
+          canContinue
+            ? `${theme.btnPrimary} text-white ${theme.btnPrimaryHover} hover:-translate-y-px cursor-pointer`
+            : "opacity-35 cursor-not-allowed bg-black/10 text-black/50"
+        }`}
       >
         {continueLabel}
       </button>

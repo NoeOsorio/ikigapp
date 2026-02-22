@@ -6,41 +6,62 @@ interface SnapshotCardProps {
   payload: SnapshotPayload;
 }
 
+function formatDate() {
+  return new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
 const SnapshotCard = forwardRef<HTMLDivElement, SnapshotCardProps>(
   function SnapshotCard({ payload }, ref) {
     return (
       <div
         ref={ref}
-        className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-lg p-6 max-w-md w-full shadow-lg"
-        style={{
-          color: "var(--color-ink)",
-          fontFamily: "var(--font-body)",
-        }}
+        className="w-full max-w-[480px] bg-white rounded-[28px] overflow-hidden shadow-xl border border-spring-accent/10 font-body"
       >
-        <h2 className="text-xl font-semibold mb-4" style={{ fontFamily: "var(--font-display)" }}>
-          {payload.name || "My Ikigai"}
-        </h2>
-        <div className="space-y-4 text-sm">
-          {CATEGORIES.map((cat, i) => {
+        <div className="bg-spring-dark px-8 py-7 relative overflow-hidden">
+          <div className="absolute right-5 top-1/2 -translate-y-1/2 font-serif text-5xl text-white/10 pointer-events-none select-none leading-none">
+            生き甲斐
+          </div>
+          <h2 className="font-display text-xl text-white mb-1 relative">
+            {payload.name || "My Ikigai"}
+          </h2>
+          <p className="text-xs text-white/60 tracking-widest relative">
+            {formatDate()} · Session
+          </p>
+        </div>
+        <div className="px-8 py-7 space-y-5">
+          {CATEGORIES.map((cat) => {
             const items = payload[`c${cat.step}` as keyof SnapshotPayload];
             const list = Array.isArray(items) ? items : [];
             return (
-              <div key={cat.step}>
-                <p className="font-medium opacity-90 mb-1">
+              <section key={cat.step} className="pb-5 border-b border-spring-accent/10 last:border-0 last:pb-0">
+                <p className="text-[0.65rem] tracking-[0.12em] uppercase text-spring-accent mb-2 flex items-center gap-1.5 font-medium">
                   {cat.emoji} {cat.title}
                 </p>
-                <ul className="list-disc list-inside text-[var(--color-ink-muted)]">
+                <div className="flex flex-wrap gap-1.5">
                   {list.map((item, j) => (
-                    <li key={j}>{item}</li>
+                    <span
+                      key={j}
+                      className="rounded-full py-1 px-3 text-[0.78rem] bg-spring-bg text-spring-dark"
+                    >
+                      {item}
+                    </span>
                   ))}
-                </ul>
-              </div>
+                </div>
+              </section>
             );
           })}
-          <div>
-            <p className="font-medium opacity-90 mb-1">Action item</p>
-            <p className="text-[var(--color-ink-muted)]">{payload.action || "—"}</p>
-          </div>
+          <section className="pt-1">
+            <p className="text-[0.65rem] tracking-[0.12em] uppercase text-spring-accent mb-2 flex items-center gap-1.5 font-medium">
+              ✦ My Action Item
+            </p>
+            <div className="rounded-xl py-3.5 px-4 text-sm text-spring-dark bg-spring-bg border-l-4 border-spring-accent leading-relaxed">
+              {payload.action || "—"}
+            </div>
+          </section>
         </div>
       </div>
     );
