@@ -1,7 +1,7 @@
 import { useQueryState } from "nuqs";
 import { getCategory, getContinueLabel, SEASON_CLASSES } from "../constants/categories";
 import CategoryInput from "../components/CategoryInput";
-import { useIkigaiForm } from "../context/ikigaiFormContext";
+import { useIkigaiForm } from "../context/ikigaiFormContextValue";
 import { stepParser, type StepValue } from "../lib/nuqs";
 
 export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) {

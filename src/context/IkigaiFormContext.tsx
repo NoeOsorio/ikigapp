@@ -3,7 +3,7 @@ import type { SnapshotPayload } from "../lib/nuqs";
 import {
   IkigaiFormContext,
   type IkigaiFormContextValue,
-} from "./ikigaiFormContext";
+} from "./ikigaiFormContextValue";
 
 const initialState = {
   c1: [] as string[],

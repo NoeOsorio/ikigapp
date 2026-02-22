@@ -18,7 +18,6 @@ export interface IkigaiFormContextValue extends IkigaiFormState {
   setC3: SetArray;
   setC4: SetArray;
   setAction: SetString;
-  /** Build current payload from form state (caller provides name). */
   buildPayload: (name: string) => SnapshotPayload;
 }
 

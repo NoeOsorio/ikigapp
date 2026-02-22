@@ -134,6 +134,50 @@ export const SEASON_CLASSES: Record<
   },
 };
 
+export type HubTheme = "dawn" | "lobby" | "matcha";
+export type ThemeKind = Season | HubTheme;
+
+/** Hub screens: background + text only (no particles). */
+export const HUB_THEME_CLASSES: Record<
+  HubTheme,
+  { bg: string; text: string; muted: string; accent: string; dark: string }
+> = {
+  dawn: {
+    bg: "bg-dawn-bg",
+    text: "text-dawn-dark",
+    muted: "text-dawn-muted",
+    accent: "text-dawn-accent",
+    dark: "text-dawn-dark",
+  },
+  lobby: {
+    bg: "bg-lobby-bg",
+    text: "text-lobby-dark",
+    muted: "text-lobby-muted",
+    accent: "text-lobby-accent",
+    dark: "text-lobby-dark",
+  },
+  matcha: {
+    bg: "bg-matcha-bg",
+    text: "text-matcha-dark",
+    muted: "text-matcha-muted",
+    accent: "text-matcha-accent",
+    dark: "text-matcha-dark",
+  },
+};
+
+export function getThemeClasses(theme: ThemeKind): { bg: string; text: string } {
+  if (theme === "dawn" || theme === "lobby" || theme === "matcha") {
+    const hub = HUB_THEME_CLASSES[theme];
+    return { bg: hub.bg, text: hub.text };
+  }
+  const season = SEASON_CLASSES[theme];
+  return { bg: season.bg, text: season.text };
+}
+
+export function isSeasonTheme(theme: ThemeKind): theme is Season {
+  return theme === "spring" || theme === "summer" || theme === "autumn" || theme === "winter";
+}
+
 const ACTION_STEP_LABEL = "My Action";
 
 /** Next step short name for continue button: step 1→Good at, 2→Problem, 3→Pay, 4→My Action */

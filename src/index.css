@@ -34,6 +34,20 @@
   --color-winter-mid: #3a5a8a;
   --color-winter-muted: #4a6380;
 
+  /* Hub themes: dawn (Home), lobby, matcha (Snapshot) */
+  --color-dawn-bg: #fdf4e8;
+  --color-dawn-accent: #b8864a;
+  --color-dawn-dark: #2d1f0e;
+  --color-dawn-muted: #7a6340;
+  --color-lobby-bg: #f5f6f8;
+  --color-lobby-accent: #7c8ba3;
+  --color-lobby-dark: #2a3142;
+  --color-lobby-muted: #5c6b82;
+  --color-matcha-bg: #e2ebe0;
+  --color-matcha-accent: #6b8c5e;
+  --color-matcha-dark: #1e2a1a;
+  --color-matcha-muted: #4d6344;
+
   /* Animations */
   --animate-fade-up: fade-up 0.8s ease both;
   --animate-pop-in: pop-in 0.25s ease both;

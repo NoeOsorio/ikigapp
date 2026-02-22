@@ -3,7 +3,7 @@ import html2canvas from "html2canvas";
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser, stepParser } from "../lib/nuqs";
 import { getSnapshotPayload, getSnapshotLinkKey } from "../lib/snapshotStorage";
-import { useIkigaiFormOptional } from "../context/ikigaiFormContext";
+import { useIkigaiFormOptional } from "../context/ikigaiFormContextValue";
 import SnapshotCard from "../components/SnapshotCard";
 
 function hasPayloadContent(p: { c1: string[]; c2: string[]; c3: string[]; c4: string[]; action: string }): boolean {

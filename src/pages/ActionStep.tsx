@@ -1,5 +1,5 @@
 import { useQueryState } from "nuqs";
-import { useIkigaiForm } from "../context/ikigaiFormContext";
+import { useIkigaiForm } from "../context/ikigaiFormContextValue";
 import { setSnapshotPayload } from "../lib/snapshotStorage";
 import { stepParser, nameParser } from "../lib/nuqs";
 

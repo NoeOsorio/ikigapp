@@ -1,6 +1,6 @@
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser, stepParser } from "./lib/nuqs";
-import { getCategory } from "./constants/categories";
+import { getCategory, type ThemeKind } from "./constants/categories";
 import { IkigaiFormProvider } from "./context/IkigaiFormContext";
 import Layout from "./components/Layout";
 import Join from "./pages/Join";
@@ -29,12 +29,16 @@ export default function App() {
           ? "snapshot"
           : (effectiveStep as StepForNav);
 
-  const season =
-    effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4"
-      ? getCategory(effectiveStep)?.season ?? "spring"
-      : effectiveStep === "5"
-        ? "winter"
-        : "spring";
+  const theme: ThemeKind =
+    !hasSession || !hasName
+      ? "dawn"
+      : effectiveStep === "lobby"
+        ? "lobby"
+        : effectiveStep === "snapshot"
+          ? "matcha"
+          : effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4"
+            ? getCategory(effectiveStep)?.season ?? "spring"
+            : "winter";
 
   let content: React.ReactNode;
   if (!hasSession || !hasName) {
@@ -51,7 +55,7 @@ export default function App() {
 
   return (
     <IkigaiFormProvider>
-      <Layout step={navStep} season={season}>
+      <Layout step={navStep} theme={theme}>
         {content}
       </Layout>
     </IkigaiFormProvider>
