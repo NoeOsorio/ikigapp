@@ -1,6 +1,7 @@
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser, stepParser } from "./lib/nuqs";
 import { getCategory } from "./constants/categories";
+import { IkigaiFormProvider } from "./context/IkigaiFormContext";
 import Layout from "./components/Layout";
 import Join from "./pages/Join";
 import Lobby from "./pages/Lobby";
@@ -49,8 +50,10 @@ export default function App() {
   }
 
   return (
-    <Layout step={navStep} season={season}>
-      {content}
-    </Layout>
+    <IkigaiFormProvider>
+      <Layout step={navStep} season={season}>
+        {content}
+      </Layout>
+    </IkigaiFormProvider>
   );
 }

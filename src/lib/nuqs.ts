@@ -1,10 +1,6 @@
-import {
-  createParser,
-  parseAsString,
-  parseAsStringLiteral,
-} from "nuqs";
+import { parseAsString, parseAsStringLiteral } from "nuqs";
 
-// Step values: lobby, 1-5 (category/action), snapshot
+// Step values: lobby, 1-5 (category/action), snapshot. Form data (c1-c4, action) lives in IkigaiFormContext, not URL.
 export const STEP_VALUES = [
   "lobby",
   "1",
@@ -23,36 +19,7 @@ export const stepParser = parseAsStringLiteral(STEP_VALUES).withDefault(
 export const sessionParser = parseAsString;
 export const nameParser = parseAsString;
 
-// Category items: stored as JSON array in a single param (c1, c2, c3, c4)
-const parseJsonArray = (value: string | null): string[] => {
-  if (value == null || value === "") return [];
-  try {
-    const parsed = JSON.parse(decodeURIComponent(value)) as unknown;
-    return Array.isArray(parsed)
-      ? parsed.filter((x): x is string => typeof x === "string")
-      : [];
-  } catch {
-    return [];
-  }
-};
-
-const serializeJsonArray = (arr: string[]): string =>
-  encodeURIComponent(JSON.stringify(arr));
-
-export const categoryArrayParser = createParser({
-  parse: parseJsonArray,
-  serialize: serializeJsonArray,
-  eq: (a, b) =>
-    a.length === b.length && a.every((v, i) => v === b[i]),
-}).withDefault([]);
-
-// Action item (step 5)
-export const actionParser = parseAsString;
-
-// Snapshot payload (base64) in URL
-export const payloadParser = parseAsString;
-
-// Snapshot payload: base64 JSON { name, c1, c2, c3, c4, action }
+// Snapshot payload shape (used in memory / sessionStorage; not stored in URL)
 export interface SnapshotPayload {
   name: string;
   c1: string[];

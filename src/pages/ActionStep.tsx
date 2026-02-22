@@ -1,37 +1,18 @@
-import { useQueryState, useQueryStates } from "nuqs";
-import {
-  stepParser,
-  actionParser,
-  nameParser,
-  categoryArrayParser,
-  payloadParser,
-  encodeSnapshotPayload,
-  type SnapshotPayload,
-} from "../lib/nuqs";
+import { useQueryState } from "nuqs";
+import { useIkigaiForm } from "../context/ikigaiFormContext";
+import { setSnapshotPayload } from "../lib/snapshotStorage";
+import { stepParser, nameParser } from "../lib/nuqs";
 
 export default function ActionStep() {
-  const [, setStepAndPayload] = useQueryStates(
-    { step: stepParser, payload: payloadParser },
-    { shallow: false }
-  );
-  const [action, setAction] = useQueryState("action", actionParser);
+  const [, setStep] = useQueryState("step", stepParser);
   const [name] = useQueryState("name", nameParser);
-  const [c1] = useQueryState("c1", categoryArrayParser);
-  const [c2] = useQueryState("c2", categoryArrayParser);
-  const [c3] = useQueryState("c3", categoryArrayParser);
-  const [c4] = useQueryState("c4", categoryArrayParser);
+  const { action, setAction, buildPayload } = useIkigaiForm();
 
   const handleContinue = () => {
-    const payload: SnapshotPayload = {
-      name: name ?? "",
-      c1: c1 ?? [],
-      c2: c2 ?? [],
-      c3: c3 ?? [],
-      c4: c4 ?? [],
-      action: action ?? "",
-    };
-    const encoded = encodeSnapshotPayload(payload);
-    setStepAndPayload({ step: "snapshot", payload: encoded });
+    const payload = buildPayload(name ?? "");
+    const session = new URLSearchParams(window.location.search).get("session") ?? "";
+    setSnapshotPayload(session, name ?? "", payload);
+    setStep("snapshot");
   };
 
   return (
@@ -44,7 +25,7 @@ export default function ActionStep() {
       </header>
       <div className="w-full bg-white rounded-3xl p-8 shadow-lg border border-spring-accent/10 animate-[fade-up_0.8s_ease_0.1s_both]">
         <textarea
-          value={action ?? ""}
+          value={action}
           onChange={(e) => setAction(e.target.value)}
           placeholder="e.g. This month I will..."
           rows={5}
