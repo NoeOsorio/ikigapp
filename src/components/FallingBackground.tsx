@@ -74,7 +74,7 @@ const SEASON_CONFIG: Record<
   winter: {
     count: 60,
     speed: { min: 0.8, max: 2 },
-    size: { min: 3, max: 10 },
+    size: { min: 8, max: 20 },
     sway: 0.5,
   },
 };
