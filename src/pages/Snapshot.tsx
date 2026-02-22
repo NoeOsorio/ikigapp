@@ -6,17 +6,8 @@ import { sessionParser, nameParser } from "../lib/nuqs";
 import { getSnapshotPayload, getSnapshotLinkKey } from "../lib/snapshotStorage";
 import { workshopUrl } from "../lib/routes";
 import { useIkigaiFormOptional } from "../context/ikigaiFormContextValue";
+import { hasPayloadContent } from "../lib/payload";
 import SnapshotCard from "../components/SnapshotCard";
-
-function hasPayloadContent(p: { c1: string[]; c2: string[]; c3: string[]; c4: string[]; action: string }): boolean {
-  return (
-    p.c1.length > 0 ||
-    p.c2.length > 0 ||
-    p.c3.length > 0 ||
-    p.c4.length > 0 ||
-    p.action.trim() !== ""
-  );
-}
 
 export default function Snapshot() {
   const navigate = useNavigate();

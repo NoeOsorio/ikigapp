@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import type { Season } from "../constants/categories";
 import cherryblossomUrl from "../assets/best_svg_images/cherryblossom-svgrepo-com.svg";
 import leafUrl from "../assets/best_svg_images/leaf-svgrepo-com.svg";
-import leafMomijiUrl from "../assets/best_svg_images/leaf-svgrepo-com (1).svg";
+import leafMomijiUrl from "../assets/best_svg_images/leaf-momiji-svgrepo-com.svg";
 import snowflakeUrl from "../assets/best_svg_images/snowflake-svgrepo-com.svg";
 
 interface Particle {

@@ -6,6 +6,7 @@ import { getCategory, type ThemeKind } from "./constants/categories";
 import { IkigaiFormProvider } from "./context/IkigaiFormContext";
 import { useIkigaiFormOptional } from "./context/ikigaiFormContextValue";
 import { getSnapshotPayload } from "./lib/snapshotStorage";
+import { hasPayloadContent } from "./lib/payload";
 import Layout from "./components/Layout";
 import Join from "./pages/Join";
 import Lobby from "./pages/Lobby";
@@ -55,16 +56,6 @@ function WorkshopView() {
         {content}
       </Layout>
     </IkigaiFormProvider>
-  );
-}
-
-function hasPayloadContent(p: { c1: string[]; c2: string[]; c3: string[]; c4: string[]; action: string }): boolean {
-  return (
-    p.c1.length > 0 ||
-    p.c2.length > 0 ||
-    p.c3.length > 0 ||
-    p.c4.length > 0 ||
-    p.action.trim() !== ""
   );
 }
 
