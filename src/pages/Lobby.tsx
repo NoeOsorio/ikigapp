@@ -1,9 +1,8 @@
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser } from "../lib/nuqs";
+import { getSnapshotLinkKey } from "../lib/snapshotStorage";
 import QRCode from "../components/QRCode";
 import { useState, useEffect } from "react";
-
-const SNAPSHOT_LINK_KEY = "ikigai_snapshot_link";
 
 export default function Lobby() {
   const [session] = useQueryState("session", sessionParser);
@@ -12,12 +11,15 @@ export default function Lobby() {
 
   useEffect(() => {
     if (typeof window === "undefined" || !session || !name) return;
-    try {
-      const key = `${SNAPSHOT_LINK_KEY}_${session}_${encodeURIComponent(name)}`;
-      setMySnapshotLink(sessionStorage.getItem(key));
-    } catch {
-      setMySnapshotLink(null);
-    }
+    const key = getSnapshotLinkKey(session, name);
+    const id = requestAnimationFrame(() => {
+      try {
+        setMySnapshotLink(sessionStorage.getItem(key));
+      } catch {
+        setMySnapshotLink(null);
+      }
+    });
+    return () => cancelAnimationFrame(id);
   }, [session, name]);
 
   const joinUrl =

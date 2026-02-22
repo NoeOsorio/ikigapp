@@ -2,6 +2,7 @@ export type Season = "spring" | "summer" | "autumn" | "winter";
 
 export interface CategoryStepConfig {
   step: "1" | "2" | "3" | "4";
+  shortName: string;
   title: string;
   description: string;
   season: Season;
@@ -11,6 +12,7 @@ export interface CategoryStepConfig {
 export const CATEGORIES: CategoryStepConfig[] = [
   {
     step: "1",
+    shortName: "Love",
     title: "What do I love doing?",
     description: "Activities and experiences that bring you joy and fulfillment.",
     season: "spring",
@@ -18,6 +20,7 @@ export const CATEGORIES: CategoryStepConfig[] = [
   },
   {
     step: "2",
+    shortName: "Good at",
     title: "What am I good at?",
     description: "Skills and strengths that come naturally to you.",
     season: "summer",
@@ -25,6 +28,7 @@ export const CATEGORIES: CategoryStepConfig[] = [
   },
   {
     step: "3",
+    shortName: "Problem",
     title: "What problem in the world do I want to solve?",
     description: "Issues or causes you feel drawn to contribute to.",
     season: "autumn",
@@ -32,6 +36,7 @@ export const CATEGORIES: CategoryStepConfig[] = [
   },
   {
     step: "4",
+    shortName: "Pay",
     title: "What skills would people pay me for right now?",
     description: "Your current marketable abilities and expertise.",
     season: "winter",
@@ -129,13 +134,55 @@ export const SEASON_CLASSES: Record<
   },
 };
 
-const NEXT_STEP_LABELS: Record<string, string> = {
-  "1": "Continue to Summer →",
-  "2": "Continue to Autumn →",
-  "3": "Continue to Winter →",
-  "4": "Add My Action Item →",
+export type HubTheme = "dawn" | "lobby" | "matcha";
+export type ThemeKind = Season | HubTheme;
+
+/** Hub screens: background + text only (no particles). */
+export const HUB_THEME_CLASSES: Record<
+  HubTheme,
+  { bg: string; text: string; muted: string; accent: string; dark: string }
+> = {
+  dawn: {
+    bg: "bg-dawn-bg",
+    text: "text-dawn-dark",
+    muted: "text-dawn-muted",
+    accent: "text-dawn-accent",
+    dark: "text-dawn-dark",
+  },
+  lobby: {
+    bg: "bg-lobby-bg",
+    text: "text-lobby-dark",
+    muted: "text-lobby-muted",
+    accent: "text-lobby-accent",
+    dark: "text-lobby-dark",
+  },
+  matcha: {
+    bg: "bg-matcha-bg",
+    text: "text-matcha-dark",
+    muted: "text-matcha-muted",
+    accent: "text-matcha-accent",
+    dark: "text-matcha-dark",
+  },
 };
 
+export function getThemeClasses(theme: ThemeKind): { bg: string; text: string } {
+  if (theme === "dawn" || theme === "lobby" || theme === "matcha") {
+    const hub = HUB_THEME_CLASSES[theme];
+    return { bg: hub.bg, text: hub.text };
+  }
+  const season = SEASON_CLASSES[theme];
+  return { bg: season.bg, text: season.text };
+}
+
+export function isSeasonTheme(theme: ThemeKind): theme is Season {
+  return theme === "spring" || theme === "summer" || theme === "autumn" || theme === "winter";
+}
+
+const ACTION_STEP_LABEL = "My Action";
+
+/** Next step short name for continue button: step 1→Good at, 2→Problem, 3→Pay, 4→My Action */
 export function getContinueLabel(step: "1" | "2" | "3" | "4"): string {
-  return NEXT_STEP_LABELS[step] ?? "Continue";
+  if (step === "4") return `Continue to ${ACTION_STEP_LABEL} →`;
+  const next = getCategory(String(Number(step) + 1) as "1" | "2" | "3" | "4");
+  return next ? `Continue to ${next.shortName} →` : "Continue";
 }
