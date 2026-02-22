@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 import type { Season } from "../constants/categories";
-import sakuraUrl from "../assets/svg_images/sakura.svg";
-import hojaUrl from "../assets/svg_images/hoja.svg";
-import momijiUrl from "../assets/svg_images/momiji.svg";
-import copoNieveUrl from "../assets/svg_images/copo-nieve.svg";
+import cherryblossomUrl from "../assets/best_svg_images/cherryblossom-svgrepo-com.svg";
+import leafUrl from "../assets/best_svg_images/leaf-svgrepo-com.svg";
+import leafMomijiUrl from "../assets/best_svg_images/leaf-svgrepo-com (1).svg";
+import snowflakeUrl from "../assets/best_svg_images/snowflake-svgrepo-com.svg";
 
 interface Particle {
   x: number;
@@ -20,10 +20,10 @@ interface Particle {
 }
 
 const SEASON_IMAGE_URLS: Record<Season, string> = {
-  spring: sakuraUrl,
-  summer: hojaUrl,
-  autumn: momijiUrl,
-  winter: copoNieveUrl,
+  spring: cherryblossomUrl,
+  summer: leafUrl,
+  autumn: leafMomijiUrl,
+  winter: snowflakeUrl,
 };
 
 function drawImageShape(
@@ -74,7 +74,7 @@ const SEASON_CONFIG: Record<
   winter: {
     count: 60,
     speed: { min: 0.8, max: 2 },
-    size: { min: 3, max: 10 },
+    size: { min: 8, max: 20 },
     sway: 0.5,
   },
 };
