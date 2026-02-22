@@ -1,9 +1,9 @@
 import type { StepValue } from "./nuqs";
 
-/** Join/create session. id = session id when joining existing session. */
+/** Join/create session. Optionally pass a session id to pre-fill. */
 export function sessionUrl(sessionId?: string): string {
   if (sessionId == null || sessionId === "") return "/session";
-  return `/session?id=${encodeURIComponent(sessionId)}`;
+  return `/session?session=${encodeURIComponent(sessionId)}`;
 }
 
 /** Workshop flow: lobby + steps 1–5. */

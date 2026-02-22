@@ -60,6 +60,14 @@ function WorkshopView() {
 }
 
 function ResultView() {
+  return (
+    <IkigaiFormProvider>
+      <ResultViewInner />
+    </IkigaiFormProvider>
+  );
+}
+
+function ResultViewInner() {
   const [session] = useQueryState("session", sessionParser);
   const [name] = useQueryState("name", nameParser);
   const formOptional = useIkigaiFormOptional();
@@ -81,7 +89,7 @@ function ResultView() {
 
   return (
     <Layout step="snapshot" theme="matcha">
-      <Snapshot />
+      <Snapshot payload={payload} />
     </Layout>
   );
 }

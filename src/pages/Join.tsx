@@ -6,13 +6,13 @@ import { workshopUrl } from "../lib/routes";
 export default function Join() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const sessionIdFromUrl = searchParams.get("id") ?? "";
+  const sessionIdFromUrl = searchParams.get("session") ?? "";
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
   const handleCreateSession = () => {
     const newId = nanoid(10);
-    setSearchParams({ id: newId });
+    setSearchParams({ session: newId });
   };
 
   const handleJoin = (e: React.FormEvent) => {
