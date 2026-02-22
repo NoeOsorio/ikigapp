@@ -48,7 +48,7 @@ function drawSakura(
     ctx.fill();
     ctx.restore();
   }
-  ctx.fillStyle = `hsla(340, 70%, 85%, ${alpha * 0.6})`;
+  ctx.fillStyle = `hsla(340, 65%, 72%, ${alpha * 0.7})`;
   ctx.beginPath();
   ctx.arc(0, 0, size * 0.12, 0, Math.PI * 2);
   ctx.fill();
@@ -152,7 +152,7 @@ const SEASON_CONFIG: Record<
 > = {
   spring: {
     color: () =>
-      `hsla(${340 + Math.random() * 20}, 80%, ${70 + Math.random() * 15}%, `,
+      `hsla(${340 + Math.random() * 20}, 75%, ${58 + Math.random() * 18}%, `,
     shape: drawSakura,
     count: 35,
     speed: { min: 1, max: 2.5 },
@@ -161,7 +161,7 @@ const SEASON_CONFIG: Record<
   },
   summer: {
     color: () =>
-      `hsla(${110 + Math.random() * 40}, 60%, ${50 + Math.random() * 20}%, `,
+      `hsla(${110 + Math.random() * 40}, 55%, ${42 + Math.random() * 18}%, `,
     shape: drawLeaf,
     count: 25,
     speed: { min: 0.5, max: 1.5 },
@@ -170,7 +170,7 @@ const SEASON_CONFIG: Record<
   },
   autumn: {
     color: () =>
-      `hsla(${15 + Math.random() * 30}, 75%, ${50 + Math.random() * 20}%, `,
+      `hsla(${15 + Math.random() * 30}, 70%, ${45 + Math.random() * 18}%, `,
     shape: drawMomiji,
     count: 40,
     speed: { min: 1.5, max: 3 },
@@ -178,7 +178,7 @@ const SEASON_CONFIG: Record<
     sway: 2,
   },
   winter: {
-    color: () => `hsla(210, 40%, ${80 + Math.random() * 15}%, `,
+    color: () => `hsla(210, 45%, ${68 + Math.random() * 18}%, `,
     shape: drawSnow,
     count: 60,
     speed: { min: 0.8, max: 2 },
@@ -210,7 +210,7 @@ function createParticle(
 export default function FallingBackground({ season }: { season: Season }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
-  const frameRef = useRef<number>();
+  const frameRef = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;

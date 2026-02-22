@@ -6,33 +6,33 @@
   --font-body: "DM Sans", "Noto Sans JP", system-ui, sans-serif;
   --font-serif: "Noto Serif JP", serif;
 
-  /* Spring */
-  --color-spring-bg: #fdf0f3;
+  /* Spring — más contraste: rosa más presente para que las sakuras destaquen */
+  --color-spring-bg: #f5dce3;
   --color-spring-accent: #e8829a;
   --color-spring-dark: #3d1f28;
   --color-spring-mid: #c9627a;
-  --color-spring-muted: #9b6872;
+  --color-spring-muted: #8b5a64;
 
-  /* Summer */
-  --color-summer-bg: #f0f7f0;
+  /* Summer — verde más definido */
+  --color-summer-bg: #dce8dc;
   --color-summer-accent: #4a8c5c;
   --color-summer-dark: #1a3325;
   --color-summer-mid: #3a7048;
-  --color-summer-muted: #5c7a5c;
+  --color-summer-muted: #4d6b4d;
 
-  /* Autumn */
-  --color-autumn-bg: #faf3eb;
+  /* Autumn — beige/cobre más cálido y visible */
+  --color-autumn-bg: #ede4d8;
   --color-autumn-accent: #c4622d;
   --color-autumn-dark: #2d1a0e;
   --color-autumn-mid: #a8512a;
-  --color-autumn-muted: #8b5a2d;
+  --color-autumn-muted: #7a4a20;
 
-  /* Winter */
-  --color-winter-bg: #eef2f7;
+  /* Winter — azul más marcado para que la nieve contraste bien */
+  --color-winter-bg: #d4e0f0;
   --color-winter-accent: #4a6fa5;
   --color-winter-dark: #0e1e35;
   --color-winter-mid: #3a5a8a;
-  --color-winter-muted: #5c7a9e;
+  --color-winter-muted: #4a6380;
 
   /* Animations */
   --animate-fade-up: fade-up 0.8s ease both;
