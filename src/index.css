@@ -1,70 +1,111 @@
 @import "tailwindcss";
 
+/* Design system: traditional Japanese minimalist, washi, muted nature tones */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  /* Typography */
+  --font-display: "Noto Serif JP", serif;
+  --font-body: "Noto Sans JP", system-ui, sans-serif;
+
+  /* Default / washi (join, lobby) */
+  --color-bg: #f5f0e8;
+  --color-bg-subtle: #ebe6dd;
+  --color-surface: #faf8f5;
+  --color-ink: #2c2416;
+  --color-ink-muted: #5c5344;
+  --color-border: #d4cfc4;
+  --color-accent: #6b5344;
+  --color-accent-hover: #534438;
+
+  /* Spring (step 1) */
+  --season-spring-bg: #fdf6f5;
+  --season-spring-surface: #faf0ef;
+  --season-spring-ink: #3d2c2a;
+  --season-spring-accent: #c47b7b;
+
+  /* Summer (step 2) */
+  --season-summer-bg: #f5f8ed;
+  --season-summer-surface: #f0f5e4;
+  --season-summer-ink: #2d3322;
+  --season-summer-accent: #7a9b5c;
+
+  /* Autumn (step 3) */
+  --season-autumn-bg: #faf4ed;
+  --season-autumn-surface: #f5ebe0;
+  --season-autumn-ink: #3d2a1a;
+  --season-autumn-accent: #b85c38;
+
+  /* Winter (step 4) */
+  --season-winter-bg: #f0f4f8;
+  --season-winter-surface: #e8eef4;
+  --season-winter-ink: #1e2a36;
+  --season-winter-accent: #5c7a9e;
+
+  font-family: var(--font-body);
+  line-height: 1.6;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color: var(--color-ink);
+  background-color: var(--color-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  font-family: var(--font-body);
   cursor: pointer;
-  transition: border-color 0.25s;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s, border-color 0.2s;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* Responsive: comfortable touch targets on small screens */
+@media (max-width: 640px) {
+  #root {
+    padding: 1rem;
+    align-items: stretch;
   }
-  a:hover {
-    color: #747bff;
+  button, .min-touch {
+    min-height: 44px;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

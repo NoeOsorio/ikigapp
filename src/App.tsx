@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useQueryState } from "nuqs";
+import { sessionParser, nameParser, stepParser } from "./lib/nuqs";
+import Join from "./pages/Join";
+import Lobby from "./pages/Lobby";
+import CategoryStep from "./pages/CategoryStep";
+import ActionStep from "./pages/ActionStep";
+import Snapshot from "./pages/Snapshot";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [session] = useQueryState("session", sessionParser);
+  const [name] = useQueryState("name", nameParser);
+  const [step] = useQueryState("step", stepParser);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  const hasSession = session != null && session !== "";
+  const hasName = name != null && name.trim() !== "";
+  const effectiveStep = step ?? "lobby";
+
+  // No session → Join
+  if (!hasSession) return <Join />;
+
+  // Session but no name → Join (enter name to join)
+  if (!hasName) return <Join />;
+
+  // Step 1–4 → Category step
+  if (effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4") {
+    return <CategoryStep step={effectiveStep} />;
+  }
+
+  // Step 5 → Action step
+  if (effectiveStep === "5") return <ActionStep />;
+
+  // Step snapshot → Snapshot page
+  if (effectiveStep === "snapshot") return <Snapshot />;
+
+  // Lobby (step lobby or default)
+  return <Lobby />;
 }
-
-export default App
