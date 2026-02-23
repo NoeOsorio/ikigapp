@@ -72,9 +72,9 @@ export default function Join() {
         </p>
       </header>
 
-      <div className="w-full bg-white rounded-3xl sm:rounded-[28px] p-8 sm:p-10 shadow-xl border border-dawn-accent/15 relative animate-[fade-up_0.9s_ease_0.15s_both] ring-1 ring-black/5">
+      <div className="w-full bg-white rounded-2xl sm:rounded-3xl md:rounded-[28px] p-6 sm:p-8 md:p-10 shadow-xl border border-dawn-accent/15 relative animate-[fade-up_0.9s_ease_0.15s_both] ring-1 ring-black/5">
         {/* Top accent line */}
-        <div className="absolute top-0 left-8 right-8 h-1 rounded-b-full bg-linear-to-r from-transparent via-dawn-accent/80 to-transparent" />
+        <div className="absolute top-0 left-6 right-6 sm:left-8 sm:right-8 h-1 rounded-b-full bg-linear-to-r from-transparent via-dawn-accent/80 to-transparent" />
 
         {!hasSession ? (
           <div className="flex flex-col gap-5 mb-2">
@@ -95,20 +95,20 @@ export default function Join() {
               >
                 Session ID
               </label>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   id="sessionId"
                   type="text"
                   value={sessionIdInput}
                   onChange={(e) => setSessionIdInput(e.target.value)}
                   placeholder="Paste or type session ID"
-                  className="flex-1 py-3.5 px-4 rounded-xl border-2 border-dawn-accent/20 bg-dawn-bg/40 font-body text-base text-dawn-dark placeholder:text-dawn-muted/70 outline-none transition-all duration-200 focus:border-dawn-accent focus:ring-4 focus:ring-dawn-accent/15"
+                  className="flex-1 py-3.5 px-4 rounded-xl border-2 border-dawn-accent/20 bg-dawn-bg/40 font-body text-sm sm:text-base text-dawn-dark placeholder:text-dawn-muted/70 outline-none transition-all duration-200 focus:border-dawn-accent focus:ring-4 focus:ring-dawn-accent/15"
                   autoComplete="off"
                 />
                 <button
                   type="submit"
                   disabled={!canJoinWithId}
-                  className="py-3.5 px-5 rounded-xl border-2 border-dawn-accent/35 bg-dawn-bg/60 text-dawn-dark font-medium hover:bg-dawn-accent/15 hover:border-dawn-accent/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                  className="w-full sm:w-auto py-3.5 px-5 rounded-xl border-2 border-dawn-accent/35 bg-dawn-bg/60 text-dawn-dark font-medium hover:bg-dawn-accent/15 hover:border-dawn-accent/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                 >
                   Join session
                 </button>
