@@ -8,9 +8,10 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
   const config = getCategory(step);
   const [, setStep] = useQueryState("step", stepParser);
   const { c1, c2, c3, c4, setC1, setC2, setC3, setC4 } = useIkigaiForm();
-  const items = step === "1" ? c1 : step === "2" ? c2 : step === "3" ? c3 : c4;
-  const setItems =
-    step === "1" ? setC1 : step === "2" ? setC2 : step === "3" ? setC3 : setC4;
+  const categoryItems = { "1": c1, "2": c2, "3": c3, "4": c4 };
+  const categorySetters = { "1": setC1, "2": setC2, "3": setC3, "4": setC4 };
+  const items = categoryItems[step];
+  const setItems = categorySetters[step];
 
   if (!config) return null;
 
