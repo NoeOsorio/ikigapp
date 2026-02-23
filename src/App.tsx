@@ -16,6 +16,8 @@ import Lobby from "./pages/Lobby";
 import CategoryStep from "./pages/CategoryStep";
 import ActionStep from "./pages/ActionStep";
 import Snapshot from "./pages/Snapshot";
+import Analytics from "./pages/Analytics";
+import AnalyticsBySession from "./pages/AnalyticsBySession";
 
 function WorkshopView() {
   const [session] = useQueryState("session", sessionParser);
@@ -135,6 +137,22 @@ export default function App() {
       />
       <Route path="/workshop" element={<WorkshopView />} />
       <Route path="/result" element={<ResultView />} />
+      <Route
+        path="/analytics"
+        element={
+          <Layout theme="matcha">
+            <Analytics />
+          </Layout>
+        }
+      />
+      <Route
+        path="/analytics/:sessionId"
+        element={
+          <Layout theme="matcha">
+            <AnalyticsBySession />
+          </Layout>
+        }
+      />
     </Routes>
   );
 }
