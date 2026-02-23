@@ -18,10 +18,10 @@ export default function CategoryInput({
   onItemsChange,
   minItems = 4,
   onContinue,
-  continueLabel = "Continue",
+  continueLabel = "Continuar",
   season = "spring",
   onBack,
-  backLabel = "Back",
+  backLabel = "Volver",
   showBackButton = false,
 }: CategoryInputProps) {
   const [inputValue, setInputValue] = useState("");
@@ -52,16 +52,16 @@ export default function CategoryInput({
     <div className="w-full max-w-[560px] space-y-5">
       <div className="flex items-center justify-between mb-4">
         {canContinue ? (
-          <span className={`text-xs ${theme.accent} font-medium`}>Ready! ✓</span>
+          <span className={`text-xs ${theme.accent} font-medium`}>¡Listo! ✓</span>
         ) : (
           <span className={`text-xs ${theme.muted} tracking-wide`}>
-            {items.length} of {minItems} minimum
+            {items.length} de {minItems} mínimo
           </span>
         )}
       </div>
       <div className="h-1 rounded-full bg-black/10 overflow-hidden mb-6">
         <div
-          className={`h-full rounded-full bg-gradient-to-r ${theme.progressGradient} transition-[width] duration-300`}
+          className={`h-full rounded-full bg-linear-to-r ${theme.progressGradient} transition-[width] duration-300`}
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -79,7 +79,7 @@ export default function CategoryInput({
               type="button"
               onClick={() => removeItem(i)}
               className={`text-xs ${theme.accent} leading-none p-0.5 hover:opacity-80`}
-              aria-label={`Remove ${item}`}
+              aria-label={`Eliminar ${item}`}
             >
               ✕
             </button>
@@ -94,14 +94,14 @@ export default function CategoryInput({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addItem())}
-          placeholder="e.g. Designing, Teaching, Cooking..."
+          placeholder="p. ej. Diseñar, enseñar, cocinar..."
           className={`flex-1 py-3 px-4 rounded-xl border-[1.5px] ${theme.border} ${theme.inputBg} ${theme.text} ${theme.placeholder} outline-none ${theme.inputFocus}`}
-          aria-label="Add item"
+          aria-label="Agregar elemento"
         />
         <button
           type="button"
           onClick={addItem}
-          className={`py-3 px-5 rounded-xl ${theme.accentBg} text-white text-lg font-medium hover:opacity-90 transition-opacity flex-shrink-0 min-h-[44px]`}
+          className={`py-3 px-5 rounded-xl ${theme.accentBg} text-white text-lg font-medium hover:opacity-90 transition-opacity shrink-0 min-h-[44px]`}
         >
           +
         </button>

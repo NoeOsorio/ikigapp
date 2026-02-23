@@ -38,7 +38,7 @@ export default function AnalyticsBySession() {
       })
       .catch((err) => {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load session analytics");
+          setError(err instanceof Error ? err.message : "No se pudieron cargar las estadísticas de la sesión");
         }
       })
       .finally(() => {
@@ -56,7 +56,7 @@ export default function AnalyticsBySession() {
   if (loading) {
     return (
       <div className="w-full max-w-2xl mx-auto text-center py-12">
-        <p className="text-matcha-muted text-sm animate-pulse">Loading session analytics…</p>
+        <p className="text-matcha-muted text-sm animate-pulse">Cargando estadísticas de la sesión…</p>
       </div>
     );
   }
@@ -64,12 +64,12 @@ export default function AnalyticsBySession() {
   if (notFound) {
     return (
       <div className="w-full max-w-2xl mx-auto space-y-6 text-center py-12">
-        <p className="text-matcha-muted text-sm">Session not found.</p>
+        <p className="text-matcha-muted text-sm">No se encontró la sesión.</p>
         <Link
           to={analyticsUrl()}
           className="text-matcha-accent text-sm font-medium hover:underline"
         >
-          Back to Analytics
+          Volver a estadísticas
         </Link>
       </div>
     );
@@ -83,7 +83,7 @@ export default function AnalyticsBySession() {
           to={analyticsUrl()}
           className="mt-4 inline-block text-matcha-accent text-sm font-medium hover:underline"
         >
-          Back to Analytics
+          Volver a estadísticas
         </Link>
       </div>
     );
@@ -100,14 +100,14 @@ export default function AnalyticsBySession() {
           to={analyticsUrl()}
           className="text-matcha-accent text-sm font-medium hover:underline mb-3 inline-block"
         >
-          ← Analytics
+          ← Estadísticas
         </Link>
         <h1 className="font-display text-2xl text-matcha-dark font-semibold tracking-tight mb-1">
-          Session analytics
+          Estadísticas de la sesión
         </h1>
         <p className="text-matcha-muted text-sm font-mono">{sessionId}</p>
         {hostName ? (
-          <p className="text-matcha-muted text-sm mt-0.5">Host: {hostName}</p>
+          <p className="text-matcha-muted text-sm mt-0.5">Anfitrión: {hostName}</p>
         ) : null}
       </header>
 

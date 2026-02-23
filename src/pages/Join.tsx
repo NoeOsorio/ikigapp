@@ -47,7 +47,7 @@ export default function Join() {
 
   const hasSession = sessionIdFromUrl !== "";
   const canEnterSession = hasSession && Boolean(firstName.trim() && lastName.trim());
-  const sessionLabel = hasSession ? `Session #${sessionIdFromUrl.slice(0, 8).toUpperCase()}` : null;
+  const sessionLabel = hasSession ? `Sesión #${sessionIdFromUrl.slice(0, 8).toUpperCase()}` : null;
   const canJoinWithId = sessionIdInput.trim() !== "";
 
   return (
@@ -62,13 +62,13 @@ export default function Join() {
 
       <header className="text-center mb-10 sm:mb-14 animate-fade-up relative">
         <p className="text-xs text-dawn-muted tracking-[0.2em] uppercase mb-3 font-medium">
-          Find your purpose
+          Encuentra tu propósito
         </p>
         <h1 className="font-display text-4xl sm:text-5xl text-dawn-dark tracking-tight mb-2.5 font-semibold">
-          Discover Your Ikigai
+          Descubre tu Ikigai
         </h1>
         <p className="text-sm text-dawn-muted tracking-[0.08em] max-w-xs mx-auto">
-          A guided journey through the four seasons of what you love, what you’re good at, what the world needs, and what you can be paid for.
+          Un recorrido guiado por los cuatro círculos: lo que amas, en lo que eres bueno, lo que el mundo necesita y por lo que te pueden pagar.
         </p>
       </header>
 
@@ -83,17 +83,17 @@ export default function Join() {
               onClick={handleCreateSession}
               className="w-full py-3.5 px-4 rounded-xl border-2 border-dawn-accent/35 bg-dawn-bg/60 text-dawn-dark font-medium hover:bg-dawn-accent/15 hover:border-dawn-accent/50 transition-all duration-200"
             >
-              Create new session
+              Crear nueva sesión
             </button>
             <div className="relative flex items-center gap-2 before:content-[''] before:flex-1 before:h-px before:bg-dawn-accent/20 after:content-[''] after:flex-1 after:h-px after:bg-dawn-accent/20">
-              <span className="text-[0.65rem] tracking-widest uppercase text-dawn-muted font-medium">or</span>
+              <span className="text-[0.65rem] tracking-widest uppercase text-dawn-muted font-medium">o</span>
             </div>
             <form onSubmit={handleJoinWithId} className="flex flex-col gap-3">
               <label
                 htmlFor="sessionId"
                 className="block text-[0.7rem] tracking-[0.12em] uppercase text-dawn-muted mb-1 font-medium"
               >
-                Session ID
+                ID de sesión
               </label>
               <div className="flex flex-col sm:flex-row gap-2">
                 <input
@@ -101,7 +101,7 @@ export default function Join() {
                   type="text"
                   value={sessionIdInput}
                   onChange={(e) => setSessionIdInput(e.target.value)}
-                  placeholder="Paste or type session ID"
+                  placeholder="Pega o escribe el ID de sesión"
                   className="flex-1 py-3.5 px-4 rounded-xl border-2 border-dawn-accent/20 bg-dawn-bg/40 font-body text-sm sm:text-base text-dawn-dark placeholder:text-dawn-muted/70 outline-none transition-all duration-200 focus:border-dawn-accent focus:ring-4 focus:ring-dawn-accent/15"
                   autoComplete="off"
                 />
@@ -110,7 +110,7 @@ export default function Join() {
                   disabled={!canJoinWithId}
                   className="w-full sm:w-auto py-3.5 px-5 rounded-xl border-2 border-dawn-accent/35 bg-dawn-bg/60 text-dawn-dark font-medium hover:bg-dawn-accent/15 hover:border-dawn-accent/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                 >
-                  Join session
+                  Unirme
                 </button>
               </div>
             </form>
@@ -132,7 +132,7 @@ export default function Join() {
                     htmlFor="firstName"
                     className="block text-[0.7rem] tracking-[0.12em] uppercase text-dawn-muted mb-1.5 font-medium"
                   >
-                    First Name
+                    Nombre
                   </label>
                   <input
                     id="firstName"
@@ -149,7 +149,7 @@ export default function Join() {
                     htmlFor="lastName"
                     className="block text-[0.7rem] tracking-[0.12em] uppercase text-dawn-muted mb-1.5 font-medium"
                   >
-                    Last Name
+                    Apellido
                   </label>
                   <input
                     id="lastName"
@@ -167,7 +167,7 @@ export default function Join() {
                 disabled={!canEnterSession}
                 className="w-full py-4 rounded-xl bg-dawn-dark text-white font-display text-base tracking-wide disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:bg-dawn-accent hover:-translate-y-0.5 active:translate-y-0 min-h-[48px] shadow-lg shadow-dawn-dark/20 hover:shadow-dawn-accent/25"
               >
-                Enter Session →
+                Entrar a la sesión →
               </button>
             </form>
           </>
@@ -175,7 +175,7 @@ export default function Join() {
       </div>
 
       <p className="mt-8 text-center text-xs text-dawn-muted/90 max-w-[280px] animate-[fade-up_0.6s_ease_0.3s_both]">
-        Your journey starts with one step. Share the session link so others can join.
+        Tu camino empieza con un paso. Comparte el enlace de la sesión para que otras personas se unan.
       </p>
     </div>
   );

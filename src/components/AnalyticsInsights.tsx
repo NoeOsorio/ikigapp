@@ -32,7 +32,7 @@ export default function AnalyticsInsights({
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
       <section className="rounded-xl border border-matcha-accent/15 bg-matcha-bg/40 px-6 py-5">
         <p className="text-[0.68rem] tracking-[0.14em] uppercase text-matcha-accent mb-4 font-semibold">
-          Overview
+          Resumen
         </p>
         <div className="flex flex-wrap gap-6">
           {!singleSession && (
@@ -40,24 +40,24 @@ export default function AnalyticsInsights({
               <p className="text-2xl font-semibold text-matcha-dark tabular-nums">
                 {stats.totalSessions}
               </p>
-              <p className="text-matcha-muted text-xs mt-0.5">Sessions</p>
+              <p className="text-matcha-muted text-xs mt-0.5">Sesiones</p>
             </div>
           )}
           <div>
             <p className="text-2xl font-semibold text-matcha-dark tabular-nums">
               {stats.totalParticipants}
             </p>
-            <p className="text-matcha-muted text-xs mt-0.5">Participants</p>
+            <p className="text-matcha-muted text-xs mt-0.5">Participantes</p>
           </div>
         </div>
       </section>
 
       <section className="rounded-xl border border-matcha-accent/15 bg-matcha-bg/40 px-6 py-5">
         <p className="text-[0.68rem] tracking-[0.14em] uppercase text-matcha-accent mb-2 font-semibold">
-          Completion rate
+          Tasa de finalización
         </p>
         <p className="text-matcha-muted text-xs mb-3">
-          Reached snapshot: {stats.finishedCount} of {stats.totalParticipants}
+          Llegaron a la tarjeta: {stats.finishedCount} de {stats.totalParticipants}
         </p>
         <div className="h-2.5 rounded-full bg-matcha-accent/15 overflow-hidden">
           <div
@@ -72,7 +72,7 @@ export default function AnalyticsInsights({
 
       <section className="sm:col-span-2 rounded-xl border border-matcha-accent/15 bg-matcha-bg/40 px-6 py-5">
         <p className="text-[0.68rem] tracking-[0.14em] uppercase text-matcha-accent mb-4 font-semibold">
-          Average items per quadrant
+          Promedio de ideas por cuadrante
         </p>
         <div className="space-y-4">
           {quadrantBars.map(({ key, label, emoji, avg, widthPercent }) => (
@@ -97,10 +97,10 @@ export default function AnalyticsInsights({
 
       <section className="sm:col-span-2 rounded-xl border border-matcha-accent/15 bg-matcha-bg/40 px-6 py-5">
         <p className="text-[0.68rem] tracking-[0.14em] uppercase text-matcha-accent mb-2 font-semibold">
-          Action commitment
+          Compromiso de acción
         </p>
         <p className="text-matcha-muted text-xs mb-3">
-          Wrote an action item: {stats.actionFillCount} of {stats.totalParticipants}
+          Escribieron una acción: {stats.actionFillCount} de {stats.totalParticipants}
         </p>
         <div className="h-2.5 rounded-full bg-matcha-accent/15 overflow-hidden max-w-xs">
           <div

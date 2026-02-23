@@ -104,7 +104,7 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
           continueLabel={getContinueLabel(step)}
           season={config.season}
           onBack={handleBack}
-          backLabel={step === "1" ? "Back to lobby" : "Back"}
+          backLabel={step === "1" ? "Volver al lobby" : "Volver"}
           showBackButton
         />
       </div>

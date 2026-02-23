@@ -18,7 +18,7 @@ interface SnapshotCardProps {
 }
 
 function formatDate() {
-  return new Date().toLocaleDateString("en-US", {
+  return new Date().toLocaleDateString("es-MX", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -41,7 +41,7 @@ const SnapshotCard = forwardRef<HTMLDivElement, SnapshotCardProps>(
             {payload.name || "My Ikigai"}
           </h2>
           <p className="text-xs text-white/70 tracking-widest relative uppercase font-medium">
-            {formatDate()} · Session
+            {formatDate()} · Sesión
           </p>
         </div>
         <div className="px-8 py-8 space-y-6">
@@ -74,7 +74,7 @@ const SnapshotCard = forwardRef<HTMLDivElement, SnapshotCardProps>(
           })}
           <section className="pt-2">
             <p className="text-[0.68rem] tracking-[0.14em] uppercase text-matcha-accent mb-3 flex items-center gap-1.5 font-semibold">
-              <span className="text-sm">✦</span> My Action Item
+              <span className="text-sm">✦</span> Mi acción
             </p>
             <div className="rounded-xl py-4 px-4 text-sm text-matcha-dark bg-matcha-bg/60 border-l-[3px] border-matcha-accent leading-relaxed font-medium">
               {payload.action || "—"}

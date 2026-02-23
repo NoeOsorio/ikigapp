@@ -30,16 +30,16 @@ export default function ActionStep() {
   return (
     <div className="w-full max-w-lg flex flex-col items-center">
       <header className="text-center mb-8 animate-fade-up">
-        <h1 className="font-display text-2xl text-spring-dark mb-2">Your Ikigai action</h1>
+        <h1 className="font-display text-2xl text-spring-dark mb-2">Tu acción de Ikigai</h1>
         <p className="text-sm text-spring-muted">
-          Write one concrete commitment that ties together your four categories.
+          Escribe un compromiso concreto que una tus cuatro categorías.
         </p>
       </header>
       <div className="w-full bg-white rounded-3xl p-8 shadow-lg border border-spring-accent/10 animate-[fade-up_0.8s_ease_0.1s_both]">
         <textarea
           value={action}
           onChange={(e) => setAction(e.target.value)}
-          placeholder="e.g. This month I will..."
+          placeholder="p. ej. Este mes voy a..."
           rows={5}
           className="w-full py-3 px-4 rounded-xl border-[1.5px] border-spring-accent/20 bg-spring-bg/30 font-body text-spring-dark placeholder:text-spring-muted outline-none focus:border-spring-accent focus:ring-2 focus:ring-spring-accent/20 focus:ring-offset-0 resize-y"
         />
@@ -49,7 +49,7 @@ export default function ActionStep() {
           disabled={!action?.trim()}
           className="mt-6 w-full py-4 rounded-xl bg-spring-dark text-white font-display text-base disabled:opacity-50 disabled:cursor-not-allowed hover:bg-spring-accent hover:-translate-y-px transition-all min-h-[44px]"
         >
-          See my snapshot
+          Ver mi tarjeta
         </button>
       </div>
     </div>

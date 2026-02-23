@@ -11,11 +11,11 @@ import type { StepValue } from "../lib/nuqs";
 import QRCode from "../components/QRCode";
 
 function stepLabel(step: StepValue): string {
-  if (step === "lobby") return "In lobby";
-  if (step === "snapshot") return "Completed ✓";
-  if (step === "5") return "Writing their action";
+  if (step === "lobby") return "En el lobby";
+  if (step === "snapshot") return "Completado ✓";
+  if (step === "5") return "Escribiendo su acción";
   const cat = getCategory(step as "1" | "2" | "3" | "4");
-  return cat ? `Step ${step}: ${cat.shortName}` : `Step ${step}`;
+  return cat ? `Paso ${step}: ${cat.shortName}` : `Paso ${step}`;
 }
 
 export default function Lobby() {
@@ -38,7 +38,7 @@ export default function Lobby() {
       ? `${window.location.origin}${sessionUrl(session)}`
       : "";
   const startUrl = session && myActualName ? workshopUrl(session, myActualName, "1") : "#";
-  const sessionLabel = session ? `Session #${session.slice(0, 8).toUpperCase()}` : "";
+  const sessionLabel = session ? `Sesión #${session.slice(0, 8).toUpperCase()}` : "";
 
   const copyLink = () => {
     if (joinUrl) navigator.clipboard.writeText(joinUrl);
@@ -62,13 +62,13 @@ export default function Lobby() {
           <p className="text-xs text-spring-muted tracking-widest uppercase mb-1 font-medium">
             {sessionLabel}
           </p>
-          <h1 className="font-display text-2xl text-spring-dark">Participants</h1>
+          <h1 className="font-display text-2xl text-spring-dark">Participantes</h1>
         </div>
         <Link
           to={startUrl}
           className="inline-flex items-center gap-2 py-2.5 px-5 rounded-xl border-[1.5px] border-spring-dark/20 bg-white text-spring-dark font-body text-sm hover:border-spring-accent hover:text-spring-accent transition-colors min-h-[44px]"
         >
-          Start My Ikigai →
+          Empezar mi Ikigai →
         </Link>
       </div>
 
@@ -101,7 +101,7 @@ export default function Lobby() {
                       {participantDisplayName(p)}
                     </p>
                     <p className={`text-[0.7rem] tracking-wide ${isMe ? "text-spring-accent font-medium" : "text-spring-muted"}`}>
-                      {isMe ? "You" : stepLabel(p.step)}
+                      {isMe ? "Tú" : stepLabel(p.step)}
                     </p>
                     {isMe && (
                       <p className="text-[0.7rem] text-spring-muted tracking-wide mt-0.5">
@@ -121,7 +121,7 @@ export default function Lobby() {
                         : "border-spring-accent/30 bg-white/60 text-spring-accent hover:bg-spring-accent/10 hover:border-spring-accent/50"
                     }`}
                   >
-                    View {isMe ? "My" : "Their"} Snapshot →
+                    Ver {isMe ? "mi" : "su"} tarjeta →
                   </a>
                 )}
               </div>
@@ -133,9 +133,9 @@ export default function Lobby() {
               {myActualName?.charAt(0)?.toUpperCase() ?? "?"}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-display text-base text-spring-dark mb-0.5">{myActualName || "You"}</p>
-              <p className="text-[0.7rem] text-spring-accent font-medium tracking-wide">You</p>
-              <p className="text-[0.7rem] text-spring-muted tracking-wide mt-0.5">In lobby</p>
+              <p className="font-display text-base text-spring-dark mb-0.5">{myActualName || "Tú"}</p>
+              <p className="text-[0.7rem] text-spring-accent font-medium tracking-wide">Tú</p>
+              <p className="text-[0.7rem] text-spring-muted tracking-wide mt-0.5">En el lobby</p>
             </div>
           </div>
         )}
@@ -148,19 +148,19 @@ export default function Lobby() {
             type="button"
             onClick={() => setIsQRModalOpen(true)}
             className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] rounded-2xl bg-spring-bg flex items-center justify-center p-4 shadow-inner hover:bg-spring-accent/10 hover:shadow-md transition-all cursor-pointer group"
-            aria-label="View QR code in full size"
+            aria-label="Ver el código QR en tamaño completo"
           >
             <QRCode value={joinUrl} size={160} />
             <span className="absolute inset-0 flex items-center justify-center bg-spring-dark/0 group-hover:bg-spring-dark/5 rounded-2xl transition-all">
               <span className="opacity-0 group-hover:opacity-100 text-spring-accent text-xs font-medium transition-opacity">
-                Click to enlarge
+                Clic para ampliar
               </span>
             </span>
           </button>
           <div>
-            <h2 className="font-display text-xl sm:text-2xl text-spring-dark mb-2">Invite Others</h2>
+            <h2 className="font-display text-xl sm:text-2xl text-spring-dark mb-2">Invita a otras personas</h2>
             <p className="text-sm text-spring-muted mb-4 max-w-md mx-auto">
-              Share this QR code or link so others can join your session
+              Comparte este código QR o enlace para que otras personas se unan a tu sesión
             </p>
             <p className="text-xs text-spring-muted mb-4 break-all font-mono bg-spring-bg/50 py-2 px-3 rounded-lg max-w-md mx-auto">
               {joinUrl || "—"}
@@ -170,7 +170,7 @@ export default function Lobby() {
               onClick={copyLink}
               className="py-3 px-6 rounded-xl bg-spring-dark text-white font-body text-sm hover:bg-spring-accent transition-colors shadow-lg hover:-translate-y-0.5 active:translate-y-0"
             >
-              Copy Link
+              Copiar enlace
             </button>
           </div>
         </div>
@@ -182,7 +182,7 @@ export default function Lobby() {
             onClick={() => setIsShareExpanded(!isShareExpanded)}
             className="w-full py-4 px-6 flex items-center justify-between text-spring-dark hover:bg-spring-bg/30 transition-colors"
           >
-            <span className="font-display text-base">Share Session</span>
+            <span className="font-display text-base">Compartir sesión</span>
             <span
               className={`text-spring-accent text-xl transition-transform duration-300 ${isShareExpanded ? "rotate-180" : ""}`}
             >
@@ -197,17 +197,17 @@ export default function Lobby() {
                 type="button"
                 onClick={() => setIsQRModalOpen(true)}
                 className="w-[120px] h-[120px] rounded-xl bg-spring-bg flex items-center justify-center p-3 shrink-0 mx-auto sm:mx-0 hover:bg-spring-accent/10 hover:shadow-md transition-all cursor-pointer group relative"
-                aria-label="View QR code in full size"
+                aria-label="Ver el código QR en tamaño completo"
               >
                 <QRCode value={joinUrl} size={96} />
                 <span className="absolute inset-0 flex items-center justify-center bg-spring-dark/0 group-hover:bg-spring-dark/5 rounded-xl transition-all">
                   <span className="opacity-0 group-hover:opacity-100 text-spring-accent text-[0.65rem] font-medium transition-opacity">
-                    Enlarge
+                    Ampliar
                   </span>
                 </span>
               </button>
               <div className="flex-1 min-w-0 text-center sm:text-left">
-                <h3 className="font-display text-base text-spring-dark mb-2">Invite Others</h3>
+                <h3 className="font-display text-base text-spring-dark mb-2">Invita a otras personas</h3>
                 <p className="text-xs text-spring-muted mb-3 break-all font-mono bg-spring-bg/50 py-2 px-3 rounded-lg">
                   {joinUrl || "—"}
                 </p>
@@ -216,7 +216,7 @@ export default function Lobby() {
                   onClick={copyLink}
                   className="py-2 px-4 rounded-lg border-[1.5px] border-spring-dark/20 bg-white text-spring-dark font-body text-sm hover:border-spring-accent hover:text-spring-accent transition-colors"
                 >
-                  Copy Link
+                  Copiar enlace
                 </button>
               </div>
             </div>
@@ -236,7 +236,7 @@ export default function Lobby() {
           >
             <div className="flex justify-between items-start mb-6">
               <div>
-                <h3 className="font-display text-xl text-spring-dark mb-1">Scan to Join</h3>
+                <h3 className="font-display text-xl text-spring-dark mb-1">Escanea para unirte</h3>
                 <p className="text-xs text-spring-muted tracking-widest uppercase">
                   {sessionLabel}
                 </p>
@@ -245,7 +245,7 @@ export default function Lobby() {
                 type="button"
                 onClick={() => setIsQRModalOpen(false)}
                 className="text-spring-muted hover:text-spring-accent transition-colors text-2xl leading-none"
-                aria-label="Close modal"
+                aria-label="Cerrar"
               >
                 ×
               </button>
@@ -261,7 +261,7 @@ export default function Lobby() {
               onClick={copyLink}
               className="w-full py-3 px-6 rounded-xl bg-spring-dark text-white font-body text-sm hover:bg-spring-accent transition-all duration-200 shadow-lg hover:-translate-y-0.5 active:translate-y-0"
             >
-              Copy Link
+              Copiar enlace
             </button>
           </div>
         </div>
