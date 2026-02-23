@@ -1,6 +1,17 @@
 import { forwardRef } from "react";
 import type { SnapshotPayload } from "../lib/nuqs";
 import { CATEGORIES } from "../constants/categories";
+import cherryblossomUrl from "../assets/best_svg_images/cherryblossom-svgrepo-com.svg";
+import leafUrl from "../assets/best_svg_images/leaf-svgrepo-com.svg";
+import leafMomijiUrl from "../assets/best_svg_images/leaf-momiji-svgrepo-com.svg";
+import snowflakeUrl from "../assets/best_svg_images/snowflake-svgrepo-com.svg";
+
+const SEASON_ICON_URLS = {
+  spring: cherryblossomUrl,
+  summer: leafUrl,
+  autumn: leafMomijiUrl,
+  winter: snowflakeUrl,
+} as const;
 
 interface SnapshotCardProps {
   payload: SnapshotPayload;
@@ -40,7 +51,13 @@ const SnapshotCard = forwardRef<HTMLDivElement, SnapshotCardProps>(
             return (
               <section key={cat.step} className="pb-6 border-b border-matcha-accent/10 last:border-0 last:pb-0">
                 <p className="text-[0.68rem] tracking-[0.14em] uppercase text-matcha-accent mb-3 flex items-center gap-1.5 font-semibold">
-                  <span className="text-sm">{cat.emoji}</span> {cat.title}
+                  <img
+                    src={SEASON_ICON_URLS[cat.season]}
+                    alt=""
+                    className="w-4 h-4 shrink-0"
+                    aria-hidden
+                  />
+                  {cat.title}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {list.map((item, j) => (
