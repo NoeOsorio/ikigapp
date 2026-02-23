@@ -18,8 +18,12 @@ export default function Analytics() {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setError(null);
+    setTimeout(() => {
+      setLoading(true);
+    }, 0);
+    setTimeout(() => {
+      setError(null);
+    }, 0);
     Promise.all([getSessionsCount(), getAllParticipants(), getSessions()])
       .then(([sessionsCount, participants, sessionsList]) => {
         if (cancelled) return;

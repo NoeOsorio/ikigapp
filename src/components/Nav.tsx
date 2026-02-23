@@ -64,7 +64,7 @@ export default function Nav({ theme }: NavProps) {
         >
           生
         </span>
-        <span className="text-lg sm:text-xl font-medium">Sesiones de Ikigai</span>
+        <span className="text-lg sm:text-xl font-medium">Ikigai</span>
       </Link>
       <Link
         to="/analytics"
