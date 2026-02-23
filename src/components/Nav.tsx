@@ -6,37 +6,37 @@ const NAV_THEME: Record<
   { bar: string; text: string; accent: string }
 > = {
   dawn: {
-    bar: "bg-white/80 backdrop-blur-xl border-b border-dawn-accent/15",
+    bar: "bg-dawn-bg border-b border-dawn-accent/10",
     text: "text-dawn-dark",
     accent: "text-dawn-accent",
   },
   lobby: {
-    bar: "bg-white/80 backdrop-blur-xl border-b border-lobby-accent/15",
+    bar: "bg-lobby-bg border-b border-lobby-accent/10",
     text: "text-lobby-dark",
     accent: "text-lobby-accent",
   },
   matcha: {
-    bar: "bg-white/80 backdrop-blur-xl border-b border-matcha-accent/15",
+    bar: "bg-matcha-bg border-b border-matcha-accent/10",
     text: "text-matcha-dark",
     accent: "text-matcha-accent",
   },
   spring: {
-    bar: "bg-spring-bg/80 backdrop-blur-xl border-b border-spring-accent/15",
+    bar: "bg-spring-bg border-b border-spring-accent/10",
     text: "text-spring-dark",
     accent: "text-spring-accent",
   },
   summer: {
-    bar: "bg-summer-bg/80 backdrop-blur-xl border-b border-summer-accent/15",
+    bar: "bg-summer-bg border-b border-summer-accent/10",
     text: "text-summer-dark",
     accent: "text-summer-accent",
   },
   autumn: {
-    bar: "bg-autumn-bg/80 backdrop-blur-xl border-b border-autumn-accent/15",
+    bar: "bg-autumn-bg border-b border-autumn-accent/10",
     text: "text-autumn-dark",
     accent: "text-autumn-accent",
   },
   winter: {
-    bar: "bg-winter-bg/80 backdrop-blur-xl border-b border-winter-accent/15",
+    bar: "bg-winter-bg border-b border-winter-accent/10",
     text: "text-winter-dark",
     accent: "text-winter-accent",
   },
