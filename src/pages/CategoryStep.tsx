@@ -62,15 +62,30 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
   return (
     <div className="w-full flex flex-col items-center justify-center px-4 py-8">
       <header className="text-center mb-10 animate-fade-up">
-        <span className="block mb-2 animate-float-y">
+        <span className="block mb-3 animate-float-y">
           <img
             src={SEASON_ICON_URLS[config.season]}
             alt={config.shortName}
             className="w-12 h-12 mx-auto"
           />
         </span>
+        <div className="flex items-center justify-center gap-2 mb-3">
+          {["1", "2", "3", "4"].map((s) => {
+            const isActive = step === s;
+            return (
+              <div
+                key={s}
+                className={`rounded-full border flex items-center justify-center transition-all ${
+                  isActive
+                    ? `w-3.5 h-3.5 border-transparent ${theme.accentBg}`
+                    : `w-2.5 h-2.5 ${theme.border} bg-black/5`
+                }`}
+              />
+            );
+          })}
+        </div>
         <p className={`text-[0.72rem] tracking-[0.14em] uppercase ${theme.muted} mb-2`}>
-          {config.shortName} · {step} of 4
+          {config.shortName}
         </p>
         <h1 className={`font-display text-2xl sm:text-[2.2rem] ${theme.text} mb-3 leading-tight`}>
           {config.title}
