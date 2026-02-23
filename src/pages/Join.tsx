@@ -3,6 +3,8 @@ import { useState } from "react";
 import { nanoid } from "nanoid";
 import { workshopUrl } from "../lib/routes";
 import { useJoinSession } from "../hooks/useParticipant";
+import { setUserIdentity } from "../lib/userIdentity";
+import { nameToParticipantId } from "../models/participant.model";
 
 export default function Join() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,6 +32,11 @@ export default function Join() {
     const name = [trimmedFirst, trimmedLast].filter(Boolean).join(" ");
     if (!name) return;
     const session = sessionIdFromUrl || nanoid(10);
+    
+    // Save user identity to sessionStorage using participant ID
+    const participantId = nameToParticipantId(name);
+    setUserIdentity(session, participantId);
+    
     joinSession.mutate({
       sessionId: session,
       hostName: name,

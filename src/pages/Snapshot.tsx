@@ -5,7 +5,9 @@ import { useQueryState } from "nuqs";
 import { sessionParser, nameParser, type SnapshotPayload } from "../lib/nuqs";
 import { getSnapshotLinkKey } from "../lib/snapshotStorage";
 import { saveShareLink } from "../services/participants.service";
-import { nameToParticipantId } from "../models/participant.model";
+import { nameToParticipantId, participantDisplayName } from "../models/participant.model";
+import { getUserIdentity } from "../lib/userIdentity";
+import { useParticipants } from "../hooks/useParticipants";
 import { workshopUrl } from "../lib/routes";
 import SnapshotCard from "../components/SnapshotCard";
 
@@ -17,11 +19,21 @@ export default function Snapshot({ payload }: SnapshotProps) {
   const navigate = useNavigate();
   const [session] = useQueryState("session", sessionParser);
   const [name] = useQueryState("name", nameParser);
+  const { data: participants = [] } = useParticipants(session);
   const cardRef = useRef<HTMLDivElement>(null);
 
+  // Get the actual logged-in user's identity from sessionStorage
+  const userIdentity = getUserIdentity();
+  const myParticipantId = userIdentity?.participantId ?? (name ? nameToParticipantId(name) : null);
+  
+  // Find my participant data to get the actual name for navigation
+  const myParticipant = participants.find((p) => p.id === myParticipantId);
+  const myActualName = myParticipant ? participantDisplayName(myParticipant) : name;
+
   const handleBackToLobby = useCallback(() => {
-    navigate(workshopUrl(session ?? "", name ?? "", "lobby"));
-  }, [navigate, session, name]);
+    // Navigate back to lobby using the actual logged-in user's name
+    navigate(workshopUrl(session ?? "", myActualName ?? "", "lobby"));
+  }, [navigate, session, myActualName]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && session && name) {

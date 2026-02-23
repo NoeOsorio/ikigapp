@@ -6,6 +6,7 @@ import { sessionUrl, workshopUrl } from "../lib/routes";
 import { getCategory } from "../constants/categories";
 import { useParticipants } from "../hooks/useParticipants";
 import { nameToParticipantId, participantDisplayName } from "../models/participant.model";
+import { getUserIdentity } from "../lib/userIdentity";
 import type { StepValue } from "../lib/nuqs";
 import QRCode from "../components/QRCode";
 
@@ -21,15 +22,22 @@ export default function Lobby() {
   const [session] = useQueryState("session", sessionParser);
   const [name] = useQueryState("name", nameParser);
   const { data: participants = [] } = useParticipants(session);
-  const myParticipantId = name ? nameToParticipantId(name) : null;
   const [isShareExpanded, setIsShareExpanded] = useState(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+
+  // Get the actual logged-in user's identity from sessionStorage
+  const userIdentity = getUserIdentity();
+  const myParticipantId = userIdentity?.participantId ?? (name ? nameToParticipantId(name) : null);
+  
+  // Find my participant data to get the actual name for URLs
+  const myParticipant = participants.find((p) => p.id === myParticipantId);
+  const myActualName = myParticipant ? participantDisplayName(myParticipant) : name;
 
   const joinUrl =
     typeof window !== "undefined" && session
       ? `${window.location.origin}${sessionUrl(session)}`
       : "";
-  const startUrl = session && name ? workshopUrl(session, name, "1") : "#";
+  const startUrl = session && myActualName ? workshopUrl(session, myActualName, "1") : "#";
   const sessionLabel = session ? `Session #${session.slice(0, 8).toUpperCase()}` : "";
 
   const copyLink = () => {
@@ -122,10 +130,10 @@ export default function Lobby() {
         ) : (
           <div className="bg-white rounded-2xl p-5 sm:p-6 border border-spring-accent/30 shadow-md ring-1 ring-spring-accent/20 flex items-center gap-4 animate-fade-up">
             <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display text-lg text-white bg-spring-accent">
-              {name?.charAt(0)?.toUpperCase() ?? "?"}
+              {myActualName?.charAt(0)?.toUpperCase() ?? "?"}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-display text-base text-spring-dark mb-0.5">{name || "You"}</p>
+              <p className="font-display text-base text-spring-dark mb-0.5">{myActualName || "You"}</p>
               <p className="text-[0.7rem] text-spring-accent font-medium tracking-wide">You</p>
               <p className="text-[0.7rem] text-spring-muted tracking-wide mt-0.5">In lobby</p>
             </div>
