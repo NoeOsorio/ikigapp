@@ -2,27 +2,27 @@ import { Link } from "react-router-dom";
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser } from "../lib/nuqs";
 import { sessionUrl, workshopUrl } from "../lib/routes";
-import { getSnapshotLinkKey } from "../lib/snapshotStorage";
+import { getCategory } from "../constants/categories";
+import { useParticipants } from "../hooks/useParticipants";
+import { nameToParticipantId, participantDisplayName } from "../models/participant.model";
+import type { StepValue } from "../lib/nuqs";
 import QRCode from "../components/QRCode";
-import { useState, useEffect } from "react";
+
+function stepLabel(step: StepValue): string {
+  if (step === "lobby") return "In lobby";
+  if (step === "snapshot") return "Completed ✓";
+  if (step === "5") return "Writing their action";
+  const cat = getCategory(step as "1" | "2" | "3" | "4");
+  return cat ? `Step ${step}: ${cat.shortName}` : `Step ${step}`;
+}
 
 export default function Lobby() {
   const [session] = useQueryState("session", sessionParser);
   const [name] = useQueryState("name", nameParser);
-  const [mySnapshotLink, setMySnapshotLink] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !session || !name) return;
-    const key = getSnapshotLinkKey(session, name);
-    const id = requestAnimationFrame(() => {
-      try {
-        setMySnapshotLink(sessionStorage.getItem(key));
-      } catch {
-        setMySnapshotLink(null);
-      }
-    });
-    return () => cancelAnimationFrame(id);
-  }, [session, name]);
+  const { data: participants = [] } = useParticipants(session);
+  const myParticipantId = name ? nameToParticipantId(name) : null;
+  const myParticipant = participants.find((p) => p.id === myParticipantId) ?? null;
+  const mySnapshotLink = myParticipant?.shareLink ?? null;
 
   const joinUrl =
     typeof window !== "undefined" && session
@@ -53,15 +53,38 @@ export default function Lobby() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
-        <div className="bg-white rounded-2xl p-5 sm:p-6 border border-spring-accent/10 shadow-sm flex items-center gap-4 animate-fade-up border-dashed bg-spring-bg/30">
-          <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 font-display text-lg text-spring-accent bg-spring-accent/15">
-            {name?.charAt(0) ?? "?"}
+        {participants.length > 0 ? (
+          participants.map((p) => {
+            const isMe = p.id === myParticipantId;
+            return (
+              <div
+                key={p.id}
+                className="bg-spring-bg/30 rounded-2xl p-5 sm:p-6 border border-spring-accent/10 border-dashed shadow-sm flex items-center gap-4 animate-fade-up"
+              >
+                <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display text-lg text-spring-accent bg-spring-accent/15">
+                  {p.firstName.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-display text-base text-spring-muted mb-1">
+                    {isMe ? "You" : participantDisplayName(p)}
+                  </p>
+                  <p className="text-[0.72rem] text-spring-muted tracking-wide">{stepLabel(p.step)}</p>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          // Fallback skeleton while Firestore loads
+          <div className="bg-spring-bg/30 rounded-2xl p-5 sm:p-6 border border-spring-accent/10 border-dashed shadow-sm flex items-center gap-4 animate-fade-up">
+            <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display text-lg text-spring-accent bg-spring-accent/15">
+              {name?.charAt(0)?.toUpperCase() ?? "?"}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-display text-base text-spring-muted mb-1">You</p>
+              <p className="text-[0.72rem] text-spring-muted tracking-wide">In lobby</p>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="font-display text-base text-spring-muted mb-1">You</p>
-            <p className="text-[0.72rem] text-spring-muted tracking-wide">Waiting to start...</p>
-          </div>
-        </div>
+        )}
       </div>
 
       {mySnapshotLink && (
@@ -73,7 +96,7 @@ export default function Lobby() {
       )}
 
       <div className="mt-6 bg-white rounded-2xl p-7 border border-spring-accent/10 flex flex-col sm:flex-row sm:items-center gap-6 animate-[fade-up_0.8s_ease_0.2s_both]">
-        <div className="w-[90px] h-[90px] rounded-xl bg-spring-bg flex items-center justify-center flex-shrink-0 p-2">
+        <div className="w-[90px] h-[90px] rounded-xl bg-spring-bg flex items-center justify-center shrink-0 p-2">
           <QRCode value={joinUrl} size={74} />
         </div>
         <div className="flex-1 min-w-0">

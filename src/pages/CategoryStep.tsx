@@ -2,15 +2,24 @@ import { useQueryState } from "nuqs";
 import { getCategory, getContinueLabel, SEASON_CLASSES } from "../constants/categories";
 import CategoryInput from "../components/CategoryInput";
 import { useIkigaiForm } from "../context/ikigaiFormContextValue";
-import { stepParser, type StepValue } from "../lib/nuqs";
+import { stepParser, sessionParser, nameParser, type StepValue } from "../lib/nuqs";
+import { nameToParticipantId } from "../models/participant.model";
+import { useUpdateStep, useUpdateAnswers } from "../hooks/useParticipant";
 
 export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) {
   const config = getCategory(step);
   const [, setStep] = useQueryState("step", stepParser);
+  const [session] = useQueryState("session", sessionParser);
+  const [name] = useQueryState("name", nameParser);
   const { c1, c2, c3, c4, setC1, setC2, setC3, setC4 } = useIkigaiForm();
-  const items = step === "1" ? c1 : step === "2" ? c2 : step === "3" ? c3 : c4;
-  const setItems =
-    step === "1" ? setC1 : step === "2" ? setC2 : step === "3" ? setC3 : setC4;
+  const updateStep = useUpdateStep();
+  const updateAnswers = useUpdateAnswers();
+
+  const categoryItems = { "1": c1, "2": c2, "3": c3, "4": c4 };
+  const categorySetters = { "1": setC1, "2": setC2, "3": setC3, "4": setC4 };
+  const items = categoryItems[step];
+  const setItems = categorySetters[step];
+  const cKey = `c${step}` as "c1" | "c2" | "c3" | "c4";
 
   if (!config) return null;
 
@@ -19,7 +28,15 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
   const nextStep: StepValue =
     nextStepNum <= 4 ? (String(nextStepNum) as "1" | "2" | "3" | "4") : "5";
 
-  const handleContinue = () => setStep(nextStep);
+  const handleContinue = () => {
+    if (session && name) {
+      const pid = nameToParticipantId(name);
+      // Fire-and-forget: sync answers and advance step in Firestore
+      updateAnswers.mutate({ sessionId: session, participantId: pid, answers: { [cKey]: items ?? [] } });
+      updateStep.mutate({ sessionId: session, participantId: pid, step: nextStep });
+    }
+    setStep(nextStep);
+  };
 
   return (
     <div className="w-full flex flex-col items-center justify-center px-4 py-8">

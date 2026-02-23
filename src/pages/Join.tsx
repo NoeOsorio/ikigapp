@@ -2,6 +2,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { nanoid } from "nanoid";
 import { workshopUrl } from "../lib/routes";
+import { useJoinSession } from "../hooks/useParticipant";
 
 export default function Join() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -9,6 +10,7 @@ export default function Join() {
   const sessionIdFromUrl = searchParams.get("session") ?? "";
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const joinSession = useJoinSession();
 
   const handleCreateSession = () => {
     const newId = nanoid(10);
@@ -17,9 +19,17 @@ export default function Join() {
 
   const handleJoin = (e: React.FormEvent) => {
     e.preventDefault();
-    const name = [firstName.trim(), lastName.trim()].filter(Boolean).join(" ");
+    const trimmedFirst = firstName.trim();
+    const trimmedLast = lastName.trim();
+    const name = [trimmedFirst, trimmedLast].filter(Boolean).join(" ");
     if (!name) return;
     const session = sessionIdFromUrl || nanoid(10);
+    // Fire-and-forget: persist session + participant to Firestore in the background
+    joinSession.mutate({
+      sessionId: session,
+      hostName: name,
+      participant: { firstName: trimmedFirst, lastName: trimmedLast },
+    });
     navigate(workshopUrl(session, name, "lobby"));
   };
 
