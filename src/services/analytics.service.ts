@@ -13,13 +13,15 @@ export interface AggregatedStats {
   actionFillRatePercent: number;
 }
 
-/** Returns the number of session documents. */
+export type ParticipantWithSession = Participant & { sessionId: string };
+
+/** Returns the number of session documents (includes archived). */
 export async function getSessionsCount(): Promise<number> {
   const snap = await getDocs(collection(db, "sessions"));
   return snap.size;
 }
 
-/** Returns all sessions (id, hostName, createdAt) for listing. */
+/** Returns all sessions including archivedAt. */
 export async function getSessions(): Promise<Session[]> {
   const snap = await getDocs(
     collection(db, "sessions").withConverter(sessionConverter)
@@ -39,12 +41,19 @@ export async function getParticipantsBySession(
   return snap.docs.map((d) => d.data());
 }
 
-/** Returns all participants across all sessions (collection group query). */
-export async function getAllParticipants(): Promise<Participant[]> {
+/**
+ * Returns all participants across all sessions via a collection group query.
+ * Each entry includes `sessionId` extracted from the Firestore document reference
+ * so callers can filter by session (e.g. to exclude archived sessions).
+ */
+export async function getAllParticipants(): Promise<ParticipantWithSession[]> {
   const snap = await getDocs(
     collectionGroup(db, "participants").withConverter(participantConverter)
   );
-  return snap.docs.map((d) => d.data());
+  return snap.docs.map((d) => ({
+    ...d.data(),
+    sessionId: d.ref.parent.parent?.id ?? "",
+  }));
 }
 
 /** Computes aggregated stats from session count and participant list. */
