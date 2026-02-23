@@ -11,6 +11,14 @@ import { useParticipants } from "../hooks/useParticipants";
 import { workshopUrl } from "../lib/routes";
 import SnapshotCard from "../components/SnapshotCard";
 
+// Matcha color palette used both for rendering and html2canvas cloning
+const MATCHA = {
+  dark: "#1e2a1a",
+  bg: "#e2ebe0",
+  accent: "#6b8c5e",
+  muted: "#4d6344",
+} as const;
+
 interface SnapshotProps {
   name: string;
   action: string;
@@ -25,11 +33,8 @@ export default function Snapshot({ name, action, aiIkigai, isLoadingAi }: Snapsh
   const { data: participants = [] } = useParticipants(session);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Get the actual logged-in user's identity from sessionStorage
   const userIdentity = getUserIdentity();
   const myParticipantId = userIdentity?.participantId ?? (rawName ? nameToParticipantId(rawName) : null);
-
-  // Find my participant data to get the actual name for navigation
   const myParticipant = participants.find((p) => p.id === myParticipantId);
   const myActualName = myParticipant ? participantDisplayName(myParticipant) : rawName;
 
@@ -57,50 +62,41 @@ export default function Snapshot({ name, action, aiIkigai, isLoadingAi }: Snapsh
       const canvas = await html2canvas(el, {
         useCORS: true,
         scale: 2,
-        backgroundColor: "#e2ebe0",
+        backgroundColor: "#ffffff",
         logging: false,
         allowTaint: false,
         imageTimeout: 0,
         onclone: (clonedDoc) => {
-          const clonedCard = clonedDoc.querySelector('[data-snapshot-card]') as HTMLElement;
-          if (!clonedCard) return;
+          const card = clonedDoc.querySelector<HTMLElement>("[data-snapshot-card]");
+          if (!card) return;
 
-          // Matcha color palette in hex (mirrors CSS custom properties for html2canvas)
-          const c = "#1e2a1a", bg = "#e2ebe0", ac = "#6b8c5e", mu = "#4d6344";
+          // Force Tailwind CSS-variable-based colors to plain hex/rgba so
+          // html2canvas (which doesn't resolve CSS custom properties) renders correctly.
           const bgMap: Record<string, string> = {
-            "bg-matcha-dark": c,
-            "bg-matcha-bg/60": "rgba(226, 235, 224, 0.6)",
-            "bg-matcha-bg": bg,
-            "bg-matcha-accent": ac,
+            "bg-matcha-dark": MATCHA.dark,
+            "bg-matcha-bg": MATCHA.bg,
+            "bg-matcha-accent": MATCHA.accent,
             "bg-white": "#ffffff",
           };
           const textMap: Record<string, string> = {
-            "text-matcha-dark": c,
-            "text-matcha-accent": ac,
-            "text-matcha-muted": mu,
-            "text-white/70": "rgba(255, 255, 255, 0.7)",
-            "text-white/8": "rgba(255, 255, 255, 0.08)",
+            "text-matcha-dark": MATCHA.dark,
+            "text-matcha-accent": MATCHA.accent,
+            "text-matcha-muted": MATCHA.muted,
             "text-white": "#ffffff",
           };
-          const borderMap: Record<string, string> = {
-            "border-matcha-accent/15": "rgba(107, 140, 94, 0.15)",
-            "border-matcha-accent/10": "rgba(107, 140, 94, 0.1)",
-            "border-matcha-accent": ac,
-          };
 
-          const replaceColors = (element: HTMLElement) => {
-            const elements = [element, ...Array.from(element.querySelectorAll<HTMLElement>("*"))];
-            for (const htmlEl of elements) {
-              for (const cls of htmlEl.classList) {
-                if (cls in bgMap) htmlEl.style.backgroundColor = bgMap[cls];
-                if (cls in textMap) htmlEl.style.color = textMap[cls];
-                if (cls in borderMap) htmlEl.style.borderColor = borderMap[cls];
-                if (cls === "ring-black/5") htmlEl.style.boxShadow = "0 0 0 1px rgba(0, 0, 0, 0.05)";
-              }
+          const all = [card, ...Array.from(card.querySelectorAll<HTMLElement>("*"))];
+          for (const el of all) {
+            for (const cls of Array.from(el.classList)) {
+              if (cls in bgMap) el.style.backgroundColor = bgMap[cls];
+              if (cls in textMap) el.style.color = textMap[cls];
+              if (cls === "ring-black/5") el.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.05)";
+              // Opacity-based classes that use CSS vars
+              if (cls === "text-white/50") el.style.color = "rgba(255,255,255,0.5)";
+              if (cls === "text-white/30") el.style.color = "rgba(255,255,255,0.3)";
+              if (cls === "bg-matcha-accent/20") el.style.backgroundColor = "rgba(107,140,94,0.2)";
             }
-          };
-
-          replaceColors(clonedCard);
+          }
         },
       });
 
@@ -122,38 +118,45 @@ export default function Snapshot({ name, action, aiIkigai, isLoadingAi }: Snapsh
   }, []);
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center gap-8 px-4 relative">
-      {/* Subtle radial gradient overlay */}
-      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,var(--color-matcha-accent)_0%,transparent_50%)] opacity-[0.08]" />
+    <div className="w-full min-h-screen flex flex-col items-center justify-center gap-10 px-4 py-16 relative">
+      {/* Background decoration */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(107,140,94,0.12),transparent)]" />
+        <div className="absolute bottom-0 left-0 right-0 h-64 bg-[radial-gradient(ellipse_60%_100%_at_50%_100%,rgba(30,42,26,0.06),transparent)]" />
+      </div>
 
-      <div className="animate-fade-up relative z-10">
+      {/* Card */}
+      <div className="animate-fade-up relative z-10 w-full flex justify-center">
         <SnapshotCard
           ref={cardRef}
           name={name}
           action={action}
           aiIkigai={aiIkigai}
           isLoadingAi={isLoadingAi}
+          sessionId={session}
         />
       </div>
-      <div className="flex flex-wrap gap-3 justify-center animate-[fade-up_0.8s_ease_0.2s_both] relative z-10">
+
+      {/* Action buttons */}
+      <div className="relative z-10 w-full max-w-[500px] flex flex-col sm:flex-row gap-3 animate-[fade-up_0.8s_ease_0.25s_both]">
         <button
           type="button"
           onClick={handleDownload}
-          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-matcha-dark text-white font-display text-sm flex items-center justify-center gap-1.5 hover:bg-matcha-accent transition-colors shadow-lg hover:shadow-matcha-accent/25 hover:-translate-y-0.5 active:translate-y-0"
+          className="flex-1 py-3.5 px-5 rounded-2xl bg-matcha-dark text-white font-display text-sm font-medium flex items-center justify-center gap-2 hover:bg-matcha-accent transition-all shadow-lg shadow-matcha-dark/20 hover:shadow-matcha-accent/25 hover:-translate-y-0.5 active:translate-y-0"
         >
-          ⬇ Descargar imagen
+          <span aria-hidden>↓</span> Descargar imagen
         </button>
         <button
           type="button"
           onClick={handleCopyLink}
-          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-white text-matcha-dark font-display text-sm border-[1.5px] border-matcha-accent/20 flex items-center justify-center gap-1.5 hover:border-matcha-accent hover:text-matcha-accent transition-colors hover:-translate-y-0.5 active:translate-y-0"
+          className="flex-1 py-3.5 px-5 rounded-2xl bg-white text-matcha-dark font-display text-sm font-medium border border-matcha-accent/25 flex items-center justify-center gap-2 hover:border-matcha-accent hover:text-matcha-accent transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
         >
-          🔗 Copiar enlace para compartir
+          <span aria-hidden>🔗</span> Copiar enlace
         </button>
         <button
           type="button"
           onClick={handleBackToLobby}
-          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-white text-matcha-dark font-display text-sm border-[1.5px] border-matcha-accent/20 flex items-center justify-center gap-1.5 hover:border-matcha-accent hover:text-matcha-accent transition-colors hover:-translate-y-0.5 active:translate-y-0"
+          className="flex-1 py-3.5 px-5 rounded-2xl bg-white text-matcha-muted font-display text-sm font-medium border border-matcha-accent/15 flex items-center justify-center gap-2 hover:border-matcha-accent/40 transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
         >
           Volver al lobby
         </button>
