@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser } from "../lib/nuqs";
-import { sessionUrl, workshopUrl } from "../lib/routes";
+import { sessionUrl, workshopUrl, analyticsSessionUrl } from "../lib/routes";
 import { getCategory } from "../constants/categories";
 import { useParticipants } from "../hooks/useParticipants";
 import { nameToParticipantId, participantDisplayName } from "../models/participant.model";
@@ -64,12 +64,22 @@ export default function Lobby() {
           </p>
           <h1 className="font-display text-2xl text-spring-dark">Participantes</h1>
         </div>
-        <Link
-          to={startUrl}
-          className="inline-flex items-center gap-2 py-2.5 px-5 rounded-xl border-[1.5px] border-spring-dark/20 bg-white text-spring-dark font-body text-sm hover:border-spring-accent hover:text-spring-accent transition-colors min-h-[44px]"
-        >
-          Empezar mi Ikigai →
-        </Link>
+        <div className="flex items-center gap-2">
+          {session && (
+            <Link
+              to={analyticsSessionUrl(session)}
+              className="inline-flex items-center gap-2 py-2.5 px-5 rounded-xl border-[1.5px] border-spring-dark/20 bg-white text-spring-dark font-body text-sm hover:border-spring-accent hover:text-spring-accent transition-colors min-h-[44px]"
+            >
+              Estadísticas de la sesión
+            </Link>
+          )}
+          <Link
+            to={startUrl}
+            className="inline-flex items-center gap-2 py-2.5 px-5 rounded-xl border-[1.5px] border-spring-dark/20 bg-white text-spring-dark font-body text-sm hover:border-spring-accent hover:text-spring-accent transition-colors min-h-[44px]"
+          >
+            Empezar mi Ikigai →
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">

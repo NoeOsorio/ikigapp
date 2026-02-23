@@ -66,12 +66,6 @@ export default function Nav({ theme }: NavProps) {
         </span>
         <span className="text-lg sm:text-xl font-medium">Ikigai</span>
       </Link>
-      <Link
-        to="/analytics"
-        className={`text-sm font-medium ${text} hover:opacity-80 transition-opacity`}
-      >
-        Estadísticas
-      </Link>
     </nav>
   );
 }
