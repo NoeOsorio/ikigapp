@@ -92,6 +92,18 @@ export async function updateParticipantAnswers(
   await updateDoc(participantRef(sessionId, participantId), patch);
 }
 
+export async function updateParticipantAiIkigai(
+  sessionId: string,
+  participantId: string,
+  aiIkigai: string
+): Promise<void> {
+  await updateDoc(participantRef(sessionId, participantId), {
+    aiIkigai,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    updatedAt: serverTimestamp() as any,
+  });
+}
+
 export async function saveShareLink(
   sessionId: string,
   participantId: string,

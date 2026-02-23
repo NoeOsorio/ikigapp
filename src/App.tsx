@@ -8,6 +8,7 @@ import { useIkigaiFormOptional } from "./context/ikigaiFormContextValue";
 import { getSnapshotPayload } from "./lib/snapshotStorage";
 import { hasPayloadContent } from "./lib/payload";
 import { useParticipant } from "./hooks/useParticipant";
+import { useAiIkigai } from "./hooks/useAiIkigai";
 import { nameToParticipantId, participantDisplayName } from "./models/participant.model";
 import type { SnapshotPayload } from "./lib/nuqs";
 import Layout from "./components/Layout";
@@ -79,11 +80,15 @@ function ResultViewInner() {
       ? payloadFromContext
       : payloadFromStorage;
 
-  // Slow path: share link opened on a different device/browser — load from Firestore
+  // Always fetch participant so we can read/trigger aiIkigai
   const participantId = name ? nameToParticipantId(name) : null;
-  const { data: participant, isLoading } = useParticipant(
-    localPayload ? null : session,
-    localPayload ? null : participantId,
+  const { data: participant, isLoading } = useParticipant(session, participantId);
+
+  // Trigger AI generation (no-op if aiIkigai already stored)
+  const { aiIkigai, isLoading: isLoadingAi } = useAiIkigai(
+    session,
+    participantId,
+    participant,
   );
 
   const firestorePayload: SnapshotPayload | null = participant
@@ -99,7 +104,7 @@ function ResultViewInner() {
 
   const payload = localPayload ?? firestorePayload;
 
-  // Wait for Firestore before deciding to redirect
+  // Wait for Firestore before deciding to redirect (only needed when no local data)
   if (!localPayload && isLoading) {
     return (
       <Layout theme="matcha">
@@ -117,9 +122,17 @@ function ResultViewInner() {
     );
   }
 
+  const displayName = payload.name;
+  const action = payload.action;
+
   return (
     <Layout theme="matcha">
-      <Snapshot payload={payload} />
+      <Snapshot
+        name={displayName}
+        action={action}
+        aiIkigai={aiIkigai}
+        isLoadingAi={isLoadingAi}
+      />
     </Layout>
   );
 }

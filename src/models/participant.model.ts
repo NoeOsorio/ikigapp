@@ -20,6 +20,8 @@ export interface Participant {
   shareLink: string | null;
   /** True once shareLink has been stored (flow is complete). */
   isFinished: boolean;
+  /** AI-generated Ikigai summary. Set once; skipped on subsequent views to save tokens. */
+  aiIkigai: string | null;
   joinedAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -63,6 +65,7 @@ export const participantConverter: FirestoreDataConverter<Participant> = {
       answers: p.answers,
       shareLink: p.shareLink,
       isFinished: p.isFinished,
+      aiIkigai: p.aiIkigai,
       joinedAt: p.joinedAt,
       updatedAt: p.updatedAt,
     };
@@ -84,6 +87,7 @@ export const participantConverter: FirestoreDataConverter<Participant> = {
       },
       shareLink: typeof d.shareLink === "string" ? d.shareLink : null,
       isFinished: d.isFinished === true,
+      aiIkigai: typeof d.aiIkigai === "string" ? d.aiIkigai : null,
       joinedAt: d.joinedAt as Timestamp,
       updatedAt: d.updatedAt as Timestamp,
     };
