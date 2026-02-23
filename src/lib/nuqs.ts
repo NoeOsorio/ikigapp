@@ -33,21 +33,28 @@ export function encodeSnapshotPayload(payload: SnapshotPayload): string {
   return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
 }
 
+function filterStringArray(arr: unknown): string[] {
+  return Array.isArray(arr) ? arr.filter((x): x is string => typeof x === "string") : [];
+}
+
+export function parseSnapshotPayloadObject(o: Record<string, unknown>): SnapshotPayload {
+  return {
+    name: typeof o.name === "string" ? o.name : "",
+    c1: filterStringArray(o.c1),
+    c2: filterStringArray(o.c2),
+    c3: filterStringArray(o.c3),
+    c4: filterStringArray(o.c4),
+    action: typeof o.action === "string" ? o.action : "",
+  };
+}
+
 export function decodeSnapshotPayload(encoded: string | null): SnapshotPayload | null {
   if (encoded == null || encoded === "") return null;
   try {
     const json = decodeURIComponent(escape(atob(encoded)));
     const data = JSON.parse(json) as unknown;
     if (data == null || typeof data !== "object") return null;
-    const o = data as Record<string, unknown>;
-    return {
-      name: typeof o.name === "string" ? o.name : "",
-      c1: Array.isArray(o.c1) ? o.c1.filter((x): x is string => typeof x === "string") : [],
-      c2: Array.isArray(o.c2) ? o.c2.filter((x): x is string => typeof x === "string") : [],
-      c3: Array.isArray(o.c3) ? o.c3.filter((x): x is string => typeof x === "string") : [],
-      c4: Array.isArray(o.c4) ? o.c4.filter((x): x is string => typeof x === "string") : [],
-      action: typeof o.action === "string" ? o.action : "",
-    };
+    return parseSnapshotPayloadObject(data as Record<string, unknown>);
   } catch {
     return null;
   }

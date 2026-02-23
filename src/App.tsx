@@ -2,7 +2,7 @@ import { useQueryState } from "nuqs";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { sessionParser, nameParser, stepParser } from "./lib/nuqs";
 import { sessionUrl, workshopUrl } from "./lib/routes";
-import { getCategory, type ThemeKind } from "./constants/categories";
+import { getCategory, isCategoryStep, type ThemeKind } from "./constants/categories";
 import { IkigaiFormProvider } from "./context/IkigaiFormContext";
 import { useIkigaiFormOptional } from "./context/ikigaiFormContextValue";
 import { getSnapshotPayload } from "./lib/snapshotStorage";
@@ -13,8 +13,6 @@ import Lobby from "./pages/Lobby";
 import CategoryStep from "./pages/CategoryStep";
 import ActionStep from "./pages/ActionStep";
 import Snapshot from "./pages/Snapshot";
-
-type StepForNav = "join" | "lobby" | "1" | "2" | "3" | "4" | "5" | "snapshot";
 
 function WorkshopView() {
   const [session] = useQueryState("session", sessionParser);
@@ -29,20 +27,15 @@ function WorkshopView() {
     return <Navigate to={sessionUrl(session ?? undefined)} replace />;
   }
 
-  const navStep: StepForNav =
-    effectiveStep === "lobby"
-      ? "lobby"
-      : (effectiveStep as StepForNav);
-
   const theme: ThemeKind =
     effectiveStep === "lobby"
       ? "lobby"
-      : effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4"
+      : isCategoryStep(effectiveStep)
         ? getCategory(effectiveStep)?.season ?? "spring"
         : "winter";
 
   let content: React.ReactNode;
-  if (effectiveStep === "1" || effectiveStep === "2" || effectiveStep === "3" || effectiveStep === "4") {
+  if (isCategoryStep(effectiveStep)) {
     content = <CategoryStep step={effectiveStep} />;
   } else if (effectiveStep === "5") {
     content = <ActionStep />;
@@ -52,7 +45,7 @@ function WorkshopView() {
 
   return (
     <IkigaiFormProvider>
-      <Layout step={navStep} theme={theme}>
+      <Layout theme={theme}>
         {content}
       </Layout>
     </IkigaiFormProvider>
@@ -88,7 +81,7 @@ function ResultViewInner() {
   }
 
   return (
-    <Layout step="snapshot" theme="matcha">
+    <Layout theme="matcha">
       <Snapshot payload={payload} />
     </Layout>
   );
@@ -101,7 +94,7 @@ export default function App() {
       <Route
         path="/session"
         element={
-          <Layout step="join" theme="dawn">
+          <Layout theme="dawn">
             <Join />
           </Layout>
         }

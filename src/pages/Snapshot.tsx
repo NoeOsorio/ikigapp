@@ -38,50 +38,103 @@ export default function Snapshot({ payload }: SnapshotProps) {
   const handleDownload = useCallback(async () => {
     const el = cardRef.current;
     if (!el) return;
+    
     try {
       const canvas = await html2canvas(el, {
         useCORS: true,
         scale: 2,
-        backgroundColor: null,
+        backgroundColor: "#e2ebe0",
         logging: false,
+        allowTaint: false,
+        imageTimeout: 0,
+        onclone: (clonedDoc) => {
+          const clonedCard = clonedDoc.querySelector('[data-snapshot-card]') as HTMLElement;
+          if (!clonedCard) return;
+          
+          // Matcha color palette in hex (mirrors CSS custom properties for html2canvas)
+          const c = "#1e2a1a", bg = "#e2ebe0", ac = "#6b8c5e", mu = "#4d6344";
+          const bgMap: Record<string, string> = {
+            "bg-matcha-dark": c,
+            "bg-matcha-bg/60": "rgba(226, 235, 224, 0.6)",
+            "bg-matcha-bg": bg,
+            "bg-matcha-accent": ac,
+            "bg-white": "#ffffff",
+          };
+          const textMap: Record<string, string> = {
+            "text-matcha-dark": c,
+            "text-matcha-accent": ac,
+            "text-matcha-muted": mu,
+            "text-white/70": "rgba(255, 255, 255, 0.7)",
+            "text-white/8": "rgba(255, 255, 255, 0.08)",
+            "text-white": "#ffffff",
+          };
+          const borderMap: Record<string, string> = {
+            "border-matcha-accent/15": "rgba(107, 140, 94, 0.15)",
+            "border-matcha-accent/10": "rgba(107, 140, 94, 0.1)",
+            "border-matcha-accent": ac,
+          };
+
+          // Force matcha color classes to inline hex so html2canvas resolves CSS vars
+          const replaceColors = (element: HTMLElement) => {
+            const elements = [element, ...Array.from(element.querySelectorAll<HTMLElement>("*"))];
+            for (const htmlEl of elements) {
+              for (const cls of htmlEl.classList) {
+                if (cls in bgMap) htmlEl.style.backgroundColor = bgMap[cls];
+                if (cls in textMap) htmlEl.style.color = textMap[cls];
+                if (cls in borderMap) htmlEl.style.borderColor = borderMap[cls];
+                if (cls === "ring-black/5") htmlEl.style.boxShadow = "0 0 0 1px rgba(0, 0, 0, 0.05)";
+              }
+            }
+          };
+          
+          replaceColors(clonedCard);
+        },
       });
+      
       const link = document.createElement("a");
-      link.download = `ikigai-${payload.name.replace(/\s+/g, "-") || "snapshot"}.png`;
+      const filename = payload.name 
+        ? `ikigai-${payload.name.replace(/\s+/g, "-")}.png`
+        : "ikigai-snapshot.png";
+      link.download = filename;
       link.href = canvas.toDataURL("image/png");
       link.click();
     } catch (e) {
-      console.error(e);
+      console.error("Download error:", e);
+      alert("Failed to download image. Please try again.");
     }
-  }, [payload]);
+  }, [payload.name]);
 
   const handleCopyLink = useCallback(() => {
     navigator.clipboard.writeText(window.location.href);
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center gap-8">
-      <div className="animate-fade-up">
+    <div className="w-full min-h-screen flex flex-col items-center justify-center gap-8 px-4 relative">
+      {/* Subtle radial gradient overlay */}
+      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,var(--color-matcha-accent)_0%,transparent_50%)] opacity-[0.08]" />
+      
+      <div className="animate-fade-up relative z-10">
         <SnapshotCard ref={cardRef} payload={payload} />
       </div>
-      <div className="flex flex-wrap gap-3 justify-center animate-[fade-up_0.8s_ease_0.2s_both]">
+      <div className="flex flex-wrap gap-3 justify-center animate-[fade-up_0.8s_ease_0.2s_both] relative z-10">
         <button
           type="button"
           onClick={handleDownload}
-          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-spring-dark text-white font-display text-sm flex items-center justify-center gap-1.5 hover:bg-spring-accent transition-colors"
+          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-matcha-dark text-white font-display text-sm flex items-center justify-center gap-1.5 hover:bg-matcha-accent transition-colors shadow-lg hover:shadow-matcha-accent/25 hover:-translate-y-0.5 active:translate-y-0"
         >
           ⬇ Download Image
         </button>
         <button
           type="button"
           onClick={handleCopyLink}
-          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-white text-spring-dark font-display text-sm border-[1.5px] border-spring-dark/15 flex items-center justify-center gap-1.5 hover:border-spring-accent hover:text-spring-accent transition-colors"
+          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-white text-matcha-dark font-display text-sm border-[1.5px] border-matcha-accent/20 flex items-center justify-center gap-1.5 hover:border-matcha-accent hover:text-matcha-accent transition-colors hover:-translate-y-0.5 active:translate-y-0"
         >
           🔗 Copy Share Link
         </button>
         <button
           type="button"
           onClick={handleBackToLobby}
-          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-white text-spring-dark font-display text-sm border-[1.5px] border-spring-dark/15 flex items-center justify-center gap-1.5 hover:border-spring-accent hover:text-spring-accent transition-colors"
+          className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-white text-matcha-dark font-display text-sm border-[1.5px] border-matcha-accent/20 flex items-center justify-center gap-1.5 hover:border-matcha-accent hover:text-matcha-accent transition-colors hover:-translate-y-0.5 active:translate-y-0"
         >
           Back to lobby
         </button>

@@ -39,7 +39,7 @@ export default function Lobby() {
     <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-10 pt-4 pb-10">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-9 animate-fade-up">
         <div>
-          <p className="text-xs text-spring-muted tracking-[0.1em] uppercase mb-1 font-medium">
+          <p className="text-xs text-spring-muted tracking-widest uppercase mb-1 font-medium">
             {sessionLabel}
           </p>
           <h1 className="font-display text-2xl text-spring-dark">Participants</h1>
@@ -74,7 +74,6 @@ export default function Lobby() {
             );
           })
         ) : (
-          // Fallback skeleton while Firestore loads
           <div className="bg-spring-bg/30 rounded-2xl p-5 sm:p-6 border border-spring-accent/10 border-dashed shadow-sm flex items-center gap-4 animate-fade-up">
             <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display text-lg text-spring-accent bg-spring-accent/15">
               {name?.charAt(0)?.toUpperCase() ?? "?"}
@@ -88,7 +87,7 @@ export default function Lobby() {
       </div>
 
       {mySnapshotLink && (
-        <p className="mt-4 text-sm text-spring-muted">
+        <p className="mb-6 text-sm text-spring-muted">
           <a href={mySnapshotLink} className="text-spring-accent underline hover:no-underline">
             Your Ikigai snapshot
           </a>
@@ -106,7 +105,7 @@ export default function Lobby() {
             <button
               type="button"
               onClick={copyLink}
-              className="py-2 px-3.5 rounded-lg border-[1.5px] border-spring-dark/20 bg-white text-spring-dark font-body text-[0.75rem] hover:border-spring-accent hover:text-spring-accent transition-colors"
+              className="py-3 px-6 rounded-xl bg-spring-dark text-white font-body text-sm hover:bg-spring-accent transition-colors shadow-lg hover:-translate-y-0.5 active:translate-y-0"
             >
               Copy Link
             </button>

@@ -178,6 +178,10 @@ export function isSeasonTheme(theme: ThemeKind): theme is Season {
   return theme === "spring" || theme === "summer" || theme === "autumn" || theme === "winter";
 }
 
+export function isCategoryStep(step: string): step is "1" | "2" | "3" | "4" {
+  return step === "1" || step === "2" || step === "3" || step === "4";
+}
+
 const ACTION_STEP_LABEL = "My Action";
 
 /** Next step short name for continue button: step 1→Good at, 2→Problem, 3→Pay, 4→My Action */

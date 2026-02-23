@@ -8,23 +8,28 @@ export default function Join() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const sessionIdFromUrl = searchParams.get("session") ?? "";
+  const [sessionIdInput, setSessionIdInput] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const joinSession = useJoinSession();
 
   const handleCreateSession = () => {
-    const newId = nanoid(10);
-    setSearchParams({ session: newId });
+    setSearchParams({ session: nanoid(10) });
   };
 
-  const handleJoin = (e: React.FormEvent) => {
+  const handleJoinWithId = (e: React.FormEvent) => {
+    e.preventDefault();
+    const id = sessionIdInput.trim();
+    if (id) setSearchParams({ session: id });
+  };
+
+  const handleEnterSession = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedFirst = firstName.trim();
     const trimmedLast = lastName.trim();
     const name = [trimmedFirst, trimmedLast].filter(Boolean).join(" ");
     if (!name) return;
     const session = sessionIdFromUrl || nanoid(10);
-    // Fire-and-forget: persist session + participant to Firestore in the background
     joinSession.mutate({
       sessionId: session,
       hostName: name,
@@ -34,8 +39,9 @@ export default function Join() {
   };
 
   const hasSession = sessionIdFromUrl !== "";
-  const canJoin = Boolean(firstName.trim() && lastName.trim());
+  const canEnterSession = hasSession && Boolean(firstName.trim() && lastName.trim());
   const sessionLabel = hasSession ? `Session #${sessionIdFromUrl.slice(0, 8).toUpperCase()}` : null;
+  const canJoinWithId = sessionIdInput.trim() !== "";
 
   return (
     <div className="w-full max-w-md flex flex-col items-center justify-center gap-0 px-4">
@@ -63,70 +69,102 @@ export default function Join() {
         {/* Top accent line */}
         <div className="absolute top-0 left-8 right-8 h-1 rounded-b-full bg-linear-to-r from-transparent via-dawn-accent/80 to-transparent" />
 
-        {hasSession && sessionLabel && (
-          <div className="inline-flex items-center gap-2 bg-dawn-bg/80 border border-dawn-accent/25 rounded-full py-2 px-4 mb-6">
-            <span className="w-2 h-2 rounded-full bg-dawn-accent animate-pulse-dot" />
-            <span className="text-xs text-dawn-accent tracking-[0.08em] font-medium">
-              {sessionLabel}
-            </span>
-          </div>
-        )}
-        {!hasSession && (
-          <button
-            type="button"
-            onClick={handleCreateSession}
-            className="w-full py-3.5 px-4 mb-6 rounded-xl border-2 border-dawn-accent/35 bg-dawn-bg/60 text-dawn-dark font-medium hover:bg-dawn-accent/15 hover:border-dawn-accent/50 transition-all duration-200"
-          >
-            Create new session
-          </button>
-        )}
-
-        <form onSubmit={handleJoin} className="flex flex-col gap-6">
-          <div className="flex flex-col gap-4">
-            <div>
-              <label
-                htmlFor="firstName"
-                className="block text-[0.7rem] tracking-[0.12em] uppercase text-dawn-muted mb-1.5 font-medium"
-              >
-                First Name
-              </label>
-              <input
-                id="firstName"
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="w-full py-3.5 px-4 rounded-xl border-2 border-dawn-accent/20 bg-dawn-bg/40 font-body text-base text-dawn-dark placeholder:text-dawn-muted/70 outline-none transition-all duration-200 focus:border-dawn-accent focus:ring-4 focus:ring-dawn-accent/15"
-                placeholder="Hana"
-                autoComplete="given-name"
-              />
+        {!hasSession ? (
+          <div className="flex flex-col gap-5 mb-2">
+            <button
+              type="button"
+              onClick={handleCreateSession}
+              className="w-full py-3.5 px-4 rounded-xl border-2 border-dawn-accent/35 bg-dawn-bg/60 text-dawn-dark font-medium hover:bg-dawn-accent/15 hover:border-dawn-accent/50 transition-all duration-200"
+            >
+              Create new session
+            </button>
+            <div className="relative flex items-center gap-2 before:content-[''] before:flex-1 before:h-px before:bg-dawn-accent/20 after:content-[''] after:flex-1 after:h-px after:bg-dawn-accent/20">
+              <span className="text-[0.65rem] tracking-widest uppercase text-dawn-muted font-medium">or</span>
             </div>
-            <div>
+            <form onSubmit={handleJoinWithId} className="flex flex-col gap-3">
               <label
-                htmlFor="lastName"
-                className="block text-[0.7rem] tracking-[0.12em] uppercase text-dawn-muted mb-1.5 font-medium"
+                htmlFor="sessionId"
+                className="block text-[0.7rem] tracking-[0.12em] uppercase text-dawn-muted mb-1 font-medium"
               >
-                Last Name
+                Session ID
               </label>
-              <input
-                id="lastName"
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="w-full py-3.5 px-4 rounded-xl border-2 border-dawn-accent/20 bg-dawn-bg/40 font-body text-base text-dawn-dark placeholder:text-dawn-muted/70 outline-none transition-all duration-200 focus:border-dawn-accent focus:ring-4 focus:ring-dawn-accent/15"
-                placeholder="Tanaka"
-                autoComplete="family-name"
-              />
-            </div>
+              <div className="flex gap-2">
+                <input
+                  id="sessionId"
+                  type="text"
+                  value={sessionIdInput}
+                  onChange={(e) => setSessionIdInput(e.target.value)}
+                  placeholder="Paste or type session ID"
+                  className="flex-1 py-3.5 px-4 rounded-xl border-2 border-dawn-accent/20 bg-dawn-bg/40 font-body text-base text-dawn-dark placeholder:text-dawn-muted/70 outline-none transition-all duration-200 focus:border-dawn-accent focus:ring-4 focus:ring-dawn-accent/15"
+                  autoComplete="off"
+                />
+                <button
+                  type="submit"
+                  disabled={!canJoinWithId}
+                  className="py-3.5 px-5 rounded-xl border-2 border-dawn-accent/35 bg-dawn-bg/60 text-dawn-dark font-medium hover:bg-dawn-accent/15 hover:border-dawn-accent/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                >
+                  Join session
+                </button>
+              </div>
+            </form>
           </div>
-
-          <button
-            type="submit"
-            disabled={!canJoin}
-            className="w-full py-4 rounded-xl bg-dawn-dark text-white font-display text-base tracking-wide disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:bg-dawn-accent hover:-translate-y-0.5 active:translate-y-0 min-h-[48px] shadow-lg shadow-dawn-dark/20 hover:shadow-dawn-accent/25"
-          >
-            Enter Session →
-          </button>
-        </form>
+        ) : (
+          <>
+            {sessionLabel && (
+              <div className="inline-flex items-center gap-2 bg-dawn-bg/80 border border-dawn-accent/25 rounded-full py-2 px-4 mb-6">
+                <span className="w-2 h-2 rounded-full bg-dawn-accent animate-pulse-dot" />
+                <span className="text-xs text-dawn-accent tracking-[0.08em] font-medium">
+                  {sessionLabel}
+                </span>
+              </div>
+            )}
+            <form onSubmit={handleEnterSession} className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4">
+                <div>
+                  <label
+                    htmlFor="firstName"
+                    className="block text-[0.7rem] tracking-[0.12em] uppercase text-dawn-muted mb-1.5 font-medium"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full py-3.5 px-4 rounded-xl border-2 border-dawn-accent/20 bg-dawn-bg/40 font-body text-base text-dawn-dark placeholder:text-dawn-muted/70 outline-none transition-all duration-200 focus:border-dawn-accent focus:ring-4 focus:ring-dawn-accent/15"
+                    placeholder="Hana"
+                    autoComplete="given-name"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="lastName"
+                    className="block text-[0.7rem] tracking-[0.12em] uppercase text-dawn-muted mb-1.5 font-medium"
+                  >
+                    Last Name
+                  </label>
+                  <input
+                    id="lastName"
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="w-full py-3.5 px-4 rounded-xl border-2 border-dawn-accent/20 bg-dawn-bg/40 font-body text-base text-dawn-dark placeholder:text-dawn-muted/70 outline-none transition-all duration-200 focus:border-dawn-accent focus:ring-4 focus:ring-dawn-accent/15"
+                    placeholder="Tanaka"
+                    autoComplete="family-name"
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={!canEnterSession}
+                className="w-full py-4 rounded-xl bg-dawn-dark text-white font-display text-base tracking-wide disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:bg-dawn-accent hover:-translate-y-0.5 active:translate-y-0 min-h-[48px] shadow-lg shadow-dawn-dark/20 hover:shadow-dawn-accent/25"
+              >
+                Enter Session →
+              </button>
+            </form>
+          </>
+        )}
       </div>
 
       <p className="mt-8 text-center text-xs text-dawn-muted/90 max-w-[280px] animate-[fade-up_0.6s_ease_0.3s_both]">

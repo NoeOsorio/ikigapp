@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { SEASON_CLASSES, type Season } from "../constants/categories";
 
 interface CategoryInputProps {
@@ -19,6 +19,7 @@ export default function CategoryInput({
   season = "spring",
 }: CategoryInputProps) {
   const [inputValue, setInputValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
   const theme = SEASON_CLASSES[season];
 
   const addItem = useCallback(() => {
@@ -26,12 +27,14 @@ export default function CategoryInput({
     if (trimmed && !items.includes(trimmed) && items.length < 10) {
       onItemsChange([...items, trimmed]);
       setInputValue("");
+      inputRef.current?.focus();
     }
   }, [inputValue, items, onItemsChange]);
 
   const removeItem = useCallback(
     (index: number) => {
       onItemsChange(items.filter((_, i) => i !== index));
+      inputRef.current?.focus();
     },
     [items, onItemsChange]
   );
@@ -80,6 +83,7 @@ export default function CategoryInput({
 
       <div className="flex gap-2.5 mb-5">
         <input
+          ref={inputRef}
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
