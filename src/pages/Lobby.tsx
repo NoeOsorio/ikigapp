@@ -33,6 +33,15 @@ export default function Lobby() {
     if (joinUrl) navigator.clipboard.writeText(joinUrl);
   };
 
+  // Sort participants: "You" first, then others
+  const sortedParticipants = [...participants].sort((a, b) => {
+    const aIsMe = a.id === myParticipantId;
+    const bIsMe = b.id === myParticipantId;
+    if (aIsMe) return -1;
+    if (bIsMe) return 1;
+    return 0;
+  });
+
   return (
     <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-10 pt-4 pb-10">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-9 animate-fade-up">
@@ -52,23 +61,40 @@ export default function Lobby() {
 
       <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
         {participants.length > 0 ? (
-          participants.map((p) => {
+          sortedParticipants.map((p) => {
             const isMe = p.id === myParticipantId;
             const hasCompleted = p.isFinished && p.shareLink;
             return (
               <div
                 key={p.id}
-                className="bg-spring-bg/30 rounded-2xl p-5 sm:p-6 border border-spring-accent/10 border-dashed shadow-sm flex flex-col gap-3 animate-fade-up"
+                className={`rounded-2xl p-5 sm:p-6 border shadow-sm flex flex-col gap-3 animate-fade-up ${
+                  isMe
+                    ? "bg-white border-spring-accent/30 border-solid shadow-md ring-1 ring-spring-accent/20"
+                    : "bg-spring-bg/30 border-spring-accent/10 border-dashed"
+                }`}
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display text-lg text-spring-accent bg-spring-accent/15">
+                  <div
+                    className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display text-lg ${
+                      isMe
+                        ? "text-white bg-spring-accent"
+                        : "text-spring-accent bg-spring-accent/15"
+                    }`}
+                  >
                     {p.firstName.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-display text-base text-spring-muted mb-1">
-                      {isMe ? "You" : participantDisplayName(p)}
+                    <p className="font-display text-base text-spring-dark mb-0.5">
+                      {participantDisplayName(p)}
                     </p>
-                    <p className="text-[0.72rem] text-spring-muted tracking-wide">{stepLabel(p.step)}</p>
+                    <p className={`text-[0.7rem] tracking-wide ${isMe ? "text-spring-accent font-medium" : "text-spring-muted"}`}>
+                      {isMe ? "You" : stepLabel(p.step)}
+                    </p>
+                    {isMe && (
+                      <p className="text-[0.7rem] text-spring-muted tracking-wide mt-0.5">
+                        {stepLabel(p.step)}
+                      </p>
+                    )}
                   </div>
                 </div>
                 {hasCompleted && p.shareLink && (
@@ -76,7 +102,11 @@ export default function Lobby() {
                     href={p.shareLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2 px-4 rounded-lg border border-spring-accent/30 bg-white/60 text-spring-accent text-xs font-medium hover:bg-spring-accent/10 hover:border-spring-accent/50 transition-all duration-200 text-center"
+                    className={`w-full py-2 px-4 rounded-lg border text-xs font-medium transition-all duration-200 text-center ${
+                      isMe
+                        ? "border-spring-accent/40 bg-spring-accent/5 text-spring-accent hover:bg-spring-accent/15 hover:border-spring-accent/60"
+                        : "border-spring-accent/30 bg-white/60 text-spring-accent hover:bg-spring-accent/10 hover:border-spring-accent/50"
+                    }`}
                   >
                     View {isMe ? "My" : "Their"} Snapshot →
                   </a>
@@ -85,13 +115,14 @@ export default function Lobby() {
             );
           })
         ) : (
-          <div className="bg-spring-bg/30 rounded-2xl p-5 sm:p-6 border border-spring-accent/10 border-dashed shadow-sm flex items-center gap-4 animate-fade-up">
-            <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display text-lg text-spring-accent bg-spring-accent/15">
+          <div className="bg-white rounded-2xl p-5 sm:p-6 border border-spring-accent/30 shadow-md ring-1 ring-spring-accent/20 flex items-center gap-4 animate-fade-up">
+            <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display text-lg text-white bg-spring-accent">
               {name?.charAt(0)?.toUpperCase() ?? "?"}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-display text-base text-spring-muted mb-1">You</p>
-              <p className="text-[0.72rem] text-spring-muted tracking-wide">In lobby</p>
+              <p className="font-display text-base text-spring-dark mb-0.5">{name || "You"}</p>
+              <p className="text-[0.7rem] text-spring-accent font-medium tracking-wide">You</p>
+              <p className="text-[0.7rem] text-spring-muted tracking-wide mt-0.5">In lobby</p>
             </div>
           </div>
         )}
