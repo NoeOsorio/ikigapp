@@ -1,27 +1,30 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   getSessionsCount,
   getAllParticipants,
+  getSessions,
   getAggregatedStats,
   type AggregatedStats,
 } from "../services/analytics.service";
-import { CATEGORIES } from "../constants/categories";
-
-const QUADRANT_KEYS = ["c1", "c2", "c3", "c4"] as const;
+import { analyticsSessionUrl } from "../lib/routes";
+import AnalyticsInsights from "../components/AnalyticsInsights";
 
 export default function Analytics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<AggregatedStats | null>(null);
+  const [sessions, setSessions] = useState<Array<{ id: string; hostName: string }>>([]);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    Promise.all([getSessionsCount(), getAllParticipants()])
-      .then(([sessionsCount, participants]) => {
+    Promise.all([getSessionsCount(), getAllParticipants(), getSessions()])
+      .then(([sessionsCount, participants, sessionsList]) => {
         if (cancelled) return;
         setStats(getAggregatedStats(sessionsCount, participants));
+        setSessions(sessionsList);
       })
       .catch((err) => {
         if (!cancelled) {
@@ -56,21 +59,6 @@ export default function Analytics() {
     return null;
   }
 
-  const maxAvg =
-    Math.max(
-      stats.avgPerQuadrant.c1,
-      stats.avgPerQuadrant.c2,
-      stats.avgPerQuadrant.c3,
-      stats.avgPerQuadrant.c4
-    ) || 1;
-  const quadrantBars = QUADRANT_KEYS.map((key, i) => ({
-    key,
-    label: CATEGORIES[i]?.shortName ?? key,
-    emoji: CATEGORIES[i]?.emoji ?? "",
-    avg: stats.avgPerQuadrant[key],
-    widthPercent: (stats.avgPerQuadrant[key] / maxAvg) * 100,
-  }));
-
   return (
     <div className="w-full max-w-2xl mx-auto space-y-8">
       <header className="text-center">
@@ -80,92 +68,35 @@ export default function Analytics() {
         <p className="text-matcha-muted text-sm">Insights from completed Ikigai sessions</p>
       </header>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {/* 1. Overview */}
-        <section className="rounded-xl border border-matcha-accent/15 bg-matcha-bg/40 px-6 py-5">
-          <p className="text-[0.68rem] tracking-[0.14em] uppercase text-matcha-accent mb-4 font-semibold">
-            Overview
-          </p>
-          <div className="flex flex-wrap gap-6">
-            <div>
-              <p className="text-2xl font-semibold text-matcha-dark tabular-nums">
-                {stats.totalSessions}
-              </p>
-              <p className="text-matcha-muted text-xs mt-0.5">Sessions</p>
-            </div>
-            <div>
-              <p className="text-2xl font-semibold text-matcha-dark tabular-nums">
-                {stats.totalParticipants}
-              </p>
-              <p className="text-matcha-muted text-xs mt-0.5">Participants</p>
-            </div>
-          </div>
-        </section>
+      <AnalyticsInsights stats={stats} />
 
-        {/* 2. Completion rate */}
-        <section className="rounded-xl border border-matcha-accent/15 bg-matcha-bg/40 px-6 py-5">
-          <p className="text-[0.68rem] tracking-[0.14em] uppercase text-matcha-accent mb-2 font-semibold">
-            Completion rate
-          </p>
-          <p className="text-matcha-muted text-xs mb-3">
-            Reached snapshot: {stats.finishedCount} of {stats.totalParticipants}
-          </p>
-          <div className="h-2.5 rounded-full bg-matcha-accent/15 overflow-hidden">
-            <div
-              className="h-full rounded-full bg-matcha-accent transition-[width] duration-500"
-              style={{ width: `${stats.completionRatePercent}%` }}
-            />
-          </div>
-          <p className="text-lg font-semibold text-matcha-dark mt-2 tabular-nums">
-            {stats.completionRatePercent.toFixed(1)}%
-          </p>
-        </section>
-
-        {/* 3. Average items per quadrant */}
-        <section className="sm:col-span-2 rounded-xl border border-matcha-accent/15 bg-matcha-bg/40 px-6 py-5">
-          <p className="text-[0.68rem] tracking-[0.14em] uppercase text-matcha-accent mb-4 font-semibold">
-            Average items per quadrant
-          </p>
-          <div className="space-y-4">
-            {quadrantBars.map(({ key, label, emoji, avg, widthPercent }) => (
-              <div key={key} className="flex items-center gap-4">
-                <span className="w-24 text-sm text-matcha-dark shrink-0 flex items-center gap-1.5">
-                  <span>{emoji}</span>
-                  {label}
-                </span>
-                <div className="flex-1 min-w-0 h-6 rounded-md bg-matcha-accent/15 overflow-hidden flex items-center">
-                  <div
-                    className="h-full rounded-md bg-matcha-accent/60 transition-[width] duration-500"
-                    style={{ width: `${widthPercent}%` }}
-                  />
-                </div>
-                <span className="w-10 text-right text-sm font-medium text-matcha-dark tabular-nums shrink-0">
-                  {avg.toFixed(1)}
-                </span>
-              </div>
+      <section className="rounded-xl border border-matcha-accent/15 bg-matcha-bg/40 px-6 py-5">
+        <p className="text-[0.68rem] tracking-[0.14em] uppercase text-matcha-accent mb-4 font-semibold">
+          Analizar por sesión
+        </p>
+        <p className="text-matcha-muted text-sm mb-4">
+          Ver métricas de una sesión concreta.
+        </p>
+        {sessions.length === 0 ? (
+          <p className="text-matcha-muted text-sm">No hay sesiones.</p>
+        ) : (
+          <ul className="space-y-2">
+            {sessions.map((s) => (
+              <li key={s.id}>
+                <Link
+                  to={analyticsSessionUrl(s.id)}
+                  className="block rounded-lg border border-matcha-accent/15 bg-matcha-bg/60 px-4 py-3 text-matcha-dark hover:border-matcha-accent/30 hover:bg-matcha-bg/80 transition-colors text-sm font-medium"
+                >
+                  <span className="font-mono text-matcha-accent">{s.id}</span>
+                  {s.hostName ? (
+                    <span className="text-matcha-muted ml-2">· {s.hostName}</span>
+                  ) : null}
+                </Link>
+              </li>
             ))}
-          </div>
-        </section>
-
-        {/* 4. Action commitment */}
-        <section className="sm:col-span-2 rounded-xl border border-matcha-accent/15 bg-matcha-bg/40 px-6 py-5">
-          <p className="text-[0.68rem] tracking-[0.14em] uppercase text-matcha-accent mb-2 font-semibold">
-            Action commitment
-          </p>
-          <p className="text-matcha-muted text-xs mb-3">
-            Wrote an action item: {stats.actionFillCount} of {stats.totalParticipants}
-          </p>
-          <div className="h-2.5 rounded-full bg-matcha-accent/15 overflow-hidden max-w-xs">
-            <div
-              className="h-full rounded-full bg-matcha-accent transition-[width] duration-500"
-              style={{ width: `${stats.actionFillRatePercent}%` }}
-            />
-          </div>
-          <p className="text-lg font-semibold text-matcha-dark mt-2 tabular-nums">
-            {stats.actionFillRatePercent.toFixed(1)}%
-          </p>
-        </section>
-      </div>
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

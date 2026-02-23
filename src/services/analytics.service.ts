@@ -1,6 +1,7 @@
 import { collection, collectionGroup, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { participantConverter, type Participant } from "../models/participant.model";
+import { sessionConverter, type Session } from "../models/session.model";
 
 export interface AggregatedStats {
   totalSessions: number;
@@ -16,6 +17,26 @@ export interface AggregatedStats {
 export async function getSessionsCount(): Promise<number> {
   const snap = await getDocs(collection(db, "sessions"));
   return snap.size;
+}
+
+/** Returns all sessions (id, hostName, createdAt) for listing. */
+export async function getSessions(): Promise<Session[]> {
+  const snap = await getDocs(
+    collection(db, "sessions").withConverter(sessionConverter)
+  );
+  return snap.docs.map((d) => d.data());
+}
+
+/** Returns all participants for a given session. */
+export async function getParticipantsBySession(
+  sessionId: string
+): Promise<Participant[]> {
+  const snap = await getDocs(
+    collection(db, "sessions", sessionId, "participants").withConverter(
+      participantConverter
+    )
+  );
+  return snap.docs.map((d) => d.data());
 }
 
 /** Returns all participants across all sessions (collection group query). */

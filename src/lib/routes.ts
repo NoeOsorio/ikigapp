@@ -27,7 +27,12 @@ export function resultUrl(session: string, name: string): string {
   return `/result?${params.toString()}`;
 }
 
-/** Analytics dashboard. */
+/** Analytics dashboard (all sessions). */
 export function analyticsUrl(): string {
   return "/analytics";
+}
+
+/** Analytics for a single session. */
+export function analyticsSessionUrl(sessionId: string): string {
+  return `/analytics/${encodeURIComponent(sessionId)}`;
 }
