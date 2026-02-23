@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { ThemeKind } from "../constants/categories";
 
 const NAV_THEME: Record<
@@ -54,8 +55,9 @@ export default function Nav({ theme }: NavProps) {
       className={`fixed top-0 left-0 right-0 z-100 ${bar} px-6 py-4 sm:px-10`}
       aria-label="Main"
     >
-      <div
-        className={`font-display flex items-center gap-3 ${text} tracking-wide`}
+      <Link
+        to="/"
+        className={`font-display flex items-center gap-3 ${text} tracking-wide hover:opacity-80 transition-opacity`}
       >
         <span
           className={`inline-flex h-9 w-9 items-center justify-center rounded-lg text-xl ${accent} bg-black/5 ring-1 ring-black/6`}
@@ -64,7 +66,7 @@ export default function Nav({ theme }: NavProps) {
           生
         </span>
         <span className="text-lg sm:text-xl font-medium">Ikigai Sessions</span>
-      </div>
+      </Link>
     </nav>
   );
 }
