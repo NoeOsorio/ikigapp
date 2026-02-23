@@ -7,16 +7,15 @@ function sessionRef(sessionId: string) {
 }
 
 /**
- * Create (or silently overwrite) a session document.
- * Using merge:true makes this idempotent — safe to call multiple times.
+ * Create a session document only if it does not already exist.
+ * This prevents subsequent joiners from overwriting the original hostName.
  */
 export async function createSession(sessionId: string, hostName: string): Promise<void> {
-  await setDoc(
-    sessionRef(sessionId),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    { createdAt: serverTimestamp() as any, hostName, id: sessionId },
-    { merge: true }
-  );
+  const ref = sessionRef(sessionId);
+  const snap = await getDoc(ref);
+  if (snap.exists()) return;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await setDoc(ref, { createdAt: serverTimestamp() as any, hostName, id: sessionId });
 }
 
 export async function getSession(sessionId: string): Promise<Session | null> {
