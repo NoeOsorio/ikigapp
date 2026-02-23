@@ -21,8 +21,6 @@ export default function Lobby() {
   const [name] = useQueryState("name", nameParser);
   const { data: participants = [] } = useParticipants(session);
   const myParticipantId = name ? nameToParticipantId(name) : null;
-  const myParticipant = participants.find((p) => p.id === myParticipantId) ?? null;
-  const mySnapshotLink = myParticipant?.shareLink ?? null;
 
   const joinUrl =
     typeof window !== "undefined" && session
@@ -56,20 +54,33 @@ export default function Lobby() {
         {participants.length > 0 ? (
           participants.map((p) => {
             const isMe = p.id === myParticipantId;
+            const hasCompleted = p.isFinished && p.shareLink;
             return (
               <div
                 key={p.id}
-                className="bg-spring-bg/30 rounded-2xl p-5 sm:p-6 border border-spring-accent/10 border-dashed shadow-sm flex items-center gap-4 animate-fade-up"
+                className="bg-spring-bg/30 rounded-2xl p-5 sm:p-6 border border-spring-accent/10 border-dashed shadow-sm flex flex-col gap-3 animate-fade-up"
               >
-                <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display text-lg text-spring-accent bg-spring-accent/15">
-                  {p.firstName.charAt(0).toUpperCase()}
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display text-lg text-spring-accent bg-spring-accent/15">
+                    {p.firstName.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-display text-base text-spring-muted mb-1">
+                      {isMe ? "You" : participantDisplayName(p)}
+                    </p>
+                    <p className="text-[0.72rem] text-spring-muted tracking-wide">{stepLabel(p.step)}</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-display text-base text-spring-muted mb-1">
-                    {isMe ? "You" : participantDisplayName(p)}
-                  </p>
-                  <p className="text-[0.72rem] text-spring-muted tracking-wide">{stepLabel(p.step)}</p>
-                </div>
+                {hasCompleted && p.shareLink && (
+                  <a
+                    href={p.shareLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2 px-4 rounded-lg border border-spring-accent/30 bg-white/60 text-spring-accent text-xs font-medium hover:bg-spring-accent/10 hover:border-spring-accent/50 transition-all duration-200 text-center"
+                  >
+                    View {isMe ? "My" : "Their"} Snapshot →
+                  </a>
+                )}
               </div>
             );
           })
@@ -85,14 +96,6 @@ export default function Lobby() {
           </div>
         )}
       </div>
-
-      {mySnapshotLink && (
-        <p className="mb-6 text-sm text-spring-muted">
-          <a href={mySnapshotLink} className="text-spring-accent underline hover:no-underline">
-            Your Ikigai snapshot
-          </a>
-        </p>
-      )}
 
       <div className="mt-6 bg-white rounded-2xl p-7 border border-spring-accent/10 flex flex-col sm:flex-row sm:items-center gap-6 animate-[fade-up_0.8s_ease_0.2s_both]">
         <div className="w-[90px] h-[90px] rounded-xl bg-spring-bg flex items-center justify-center shrink-0 p-2">
