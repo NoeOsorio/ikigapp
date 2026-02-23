@@ -51,7 +51,7 @@ export default function Nav({ theme }: NavProps) {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-100 ${bar} px-6 py-4 sm:px-10`}
+      className={`fixed top-0 left-0 right-0 z-100 ${bar} px-6 py-4 sm:px-10 flex items-center justify-between`}
       aria-label="Main"
     >
       <Link
@@ -65,6 +65,12 @@ export default function Nav({ theme }: NavProps) {
           生
         </span>
         <span className="text-lg sm:text-xl font-medium">Ikigai Sessions</span>
+      </Link>
+      <Link
+        to="/analytics"
+        className={`text-sm font-medium ${text} hover:opacity-80 transition-opacity`}
+      >
+        Analytics
       </Link>
     </nav>
   );

@@ -26,3 +26,8 @@ export function resultUrl(session: string, name: string): string {
   params.set("name", name);
   return `/result?${params.toString()}`;
 }
+
+/** Analytics dashboard. */
+export function analyticsUrl(): string {
+  return "/analytics";
+}
