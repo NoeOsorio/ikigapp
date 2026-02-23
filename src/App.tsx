@@ -7,6 +7,9 @@ import { IkigaiFormProvider } from "./context/IkigaiFormContext";
 import { useIkigaiFormOptional } from "./context/ikigaiFormContextValue";
 import { getSnapshotPayload } from "./lib/snapshotStorage";
 import { hasPayloadContent } from "./lib/payload";
+import { useParticipant } from "./hooks/useParticipant";
+import { nameToParticipantId, participantDisplayName } from "./models/participant.model";
+import type { SnapshotPayload } from "./lib/nuqs";
 import Layout from "./components/Layout";
 import Join from "./pages/Join";
 import Lobby from "./pages/Lobby";
@@ -64,12 +67,43 @@ function ResultViewInner() {
   const [session] = useQueryState("session", sessionParser);
   const [name] = useQueryState("name", nameParser);
   const formOptional = useIkigaiFormOptional();
+
+  // Fast path: payload already in memory (same session) or sessionStorage (same device)
   const payloadFromContext = formOptional?.buildPayload(name ?? "") ?? null;
   const payloadFromStorage = getSnapshotPayload(session ?? "", name ?? "");
-  const payload =
+  const localPayload: SnapshotPayload | null =
     payloadFromContext && hasPayloadContent(payloadFromContext)
       ? payloadFromContext
       : payloadFromStorage;
+
+  // Slow path: share link opened on a different device/browser — load from Firestore
+  const participantId = name ? nameToParticipantId(name) : null;
+  const { data: participant, isLoading } = useParticipant(
+    localPayload ? null : session,
+    localPayload ? null : participantId,
+  );
+
+  const firestorePayload: SnapshotPayload | null = participant
+    ? {
+        name: participantDisplayName(participant),
+        c1: participant.answers.c1,
+        c2: participant.answers.c2,
+        c3: participant.answers.c3,
+        c4: participant.answers.c4,
+        action: participant.answers.action,
+      }
+    : null;
+
+  const payload = localPayload ?? firestorePayload;
+
+  // Wait for Firestore before deciding to redirect
+  if (!localPayload && isLoading) {
+    return (
+      <Layout theme="matcha">
+        <div className="text-matcha-muted text-sm animate-pulse">Loading snapshot…</div>
+      </Layout>
+    );
+  }
 
   if (!payload) {
     return (

@@ -2,6 +2,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { nanoid } from "nanoid";
 import { workshopUrl } from "../lib/routes";
+import { useJoinSession } from "../hooks/useParticipant";
 
 export default function Join() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,6 +11,7 @@ export default function Join() {
   const [sessionIdInput, setSessionIdInput] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const joinSession = useJoinSession();
 
   const handleCreateSession = () => {
     setSearchParams({ session: nanoid(10) });
@@ -23,9 +25,17 @@ export default function Join() {
 
   const handleEnterSession = (e: React.FormEvent) => {
     e.preventDefault();
-    const name = [firstName.trim(), lastName.trim()].filter(Boolean).join(" ");
-    if (!name || !sessionIdFromUrl) return;
-    navigate(workshopUrl(sessionIdFromUrl, name, "lobby"));
+    const trimmedFirst = firstName.trim();
+    const trimmedLast = lastName.trim();
+    const name = [trimmedFirst, trimmedLast].filter(Boolean).join(" ");
+    if (!name) return;
+    const session = sessionIdFromUrl || nanoid(10);
+    joinSession.mutate({
+      sessionId: session,
+      hostName: name,
+      participant: { firstName: trimmedFirst, lastName: trimmedLast },
+    });
+    navigate(workshopUrl(session, name, "lobby"));
   };
 
   const hasSession = sessionIdFromUrl !== "";

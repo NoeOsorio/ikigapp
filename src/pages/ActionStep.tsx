@@ -4,16 +4,26 @@ import { useIkigaiForm } from "../context/ikigaiFormContextValue";
 import { setSnapshotPayload } from "../lib/snapshotStorage";
 import { resultUrl } from "../lib/routes";
 import { sessionParser, nameParser } from "../lib/nuqs";
+import { nameToParticipantId } from "../models/participant.model";
+import { useUpdateStep, useUpdateAnswers } from "../hooks/useParticipant";
 
 export default function ActionStep() {
   const navigate = useNavigate();
   const [session] = useQueryState("session", sessionParser);
   const [name] = useQueryState("name", nameParser);
   const { action, setAction, buildPayload } = useIkigaiForm();
+  const updateStep = useUpdateStep();
+  const updateAnswers = useUpdateAnswers();
 
   const handleContinue = () => {
     const payload = buildPayload(name ?? "");
     setSnapshotPayload(session ?? "", name ?? "", payload);
+    if (session && name) {
+      const pid = nameToParticipantId(name);
+      // Fire-and-forget: sync action and mark participant as finished
+      updateAnswers.mutate({ sessionId: session, participantId: pid, answers: { action } });
+      updateStep.mutate({ sessionId: session, participantId: pid, step: "snapshot" });
+    }
     navigate(resultUrl(session ?? "", name ?? ""));
   };
 

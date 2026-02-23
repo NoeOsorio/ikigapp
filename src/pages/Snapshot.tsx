@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser, type SnapshotPayload } from "../lib/nuqs";
 import { getSnapshotLinkKey } from "../lib/snapshotStorage";
+import { saveShareLink } from "../services/participants.service";
+import { nameToParticipantId } from "../models/participant.model";
 import { workshopUrl } from "../lib/routes";
 import SnapshotCard from "../components/SnapshotCard";
 
@@ -23,11 +25,13 @@ export default function Snapshot({ payload }: SnapshotProps) {
 
   useEffect(() => {
     if (typeof window !== "undefined" && session && name) {
+      const link = window.location.href;
       try {
-        sessionStorage.setItem(getSnapshotLinkKey(session, name), window.location.href);
+        sessionStorage.setItem(getSnapshotLinkKey(session, name), link);
       } catch {
         // ignore
       }
+      saveShareLink(session, nameToParticipantId(name), link).catch(() => {});
     }
   }, [session, name]);
 
