@@ -47,82 +47,40 @@ export default function Snapshot({ payload }: SnapshotProps) {
           const clonedCard = clonedDoc.querySelector('[data-snapshot-card]') as HTMLElement;
           if (!clonedCard) return;
           
-          // Matcha color palette in hex
-          const colors = {
-            bg: "#e2ebe0",
-            bgOpacity60: "rgba(226, 235, 224, 0.6)",
-            accent: "#6b8c5e",
-            accentOpacity15: "rgba(107, 140, 94, 0.15)",
-            accentOpacity10: "rgba(107, 140, 94, 0.1)",
-            dark: "#1e2a1a",
-            muted: "#4d6344",
-            white: "#ffffff",
-            whiteOpacity8: "rgba(255, 255, 255, 0.08)",
-            whiteOpacity70: "rgba(255, 255, 255, 0.7)",
+          // Matcha color palette in hex (mirrors CSS custom properties for html2canvas)
+          const c = "#1e2a1a", bg = "#e2ebe0", ac = "#6b8c5e", mu = "#4d6344";
+          const bgMap: Record<string, string> = {
+            "bg-matcha-dark": c,
+            "bg-matcha-bg/60": "rgba(226, 235, 224, 0.6)",
+            "bg-matcha-bg": bg,
+            "bg-matcha-accent": ac,
+            "bg-white": "#ffffff",
           };
-          
-          // Force all matcha color classes to use inline hex values
+          const textMap: Record<string, string> = {
+            "text-matcha-dark": c,
+            "text-matcha-accent": ac,
+            "text-matcha-muted": mu,
+            "text-white/70": "rgba(255, 255, 255, 0.7)",
+            "text-white/8": "rgba(255, 255, 255, 0.08)",
+            "text-white": "#ffffff",
+          };
+          const borderMap: Record<string, string> = {
+            "border-matcha-accent/15": "rgba(107, 140, 94, 0.15)",
+            "border-matcha-accent/10": "rgba(107, 140, 94, 0.1)",
+            "border-matcha-accent": ac,
+          };
+
+          // Force matcha color classes to inline hex so html2canvas resolves CSS vars
           const replaceColors = (element: HTMLElement) => {
-            // Get all elements including the root
-            const elements = [element, ...Array.from(element.querySelectorAll("*"))];
-            
-            elements.forEach((el) => {
-              const htmlEl = el as HTMLElement;
-              const classList = Array.from(htmlEl.classList);
-              
-              // Background colors
-              if (classList.some(c => c.includes("bg-matcha-dark"))) {
-                htmlEl.style.backgroundColor = colors.dark;
+            const elements = [element, ...Array.from(element.querySelectorAll<HTMLElement>("*"))];
+            for (const htmlEl of elements) {
+              for (const cls of htmlEl.classList) {
+                if (cls in bgMap) htmlEl.style.backgroundColor = bgMap[cls];
+                if (cls in textMap) htmlEl.style.color = textMap[cls];
+                if (cls in borderMap) htmlEl.style.borderColor = borderMap[cls];
+                if (cls === "ring-black/5") htmlEl.style.boxShadow = "0 0 0 1px rgba(0, 0, 0, 0.05)";
               }
-              if (classList.some(c => c.includes("bg-matcha-bg/60"))) {
-                htmlEl.style.backgroundColor = colors.bgOpacity60;
-              }
-              if (classList.some(c => c.includes("bg-matcha-bg"))) {
-                htmlEl.style.backgroundColor = colors.bg;
-              }
-              if (classList.some(c => c.includes("bg-matcha-accent"))) {
-                htmlEl.style.backgroundColor = colors.accent;
-              }
-              if (classList.some(c => c.includes("bg-white"))) {
-                htmlEl.style.backgroundColor = colors.white;
-              }
-              
-              // Text colors
-              if (classList.some(c => c.includes("text-matcha-dark"))) {
-                htmlEl.style.color = colors.dark;
-              }
-              if (classList.some(c => c.includes("text-matcha-accent"))) {
-                htmlEl.style.color = colors.accent;
-              }
-              if (classList.some(c => c.includes("text-matcha-muted"))) {
-                htmlEl.style.color = colors.muted;
-              }
-              if (classList.some(c => c.includes("text-white/70"))) {
-                htmlEl.style.color = colors.whiteOpacity70;
-              }
-              if (classList.some(c => c.includes("text-white/8"))) {
-                htmlEl.style.color = colors.whiteOpacity8;
-              }
-              if (classList.some(c => c.includes("text-white"))) {
-                htmlEl.style.color = colors.white;
-              }
-              
-              // Border colors
-              if (classList.some(c => c.includes("border-matcha-accent/15"))) {
-                htmlEl.style.borderColor = colors.accentOpacity15;
-              }
-              if (classList.some(c => c.includes("border-matcha-accent/10"))) {
-                htmlEl.style.borderColor = colors.accentOpacity10;
-              }
-              if (classList.some(c => c.includes("border-matcha-accent"))) {
-                htmlEl.style.borderColor = colors.accent;
-              }
-              
-              // Ring colors (for the outer ring)
-              if (classList.some(c => c.includes("ring-black/5"))) {
-                htmlEl.style.boxShadow = "0 0 0 1px rgba(0, 0, 0, 0.05)";
-              }
-            });
+            }
           };
           
           replaceColors(clonedCard);

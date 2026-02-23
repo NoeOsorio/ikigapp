@@ -43,7 +43,6 @@ const NAV_THEME: Record<
 };
 
 interface NavProps {
-  currentStep?: "join" | "lobby" | "1" | "2" | "3" | "4" | "5" | "snapshot";
   theme: ThemeKind;
 }
 
