@@ -63,9 +63,9 @@ export const participantConverter: FirestoreDataConverter<Participant> = {
       lastName: p.lastName,
       step: p.step,
       answers: p.answers,
-      shareLink: p.shareLink,
+      shareLink: p.shareLink ?? null,
       isFinished: p.isFinished,
-      aiIkigai: p.aiIkigai,
+      aiIkigai: p.aiIkigai ?? null,
       joinedAt: p.joinedAt,
       updatedAt: p.updatedAt,
     };

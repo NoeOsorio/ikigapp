@@ -25,24 +25,28 @@ export default function Join() {
     if (id) setSearchParams({ session: id });
   };
 
-  const handleEnterSession = (e: React.FormEvent) => {
+  const handleEnterSession = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedFirst = firstName.trim();
     const trimmedLast = lastName.trim();
     const name = [trimmedFirst, trimmedLast].filter(Boolean).join(" ");
     if (!name) return;
     const session = sessionIdFromUrl || nanoid(10);
-    
+
     // Save user identity to sessionStorage using participant ID
     const participantId = nameToParticipantId(name);
     setUserIdentity(session, participantId);
-    
-    joinSession.mutate({
-      sessionId: session,
-      hostName: name,
-      participant: { firstName: trimmedFirst, lastName: trimmedLast },
-    });
-    navigate(workshopUrl(session, name, "lobby"));
+
+    try {
+      await joinSession.mutateAsync({
+        sessionId: session,
+        hostName: name,
+        participant: { firstName: trimmedFirst, lastName: trimmedLast },
+      });
+      navigate(workshopUrl(session, name, "lobby"));
+    } catch (err) {
+      console.error("Error al unirse a la sesión:", err);
+    }
   };
 
   const hasSession = sessionIdFromUrl !== "";
@@ -162,12 +166,17 @@ export default function Join() {
                   />
                 </div>
               </div>
+              {joinSession.isError && (
+                <p className="text-sm text-red-600" role="alert">
+                  No se pudo unir a la sesión. Revisa tu conexión e inténtalo de nuevo.
+                </p>
+              )}
               <button
                 type="submit"
-                disabled={!canEnterSession}
+                disabled={!canEnterSession || joinSession.isPending}
                 className="w-full py-4 rounded-xl bg-dawn-dark text-white font-display text-base tracking-wide disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:bg-dawn-accent hover:-translate-y-0.5 active:translate-y-0 min-h-[48px] shadow-lg shadow-dawn-dark/20 hover:shadow-dawn-accent/25"
               >
-                Entrar a la sesión →
+                {joinSession.isPending ? "Guardando…" : "Entrar a la sesión →"}
               </button>
             </form>
           </>
