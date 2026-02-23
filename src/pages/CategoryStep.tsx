@@ -5,6 +5,17 @@ import { useIkigaiForm } from "../context/ikigaiFormContextValue";
 import { stepParser, sessionParser, nameParser, type StepValue } from "../lib/nuqs";
 import { nameToParticipantId } from "../models/participant.model";
 import { useUpdateStep, useUpdateAnswers } from "../hooks/useParticipant";
+import cherryblossomUrl from "../assets/best_svg_images/cherryblossom-svgrepo-com.svg";
+import leafUrl from "../assets/best_svg_images/leaf-svgrepo-com.svg";
+import leafMomijiUrl from "../assets/best_svg_images/leaf-momiji-svgrepo-com.svg";
+import snowflakeUrl from "../assets/best_svg_images/snowflake-svgrepo-com.svg";
+
+const SEASON_ICON_URLS = {
+  spring: cherryblossomUrl,
+  summer: leafUrl,
+  autumn: leafMomijiUrl,
+  winter: snowflakeUrl,
+} as const;
 
 export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) {
   const config = getCategory(step);
@@ -41,7 +52,13 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
   return (
     <div className="w-full flex flex-col items-center justify-center px-4 py-8">
       <header className="text-center mb-10 animate-fade-up">
-        <span className="text-4xl block mb-2 animate-float-y">{config.emoji}</span>
+        <span className="block mb-2 animate-float-y">
+          <img
+            src={SEASON_ICON_URLS[config.season]}
+            alt={config.shortName}
+            className="w-12 h-12 mx-auto"
+          />
+        </span>
         <p className={`text-[0.72rem] tracking-[0.14em] uppercase ${theme.muted} mb-2`}>
           {config.shortName} · {step} of 4
         </p>
