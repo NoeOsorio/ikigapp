@@ -57,3 +57,4 @@ Japanese minimalist aesthetic with seasonal theming. CSS custom properties defin
 - Components using React context hooks must be rendered inside their corresponding Provider. If a route-level view needs context, wrap it in the Provider before rendering the inner component.
 - Keep query param names consistent across all route helpers (`session` everywhere, not `id` in one and `session` in another).
 - Avoid resolving the same data in both a parent and child component — pass it as a prop from the parent to prevent duplicated logic.
+- When using `html2canvas` with Tailwind CSS variables, CSS custom properties may not resolve in the cloned DOM. Use the `onclone` callback to force inline hex values, and consider extracting the color map to a shared constant if the same palette is used in multiple places.
