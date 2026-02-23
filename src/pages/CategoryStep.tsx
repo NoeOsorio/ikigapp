@@ -38,6 +38,7 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
   const nextStepNum = Number(step) + 1;
   const nextStep: StepValue =
     nextStepNum <= 4 ? (String(nextStepNum) as "1" | "2" | "3" | "4") : "5";
+  const prevStep: StepValue = step === "1" ? "lobby" : (String(Number(step) - 1) as "1" | "2" | "3" | "4");
 
   const handleContinue = () => {
     if (session && name) {
@@ -47,6 +48,15 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
       updateStep.mutate({ sessionId: session, participantId: pid, step: nextStep });
     }
     setStep(nextStep);
+  };
+
+  const handleBack = () => {
+    if (session && name) {
+      const pid = nameToParticipantId(name);
+      updateAnswers.mutate({ sessionId: session, participantId: pid, answers: { [cKey]: items ?? [] } });
+      updateStep.mutate({ sessionId: session, participantId: pid, step: prevStep });
+    }
+    setStep(prevStep);
   };
 
   return (
@@ -78,6 +88,9 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
           onContinue={handleContinue}
           continueLabel={getContinueLabel(step)}
           season={config.season}
+          onBack={handleBack}
+          backLabel={step === "1" ? "Back to lobby" : "Back"}
+          showBackButton
         />
       </div>
     </div>

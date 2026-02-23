@@ -8,6 +8,9 @@ interface CategoryInputProps {
   onContinue: () => void;
   continueLabel?: string;
   season?: Season;
+  onBack?: () => void;
+  backLabel?: string;
+  showBackButton?: boolean;
 }
 
 export default function CategoryInput({
@@ -17,6 +20,9 @@ export default function CategoryInput({
   onContinue,
   continueLabel = "Continue",
   season = "spring",
+  onBack,
+  backLabel = "Back",
+  showBackButton = false,
 }: CategoryInputProps) {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -101,18 +107,31 @@ export default function CategoryInput({
         </button>
       </div>
 
-      <button
-        type="button"
-        onClick={onContinue}
-        disabled={!canContinue}
-        className={`w-full py-4 rounded-xl font-display text-base flex items-center justify-center gap-2 transition-all min-h-[44px] ${
-          canContinue
-            ? `${theme.btnPrimary} text-white ${theme.btnPrimaryHover} hover:-translate-y-px cursor-pointer`
-            : "opacity-35 cursor-not-allowed bg-black/10 text-black/50"
-        }`}
-      >
-        {continueLabel}
-      </button>
+      <div className="flex gap-3">
+        {showBackButton && (
+          <button
+            type="button"
+            onClick={onBack}
+            className={`w-1/3 py-4 rounded-xl font-display text-base flex items-center justify-center gap-2 min-h-[44px] border ${theme.border} ${theme.inputBg} ${theme.text} hover:bg-black/5 transition-all`}
+          >
+            {backLabel}
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={onContinue}
+          disabled={!canContinue}
+          className={`${
+            showBackButton ? "w-2/3" : "w-full"
+          } py-4 rounded-xl font-display text-base flex items-center justify-center gap-2 transition-all min-h-[44px] ${
+            canContinue
+              ? `${theme.btnPrimary} text-white ${theme.btnPrimaryHover} hover:-translate-y-px cursor-pointer`
+              : "opacity-35 cursor-not-allowed bg-black/10 text-black/50"
+          }`}
+        >
+          {continueLabel}
+        </button>
+      </div>
     </div>
   );
 }
