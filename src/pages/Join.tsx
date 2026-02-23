@@ -168,10 +168,7 @@ export default function Join() {
               </div>
               {joinSession.isError && (
                 <p className="text-sm text-red-600" role="alert">
-                  No se pudo unir a la sesión.{" "}
-                  {joinSession.error instanceof Error
-                    ? joinSession.error.message
-                    : String(joinSession.error)}
+                  No se pudo unir a la sesión. Revisa tu conexión e inténtalo de nuevo.
                 </p>
               )}
               <button
