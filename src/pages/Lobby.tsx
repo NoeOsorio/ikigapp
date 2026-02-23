@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser } from "../lib/nuqs";
 import { sessionUrl, workshopUrl } from "../lib/routes";
@@ -21,6 +22,7 @@ export default function Lobby() {
   const [name] = useQueryState("name", nameParser);
   const { data: participants = [] } = useParticipants(session);
   const myParticipantId = name ? nameToParticipantId(name) : null;
+  const [isShareExpanded, setIsShareExpanded] = useState(false);
 
   const joinUrl =
     typeof window !== "undefined" && session
@@ -41,6 +43,8 @@ export default function Lobby() {
     if (bIsMe) return 1;
     return 0;
   });
+
+  const isSolo = participants.length <= 1;
 
   return (
     <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-10 pt-4 pb-10">
@@ -128,14 +132,20 @@ export default function Lobby() {
         )}
       </div>
 
-      <div className="mt-6 bg-white rounded-2xl p-7 border border-spring-accent/10 flex flex-col sm:flex-row sm:items-center gap-6 animate-[fade-up_0.8s_ease_0.2s_both]">
-        <div className="w-[90px] h-[90px] rounded-xl bg-spring-bg flex items-center justify-center shrink-0 p-2">
-          <QRCode value={joinUrl} size={74} />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h2 className="font-display text-base text-spring-dark mb-1">Invite Others</h2>
-          <p className="text-[0.78rem] text-spring-muted mb-3 break-all font-body">{joinUrl || "—"}</p>
-          <div className="flex flex-wrap gap-2">
+      {isSolo ? (
+        // SOLO: Grande y prominente para facilitar compartir
+        <div className="mt-8 bg-white rounded-3xl p-8 sm:p-10 border border-spring-accent/15 shadow-lg animate-[fade-up_0.8s_ease_0.2s_both] flex flex-col items-center text-center gap-6">
+          <div className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] rounded-2xl bg-spring-bg flex items-center justify-center p-4 shadow-inner">
+            <QRCode value={joinUrl} size={160} />
+          </div>
+          <div>
+            <h2 className="font-display text-xl sm:text-2xl text-spring-dark mb-2">Invite Others</h2>
+            <p className="text-sm text-spring-muted mb-4 max-w-md mx-auto">
+              Share this QR code or link so others can join your session
+            </p>
+            <p className="text-xs text-spring-muted mb-4 break-all font-mono bg-spring-bg/50 py-2 px-3 rounded-lg max-w-md mx-auto">
+              {joinUrl || "—"}
+            </p>
             <button
               type="button"
               onClick={copyLink}
@@ -145,7 +155,45 @@ export default function Lobby() {
             </button>
           </div>
         </div>
-      </div>
+      ) : (
+        // MULTIPLE: Colapsable y compacto
+        <div className="mt-8 bg-white rounded-2xl border border-spring-accent/15 shadow-md overflow-hidden transition-all duration-300 animate-[fade-up_0.8s_ease_0.2s_both]">
+          <button
+            type="button"
+            onClick={() => setIsShareExpanded(!isShareExpanded)}
+            className="w-full py-4 px-6 flex items-center justify-between text-spring-dark hover:bg-spring-bg/30 transition-colors"
+          >
+            <span className="font-display text-base">Share Session</span>
+            <span
+              className={`text-spring-accent text-xl transition-transform duration-300 ${isShareExpanded ? "rotate-180" : ""}`}
+            >
+              ▼
+            </span>
+          </button>
+          <div
+            className={`transition-all duration-300 ease-in-out ${isShareExpanded ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}
+          >
+            <div className="p-6 border-t border-spring-accent/10 flex flex-col sm:flex-row sm:items-center gap-6">
+              <div className="w-[120px] h-[120px] rounded-xl bg-spring-bg flex items-center justify-center p-3 shrink-0 mx-auto sm:mx-0">
+                <QRCode value={joinUrl} size={96} />
+              </div>
+              <div className="flex-1 min-w-0 text-center sm:text-left">
+                <h3 className="font-display text-base text-spring-dark mb-2">Invite Others</h3>
+                <p className="text-xs text-spring-muted mb-3 break-all font-mono bg-spring-bg/50 py-2 px-3 rounded-lg">
+                  {joinUrl || "—"}
+                </p>
+                <button
+                  type="button"
+                  onClick={copyLink}
+                  className="py-2 px-4 rounded-lg border-[1.5px] border-spring-dark/20 bg-white text-spring-dark font-body text-sm hover:border-spring-accent hover:text-spring-accent transition-colors"
+                >
+                  Copy Link
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
