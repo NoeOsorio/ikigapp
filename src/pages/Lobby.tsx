@@ -23,6 +23,7 @@ export default function Lobby() {
   const { data: participants = [] } = useParticipants(session);
   const myParticipantId = name ? nameToParticipantId(name) : null;
   const [isShareExpanded, setIsShareExpanded] = useState(false);
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
   const joinUrl =
     typeof window !== "undefined" && session
@@ -135,9 +136,19 @@ export default function Lobby() {
       {isSolo ? (
         // SOLO: Grande y prominente para facilitar compartir
         <div className="mt-8 bg-white rounded-3xl p-8 sm:p-10 border border-spring-accent/15 shadow-lg animate-[fade-up_0.8s_ease_0.2s_both] flex flex-col items-center text-center gap-6">
-          <div className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] rounded-2xl bg-spring-bg flex items-center justify-center p-4 shadow-inner">
+          <button
+            type="button"
+            onClick={() => setIsQRModalOpen(true)}
+            className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] rounded-2xl bg-spring-bg flex items-center justify-center p-4 shadow-inner hover:bg-spring-accent/10 hover:shadow-md transition-all cursor-pointer group"
+            aria-label="View QR code in full size"
+          >
             <QRCode value={joinUrl} size={160} />
-          </div>
+            <span className="absolute inset-0 flex items-center justify-center bg-spring-dark/0 group-hover:bg-spring-dark/5 rounded-2xl transition-all">
+              <span className="opacity-0 group-hover:opacity-100 text-spring-accent text-xs font-medium transition-opacity">
+                Click to enlarge
+              </span>
+            </span>
+          </button>
           <div>
             <h2 className="font-display text-xl sm:text-2xl text-spring-dark mb-2">Invite Others</h2>
             <p className="text-sm text-spring-muted mb-4 max-w-md mx-auto">
@@ -174,9 +185,19 @@ export default function Lobby() {
             className={`transition-all duration-300 ease-in-out ${isShareExpanded ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}
           >
             <div className="p-6 border-t border-spring-accent/10 flex flex-col sm:flex-row sm:items-center gap-6">
-              <div className="w-[120px] h-[120px] rounded-xl bg-spring-bg flex items-center justify-center p-3 shrink-0 mx-auto sm:mx-0">
+              <button
+                type="button"
+                onClick={() => setIsQRModalOpen(true)}
+                className="w-[120px] h-[120px] rounded-xl bg-spring-bg flex items-center justify-center p-3 shrink-0 mx-auto sm:mx-0 hover:bg-spring-accent/10 hover:shadow-md transition-all cursor-pointer group relative"
+                aria-label="View QR code in full size"
+              >
                 <QRCode value={joinUrl} size={96} />
-              </div>
+                <span className="absolute inset-0 flex items-center justify-center bg-spring-dark/0 group-hover:bg-spring-dark/5 rounded-xl transition-all">
+                  <span className="opacity-0 group-hover:opacity-100 text-spring-accent text-[0.65rem] font-medium transition-opacity">
+                    Enlarge
+                  </span>
+                </span>
+              </button>
               <div className="flex-1 min-w-0 text-center sm:text-left">
                 <h3 className="font-display text-base text-spring-dark mb-2">Invite Others</h3>
                 <p className="text-xs text-spring-muted mb-3 break-all font-mono bg-spring-bg/50 py-2 px-3 rounded-lg">
@@ -191,6 +212,49 @@ export default function Lobby() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* QR Code Modal */}
+      {isQRModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-spring-dark/60 backdrop-blur-sm animate-fade-in"
+          onClick={() => setIsQRModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-3xl p-8 sm:p-12 shadow-2xl max-w-md w-full animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h3 className="font-display text-xl text-spring-dark mb-1">Scan to Join</h3>
+                <p className="text-xs text-spring-muted tracking-widest uppercase">
+                  {sessionLabel}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsQRModalOpen(false)}
+                className="text-spring-muted hover:text-spring-accent transition-colors text-2xl leading-none"
+                aria-label="Close modal"
+              >
+                ×
+              </button>
+            </div>
+            <div className="bg-spring-bg rounded-2xl p-8 flex items-center justify-center mb-6">
+              <QRCode value={joinUrl} size={280} />
+            </div>
+            <p className="text-xs text-spring-muted mb-4 break-all font-mono bg-spring-bg/50 py-3 px-4 rounded-lg text-center">
+              {joinUrl || "—"}
+            </p>
+            <button
+              type="button"
+              onClick={copyLink}
+              className="w-full py-3 px-6 rounded-xl bg-spring-dark text-white font-body text-sm hover:bg-spring-accent transition-all duration-200 shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+            >
+              Copy Link
+            </button>
           </div>
         </div>
       )}
