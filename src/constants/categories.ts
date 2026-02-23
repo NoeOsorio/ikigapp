@@ -12,33 +12,33 @@ export interface CategoryStepConfig {
 export const CATEGORIES: CategoryStepConfig[] = [
   {
     step: "1",
-    shortName: "Love",
-    title: "What do I love doing?",
-    description: "Activities and experiences that bring you joy and fulfillment.",
+    shortName: "Lo que amas",
+    title: "¿Qué amo hacer?",
+    description: "Actividades y experiencias que te dan alegría y plenitud.",
     season: "spring",
     emoji: "🌸",
   },
   {
     step: "2",
-    shortName: "Good at",
-    title: "What am I good at?",
-    description: "Skills and strengths that come naturally to you.",
+    shortName: "En lo que eres bueno",
+    title: "¿En qué soy bueno?",
+    description: "Habilidades y fortalezas que te salen de forma natural.",
     season: "summer",
     emoji: "☀️",
   },
   {
     step: "3",
-    shortName: "Problem",
-    title: "What problem in the world do I want to solve?",
-    description: "Issues or causes you feel drawn to contribute to.",
+    shortName: "Lo que el mundo necesita",
+    title: "¿Qué necesita el mundo que me gustaría aportar?",
+    description: "Problemas o causas con las que te sientes conectado y quieres contribuir.",
     season: "autumn",
     emoji: "🍂",
   },
   {
     step: "4",
-    shortName: "Pay",
-    title: "What skills would people pay me for right now?",
-    description: "Your current marketable abilities and expertise.",
+    shortName: "Por lo que te pueden pagar",
+    title: "¿Por qué habilidades me pagarían hoy?",
+    description: "Tus habilidades y experiencia que hoy son valiosas para otras personas.",
     season: "winter",
     emoji: "❄️",
   },
@@ -182,11 +182,11 @@ export function isCategoryStep(step: string): step is "1" | "2" | "3" | "4" {
   return step === "1" || step === "2" || step === "3" || step === "4";
 }
 
-const ACTION_STEP_LABEL = "My Action";
+const ACTION_STEP_LABEL = "Mi acción";
 
 /** Next step short name for continue button: step 1→Good at, 2→Problem, 3→Pay, 4→My Action */
 export function getContinueLabel(step: "1" | "2" | "3" | "4"): string {
-  if (step === "4") return `Continue to ${ACTION_STEP_LABEL} →`;
+  if (step === "4") return `Continuar a ${ACTION_STEP_LABEL} →`;
   const next = getCategory(String(Number(step) + 1) as "1" | "2" | "3" | "4");
-  return next ? `Continue to ${next.shortName} →` : "Continue";
+  return next ? `Continuar a ${next.shortName} →` : "Continuar";
 }

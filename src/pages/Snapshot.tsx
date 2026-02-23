@@ -112,7 +112,7 @@ export default function Snapshot({ payload }: SnapshotProps) {
       link.click();
     } catch (e) {
       console.error("Download error:", e);
-      alert("Failed to download image. Please try again.");
+      alert("No se pudo descargar la imagen. Intenta de nuevo.");
     }
   }, [payload.name]);
 
@@ -134,21 +134,21 @@ export default function Snapshot({ payload }: SnapshotProps) {
           onClick={handleDownload}
           className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-matcha-dark text-white font-display text-sm flex items-center justify-center gap-1.5 hover:bg-matcha-accent transition-colors shadow-lg hover:shadow-matcha-accent/25 hover:-translate-y-0.5 active:translate-y-0"
         >
-          ⬇ Download Image
+          ⬇ Descargar imagen
         </button>
         <button
           type="button"
           onClick={handleCopyLink}
           className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-white text-matcha-dark font-display text-sm border-[1.5px] border-matcha-accent/20 flex items-center justify-center gap-1.5 hover:border-matcha-accent hover:text-matcha-accent transition-colors hover:-translate-y-0.5 active:translate-y-0"
         >
-          🔗 Copy Share Link
+          🔗 Copiar enlace para compartir
         </button>
         <button
           type="button"
           onClick={handleBackToLobby}
           className="flex-1 min-w-[140px] py-3.5 px-4 rounded-xl bg-white text-matcha-dark font-display text-sm border-[1.5px] border-matcha-accent/20 flex items-center justify-center gap-1.5 hover:border-matcha-accent hover:text-matcha-accent transition-colors hover:-translate-y-0.5 active:translate-y-0"
         >
-          Back to lobby
+          Volver al lobby
         </button>
       </div>
     </div>

@@ -28,7 +28,7 @@ export default function Analytics() {
       })
       .catch((err) => {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load analytics");
+          setError(err instanceof Error ? err.message : "No se pudieron cargar las estadísticas");
         }
       })
       .finally(() => {
@@ -42,7 +42,7 @@ export default function Analytics() {
   if (loading) {
     return (
       <div className="w-full max-w-2xl mx-auto text-center py-12">
-        <p className="text-matcha-muted text-sm animate-pulse">Loading analytics…</p>
+        <p className="text-matcha-muted text-sm animate-pulse">Cargando estadísticas…</p>
       </div>
     );
   }
@@ -63,9 +63,9 @@ export default function Analytics() {
     <div className="w-full max-w-2xl mx-auto space-y-8">
       <header className="text-center">
         <h1 className="font-display text-2xl text-matcha-dark font-semibold tracking-tight mb-1">
-          Analytics
+          Estadísticas
         </h1>
-        <p className="text-matcha-muted text-sm">Insights from completed Ikigai sessions</p>
+        <p className="text-matcha-muted text-sm">Hallazgos de sesiones de Ikigai completadas</p>
       </header>
 
       <AnalyticsInsights stats={stats} />

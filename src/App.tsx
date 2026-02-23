@@ -102,7 +102,7 @@ function ResultViewInner() {
   if (!localPayload && isLoading) {
     return (
       <Layout theme="matcha">
-        <div className="text-matcha-muted text-sm animate-pulse">Loading snapshot…</div>
+        <div className="text-matcha-muted text-sm animate-pulse">Cargando tarjeta…</div>
       </Layout>
     );
   }
