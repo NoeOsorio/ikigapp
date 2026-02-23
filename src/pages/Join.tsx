@@ -1,10 +1,11 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
 import { workshopUrl } from "../lib/routes";
 import { useJoinSession } from "../hooks/useParticipant";
-import { setUserIdentity } from "../lib/userIdentity";
-import { nameToParticipantId } from "../models/participant.model";
+import { setUserIdentity, getUserIdentity } from "../lib/userIdentity";
+import { nameToParticipantId, participantDisplayName } from "../models/participant.model";
+import { getParticipantsBySession } from "../services/analytics.service";
 
 export default function Join() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -53,6 +54,28 @@ export default function Join() {
   const canEnterSession = hasSession && Boolean(firstName.trim() && lastName.trim());
   const sessionLabel = hasSession ? `Sesión #${sessionIdFromUrl.slice(0, 8).toUpperCase()}` : null;
   const canJoinWithId = sessionIdInput.trim() !== "";
+
+  // Si ya estás en esta sesión (identidad guardada), ir directo al lobby
+  useEffect(() => {
+    if (!hasSession || !sessionIdFromUrl) return;
+    const identity = getUserIdentity();
+    if (!identity || identity.session !== sessionIdFromUrl) return;
+    let cancelled = false;
+    getParticipantsBySession(sessionIdFromUrl)
+      .then((participants) => {
+        if (cancelled) return;
+        const me = participants.find((p) => p.id === identity.participantId);
+        if (me) {
+          navigate(workshopUrl(sessionIdFromUrl, participantDisplayName(me), "lobby"), {
+            replace: true,
+          });
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [hasSession, sessionIdFromUrl, navigate]);
 
   return (
     <div className="w-full max-w-md flex flex-col items-center justify-center gap-0 px-4">

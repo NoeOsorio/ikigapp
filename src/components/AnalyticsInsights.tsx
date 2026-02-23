@@ -57,7 +57,9 @@ export default function AnalyticsInsights({
           Tasa de finalización
         </p>
         <p className="text-matcha-muted text-xs mb-3">
-          Llegaron a la tarjeta: {stats.finishedCount} de {stats.totalParticipants}
+          {singleSession
+            ? `Participantes que terminaron el workshop: ${stats.finishedCount} de ${stats.totalParticipants}`
+            : `Llegaron a la tarjeta: ${stats.finishedCount} de ${stats.totalParticipants}`}
         </p>
         <div className="h-2.5 rounded-full bg-matcha-accent/15 overflow-hidden">
           <div
