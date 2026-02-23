@@ -18,6 +18,7 @@ import ActionStep from "./pages/ActionStep";
 import Snapshot from "./pages/Snapshot";
 import Analytics from "./pages/Analytics";
 import AnalyticsBySession from "./pages/AnalyticsBySession";
+import About from "./pages/About";
 
 function WorkshopView() {
   const [session] = useQueryState("session", sessionParser);
@@ -126,7 +127,14 @@ function ResultViewInner() {
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/session" replace />} />
+      <Route
+        path="/"
+        element={
+          <Layout theme="dawn">
+            <About />
+          </Layout>
+        }
+      />
       <Route
         path="/session"
         element={

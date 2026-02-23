@@ -36,3 +36,8 @@ export function analyticsUrl(): string {
 export function analyticsSessionUrl(sessionId: string): string {
   return `/analytics/${encodeURIComponent(sessionId)}`;
 }
+
+/** About/landing page explaining the Ikigai process. */
+export function aboutUrl(): string {
+  return "/";
+}
