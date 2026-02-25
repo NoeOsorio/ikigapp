@@ -61,7 +61,7 @@ function WorkshopView() {
   return (
     <IkigaiFormProvider>
       <FormHydrator session={session} name={name} />
-      <Layout theme={theme}>
+      <Layout theme={theme} navTransparent={effectiveStep !== "intersections" && effectiveStep !== "snapshot"}>
         {content}
       </Layout>
     </IkigaiFormProvider>

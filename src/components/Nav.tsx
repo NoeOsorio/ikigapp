@@ -44,14 +44,19 @@ const NAV_THEME: Record<
 
 interface NavProps {
   theme: ThemeKind;
+  /** When true, nav bar is transparent (e.g. lobby full-screen look). */
+  transparent?: boolean;
 }
 
-export default function Nav({ theme }: NavProps) {
+export default function Nav({ theme, transparent = false }: NavProps) {
   const { bar, text, accent } = NAV_THEME[theme];
+  const barClasses = transparent
+    ? "bg-transparent border-transparent"
+    : bar;
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-100 ${bar} px-6 py-4 sm:px-10 flex items-center justify-between`}
+      className={`fixed top-0 left-0 right-0 z-100 ${barClasses} px-6 py-4 sm:px-10 flex items-center justify-between`}
       aria-label="Principal"
     >
       <Link
