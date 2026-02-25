@@ -1,5 +1,5 @@
 import { useQueryState } from "nuqs";
-import { getCategory, getContinueLabel, SEASON_CLASSES } from "../constants/categories";
+import { getCategory, SEASON_CLASSES } from "../constants/categories";
 import CategoryInput from "../components/CategoryInput";
 import { useIkigaiForm } from "../context/ikigaiFormContextValue";
 import { stepParser, sessionParser, nameParser, type StepValue } from "../lib/nuqs";
@@ -101,7 +101,7 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
           onItemsChange={setItems}
           minItems={4}
           onContinue={handleContinue}
-          continueLabel={getContinueLabel(step)}
+          continueLabel={`Continuar →`}
           season={config.season}
           onBack={handleBack}
           backLabel={step === "1" ? "Volver al lobby" : "Volver"}

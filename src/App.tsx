@@ -12,6 +12,7 @@ import { useAiIkigai } from "./hooks/useAiIkigai";
 import { nameToParticipantId, participantDisplayName } from "./models/participant.model";
 import type { SnapshotPayload } from "./lib/nuqs";
 import Layout from "./components/Layout";
+import { FormHydrator } from "./components/FormHydrator";
 import Join from "./pages/Join";
 import Lobby from "./pages/Lobby";
 import CategoryStep from "./pages/CategoryStep";
@@ -59,6 +60,7 @@ function WorkshopView() {
 
   return (
     <IkigaiFormProvider>
+      <FormHydrator session={session} name={name} />
       <Layout theme={theme}>
         {content}
       </Layout>

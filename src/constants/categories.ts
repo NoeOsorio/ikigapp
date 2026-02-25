@@ -182,11 +182,3 @@ export function isCategoryStep(step: string): step is "1" | "2" | "3" | "4" {
   return step === "1" || step === "2" || step === "3" || step === "4";
 }
 
-const INTERSECTIONS_STEP_LABEL = "Tu resumen Ikigai";
-
-/** Next step short name for continue button: step 1→Good at, 2→Problem, 3→Pay, 4→Resumen */
-export function getContinueLabel(step: "1" | "2" | "3" | "4"): string {
-  if (step === "4") return `Continuar a ${INTERSECTIONS_STEP_LABEL} →`;
-  const next = getCategory(String(Number(step) + 1) as "1" | "2" | "3" | "4");
-  return next ? `Continuar a ${next.shortName} →` : "Continuar";
-}
