@@ -6,7 +6,7 @@ import { getCategory, isCategoryStep, type ThemeKind } from "./constants/categor
 import { IkigaiFormProvider } from "./context/IkigaiFormContext";
 import { useIkigaiFormOptional } from "./context/ikigaiFormContextValue";
 import { getSnapshotPayload } from "./lib/snapshotStorage";
-import { hasPayloadContent } from "./lib/payload";
+import { hasPayloadContent, hasNewSnapshotContent } from "./lib/payload";
 import { useParticipant } from "./hooks/useParticipant";
 import { useAiIkigai } from "./hooks/useAiIkigai";
 import { nameToParticipantId, participantDisplayName } from "./models/participant.model";
@@ -15,7 +15,7 @@ import Layout from "./components/Layout";
 import Join from "./pages/Join";
 import Lobby from "./pages/Lobby";
 import CategoryStep from "./pages/CategoryStep";
-import ActionStep from "./pages/ActionStep";
+import IntersectionsStep from "./pages/IntersectionsStep";
 import Snapshot from "./pages/Snapshot";
 import Analytics from "./pages/Analytics";
 import AnalyticsBySession from "./pages/AnalyticsBySession";
@@ -34,18 +34,25 @@ function WorkshopView() {
     return <Navigate to={sessionUrl(session ?? undefined)} replace />;
   }
 
+  // Redirect legacy step 5 to intersections
+  if (effectiveStep === "5") {
+    return <Navigate to={workshopUrl(session, name, "intersections")} replace />;
+  }
+
   const theme: ThemeKind =
     effectiveStep === "lobby"
       ? "lobby"
-      : isCategoryStep(effectiveStep)
-        ? getCategory(effectiveStep)?.season ?? "spring"
-        : "winter";
+      : effectiveStep === "intersections"
+        ? "dawn"
+        : isCategoryStep(effectiveStep)
+          ? getCategory(effectiveStep)?.season ?? "spring"
+          : "lobby";
 
   let content: React.ReactNode;
   if (isCategoryStep(effectiveStep)) {
     content = <CategoryStep step={effectiveStep} />;
-  } else if (effectiveStep === "5") {
-    content = <ActionStep />;
+  } else if (effectiveStep === "intersections") {
+    content = <IntersectionsStep />;
   } else {
     content = <Lobby />;
   }
@@ -99,6 +106,9 @@ function ResultViewInner() {
         c3: participant.answers.c3,
         c4: participant.answers.c4,
         action: participant.answers.action,
+        intersections: participant.answers.intersections ?? undefined,
+        ikigai: participant.answers.ikigai ?? undefined,
+        actions: participant.answers.actions ?? undefined,
       }
     : null;
 
@@ -125,6 +135,8 @@ function ResultViewInner() {
   const displayName = payload.name;
   const action = payload.action;
 
+  const isLegacySnapshot = !hasNewSnapshotContent(payload);
+
   return (
     <Layout theme="matcha">
       <Snapshot
@@ -132,6 +144,12 @@ function ResultViewInner() {
         action={action}
         aiIkigai={aiIkigai}
         isLoadingAi={isLoadingAi}
+        intersections={payload.intersections}
+        ikigai={payload.ikigai}
+        actions={payload.actions}
+        sessionId={session}
+        showCompleteResumenCta={isLegacySnapshot && !!session && !!name}
+        completeResumenUrl={session && name ? workshopUrl(session, name, "intersections") : undefined}
       />
     </Layout>
   );

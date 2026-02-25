@@ -14,6 +14,7 @@ import BreathingBackground from "../components/BreathingBackground";
 function stepLabel(step: StepValue): string {
   if (step === "lobby") return "En el lobby";
   if (step === "snapshot") return "Completado ✓";
+  if (step === "intersections") return "Completando tu resumen";
   if (step === "5") return "Escribiendo su acción";
   const cat = getCategory(step as "1" | "2" | "3" | "4");
   return cat ? `Paso ${step}: ${cat.shortName}` : `Paso ${step}`;

@@ -8,8 +8,10 @@ import { saveShareLink } from "../services/participants.service";
 import { nameToParticipantId, participantDisplayName } from "../models/participant.model";
 import { getUserIdentity } from "../lib/userIdentity";
 import { useParticipants } from "../hooks/useParticipants";
+import { Link } from "react-router-dom";
 import { workshopUrl } from "../lib/routes";
 import SnapshotCard from "../components/SnapshotCard";
+import type { Intersections } from "../models/participant.model";
 
 // Matcha color palette used both for rendering and html2canvas cloning
 const MATCHA = {
@@ -24,9 +26,26 @@ interface SnapshotProps {
   action: string;
   aiIkigai: string | null;
   isLoadingAi: boolean;
+  intersections?: Intersections | null;
+  ikigai?: string | null;
+  actions?: string[] | null;
+  sessionId?: string | null;
+  showCompleteResumenCta?: boolean;
+  completeResumenUrl?: string;
 }
 
-export default function Snapshot({ name, action, aiIkigai, isLoadingAi }: SnapshotProps) {
+export default function Snapshot({
+  name,
+  action,
+  aiIkigai,
+  isLoadingAi,
+  intersections,
+  ikigai,
+  actions,
+  sessionId,
+  showCompleteResumenCta,
+  completeResumenUrl,
+}: SnapshotProps) {
   const navigate = useNavigate();
   const [session] = useQueryState("session", sessionParser);
   const [rawName] = useQueryState("name", nameParser);
@@ -125,6 +144,18 @@ export default function Snapshot({ name, action, aiIkigai, isLoadingAi }: Snapsh
         <div className="absolute bottom-0 left-0 right-0 h-64 bg-[radial-gradient(ellipse_60%_100%_at_50%_100%,rgba(30,42,26,0.06),transparent)]" />
       </div>
 
+      {/* Legacy CTA: complete new intersections step */}
+      {showCompleteResumenCta && completeResumenUrl && (
+        <div className="relative z-10 w-full max-w-[500px] mb-4 animate-fade-up">
+          <Link
+            to={completeResumenUrl}
+            className="block rounded-2xl border border-matcha-accent/30 bg-matcha-bg/80 px-5 py-4 text-center text-sm text-matcha-dark hover:border-matcha-accent hover:bg-matcha-accent/10 transition-colors"
+          >
+            Completa tu resumen con intersecciones e Ikigai →
+          </Link>
+        </div>
+      )}
+
       {/* Card */}
       <div className="animate-fade-up relative z-10 w-full flex justify-center">
         <SnapshotCard
@@ -133,7 +164,10 @@ export default function Snapshot({ name, action, aiIkigai, isLoadingAi }: Snapsh
           action={action}
           aiIkigai={aiIkigai}
           isLoadingAi={isLoadingAi}
-          sessionId={session}
+          sessionId={sessionId ?? session}
+          intersections={intersections}
+          ikigai={ikigai}
+          actions={actions}
         />
       </div>
 
