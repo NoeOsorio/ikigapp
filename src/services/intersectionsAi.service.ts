@@ -89,23 +89,14 @@ Devuelve solo el JSON con las cuatro claves: pasion, mision, profesion, vocacion
 
 function parseIntersectionsJson(raw: string): Intersections | null {
   const cleaned = raw.replace(/^```json?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
-  let data: unknown;
   try {
-    data = JSON.parse(cleaned);
+    const output = JSON.parse(cleaned) as Record<string, unknown>;
+    const { pasion, mision, profesion, vocacion } = output;
+    if ([pasion, mision, profesion, vocacion].every((v) => typeof v === "string")) {
+      return { pasion, mision, profesion, vocacion } as Intersections;
+    }
   } catch {
-    return null;
-  }
-  if (data == null || typeof data !== "object" || Array.isArray(data)) return null;
-  const o = data as Record<string, unknown>;
-  const pasion = o.pasion; const mision = o.mision;
-  const profesion = o.profesion; const vocacion = o.vocacion;
-  if (
-    typeof pasion === "string" &&
-    typeof mision === "string" &&
-    typeof profesion === "string" &&
-    typeof vocacion === "string"
-  ) {
-    return { pasion, mision, profesion, vocacion };
+    /* no-op */
   }
   return null;
 }
