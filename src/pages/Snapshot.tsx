@@ -137,7 +137,7 @@ export default function Snapshot({
   }, []);
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center gap-10 px-4 py-16 relative">
+    <div className="w-full min-h-screen relative bg-matcha-bg/30">
       {/* Background decoration */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(107,140,94,0.12),transparent)]" />
@@ -146,18 +146,18 @@ export default function Snapshot({
 
       {/* Legacy CTA: complete new intersections step */}
       {showCompleteResumenCta && completeResumenUrl && (
-        <div className="relative z-10 w-full max-w-[500px] mb-4 animate-fade-up">
+        <div className="relative z-10 max-w-2xl mx-auto px-4 pt-4 animate-fade-up">
           <Link
             to={completeResumenUrl}
-            className="block rounded-2xl border border-matcha-accent/30 bg-matcha-bg/80 px-5 py-4 text-center text-sm text-matcha-dark hover:border-matcha-accent hover:bg-matcha-accent/10 transition-colors"
+            className="block rounded-xl border-2 border-matcha-accent/40 bg-matcha-bg/80 px-5 py-3.5 text-center text-sm text-matcha-dark hover:border-matcha-accent hover:bg-matcha-accent/10 transition-colors font-medium"
           >
             Completa tu resumen con intersecciones e Ikigai →
           </Link>
         </div>
       )}
 
-      {/* Card */}
-      <div className="animate-fade-up relative z-10 w-full flex justify-center">
+      {/* Card - full width on mobile, max width on desktop */}
+      <div className="animate-fade-up relative z-10 max-w-2xl mx-auto">
         <SnapshotCard
           ref={cardRef}
           name={name}
@@ -172,25 +172,25 @@ export default function Snapshot({
       </div>
 
       {/* Action buttons */}
-      <div className="relative z-10 w-full max-w-[500px] flex flex-col sm:flex-row gap-3 animate-[fade-up_0.8s_ease_0.25s_both]">
+      <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row gap-3 animate-[fade-up_0.8s_ease_0.25s_both]">
         <button
           type="button"
           onClick={handleDownload}
-          className="flex-1 py-3.5 px-5 rounded-2xl bg-matcha-dark text-white font-display text-sm font-medium flex items-center justify-center gap-2 hover:bg-matcha-accent transition-all shadow-lg shadow-matcha-dark/20 hover:shadow-matcha-accent/25 hover:-translate-y-0.5 active:translate-y-0"
+          className="flex-1 py-3.5 px-5 rounded-xl bg-matcha-dark text-white font-display text-sm font-medium flex items-center justify-center gap-2 hover:bg-matcha-accent transition-all shadow-lg shadow-matcha-dark/20 hover:shadow-matcha-accent/25 hover:-translate-y-0.5 active:translate-y-0"
         >
           <span aria-hidden>↓</span> Descargar imagen
         </button>
         <button
           type="button"
           onClick={handleCopyLink}
-          className="flex-1 py-3.5 px-5 rounded-2xl bg-white text-matcha-dark font-display text-sm font-medium border border-matcha-accent/25 flex items-center justify-center gap-2 hover:border-matcha-accent hover:text-matcha-accent transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
+          className="flex-1 py-3.5 px-5 rounded-xl bg-white text-matcha-dark font-display text-sm font-medium border-2 border-matcha-accent/30 flex items-center justify-center gap-2 hover:border-matcha-accent hover:text-matcha-accent transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
         >
           <span aria-hidden>🔗</span> Copiar enlace
         </button>
         <button
           type="button"
           onClick={handleBackToLobby}
-          className="flex-1 py-3.5 px-5 rounded-2xl bg-white text-matcha-muted font-display text-sm font-medium border border-matcha-accent/15 flex items-center justify-center gap-2 hover:border-matcha-accent/40 transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
+          className="flex-1 py-3.5 px-5 rounded-xl bg-white text-matcha-muted font-display text-sm font-medium border-2 border-matcha-accent/20 flex items-center justify-center gap-2 hover:border-matcha-accent/40 hover:text-matcha-dark transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
         >
           Volver al lobby
         </button>
