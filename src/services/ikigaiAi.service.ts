@@ -66,6 +66,7 @@ Escribe el resumen de su Ikigai en 2–3 frases.`;
       ],
       max_tokens: 200,
       temperature: 0.75,
+      response_format: { type: "json_object" },
     }),
   });
 

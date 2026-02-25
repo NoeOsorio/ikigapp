@@ -1,5 +1,4 @@
-import { useRef, useCallback, useEffect } from "react";
-import html2canvas from "html2canvas";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser } from "../lib/nuqs";
@@ -8,30 +7,49 @@ import { saveShareLink } from "../services/participants.service";
 import { nameToParticipantId, participantDisplayName } from "../models/participant.model";
 import { getUserIdentity } from "../lib/userIdentity";
 import { useParticipants } from "../hooks/useParticipants";
+import { Link } from "react-router-dom";
 import { workshopUrl } from "../lib/routes";
 import SnapshotCard from "../components/SnapshotCard";
-
-// Matcha color palette used both for rendering and html2canvas cloning
-const MATCHA = {
-  dark: "#1e2a1a",
-  bg: "#e2ebe0",
-  accent: "#6b8c5e",
-  muted: "#4d6344",
-} as const;
+import { buildSnapshotPdf } from "../lib/snapshotPdf";
+import type { Intersections } from "../models/participant.model";
 
 interface SnapshotProps {
   name: string;
   action: string;
+  c1?: string[];
+  c2?: string[];
+  c3?: string[];
+  c4?: string[];
   aiIkigai: string | null;
   isLoadingAi: boolean;
+  intersections?: Intersections | null;
+  ikigai?: string | null;
+  actions?: string[] | null;
+  sessionId?: string | null;
+  showCompleteResumenCta?: boolean;
+  completeResumenUrl?: string;
 }
 
-export default function Snapshot({ name, action, aiIkigai, isLoadingAi }: SnapshotProps) {
+export default function Snapshot({
+  name,
+  action,
+  c1 = [],
+  c2 = [],
+  c3 = [],
+  c4 = [],
+  aiIkigai,
+  isLoadingAi,
+  intersections,
+  ikigai,
+  actions,
+  sessionId,
+  showCompleteResumenCta,
+  completeResumenUrl,
+}: SnapshotProps) {
   const navigate = useNavigate();
   const [session] = useQueryState("session", sessionParser);
   const [rawName] = useQueryState("name", nameParser);
   const { data: participants = [] } = useParticipants(session);
-  const cardRef = useRef<HTMLDivElement>(null);
 
   const userIdentity = getUserIdentity();
   const myParticipantId = userIdentity?.participantId ?? (rawName ? nameToParticipantId(rawName) : null);
@@ -54,109 +72,84 @@ export default function Snapshot({ name, action, aiIkigai, isLoadingAi }: Snapsh
     }
   }, [session, rawName]);
 
-  const handleDownload = useCallback(async () => {
-    const el = cardRef.current;
-    if (!el) return;
-
+  const handleDownloadPdf = useCallback(() => {
     try {
-      const canvas = await html2canvas(el, {
-        useCORS: true,
-        scale: 2,
-        backgroundColor: "#ffffff",
-        logging: false,
-        allowTaint: false,
-        imageTimeout: 0,
-        onclone: (clonedDoc) => {
-          const card = clonedDoc.querySelector<HTMLElement>("[data-snapshot-card]");
-          if (!card) return;
-
-          // Force Tailwind CSS-variable-based colors to plain hex/rgba so
-          // html2canvas (which doesn't resolve CSS custom properties) renders correctly.
-          const bgMap: Record<string, string> = {
-            "bg-matcha-dark": MATCHA.dark,
-            "bg-matcha-bg": MATCHA.bg,
-            "bg-matcha-accent": MATCHA.accent,
-            "bg-white": "#ffffff",
-          };
-          const textMap: Record<string, string> = {
-            "text-matcha-dark": MATCHA.dark,
-            "text-matcha-accent": MATCHA.accent,
-            "text-matcha-muted": MATCHA.muted,
-            "text-white": "#ffffff",
-          };
-
-          const all = [card, ...Array.from(card.querySelectorAll<HTMLElement>("*"))];
-          for (const el of all) {
-            for (const cls of Array.from(el.classList)) {
-              if (cls in bgMap) el.style.backgroundColor = bgMap[cls];
-              if (cls in textMap) el.style.color = textMap[cls];
-              if (cls === "ring-black/5") el.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.05)";
-              // Opacity-based classes that use CSS vars
-              if (cls === "text-white/50") el.style.color = "rgba(255,255,255,0.5)";
-              if (cls === "text-white/30") el.style.color = "rgba(255,255,255,0.3)";
-              if (cls === "bg-matcha-accent/20") el.style.backgroundColor = "rgba(107,140,94,0.2)";
-            }
-          }
-        },
+      buildSnapshotPdf({
+        name,
+        action,
+        c1,
+        c2,
+        c3,
+        c4,
+        intersections,
+        ikigai,
+        actions,
+        sessionId: sessionId ?? session ?? undefined,
       });
-
-      const link = document.createElement("a");
-      const filename = name
-        ? `ikigai-${name.replace(/\s+/g, "-")}.png`
-        : "ikigai-snapshot.png";
-      link.download = filename;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
     } catch (e) {
-      console.error("Download error:", e);
-      alert("No se pudo descargar la imagen. Intenta de nuevo.");
+      console.error("Download PDF error:", e);
+      alert("No se pudo descargar el PDF. Intenta de nuevo.");
     }
-  }, [name]);
+  }, [name, action, c1, c2, c3, c4, intersections, ikigai, actions, sessionId, session]);
 
   const handleCopyLink = useCallback(() => {
     navigator.clipboard.writeText(window.location.href);
   }, []);
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center gap-10 px-4 py-16 relative">
+    <div className="w-full min-h-screen relative bg-matcha-bg/30">
       {/* Background decoration */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(107,140,94,0.12),transparent)]" />
         <div className="absolute bottom-0 left-0 right-0 h-64 bg-[radial-gradient(ellipse_60%_100%_at_50%_100%,rgba(30,42,26,0.06),transparent)]" />
       </div>
 
-      {/* Card */}
-      <div className="animate-fade-up relative z-10 w-full flex justify-center">
+      {/* Legacy CTA: complete new intersections step */}
+      {showCompleteResumenCta && completeResumenUrl && (
+        <div className="relative z-10 max-w-2xl mx-auto px-4 pt-4 animate-fade-up">
+          <Link
+            to={completeResumenUrl}
+            className="block rounded-xl border-2 border-matcha-accent/40 bg-matcha-bg/80 px-5 py-3.5 text-center text-sm text-matcha-dark hover:border-matcha-accent hover:bg-matcha-accent/10 transition-colors font-medium"
+          >
+            Completa tu resumen con intersecciones e Ikigai →
+          </Link>
+        </div>
+      )}
+
+      {/* Card - full width on mobile, max width on desktop */}
+      <div className="animate-fade-up relative z-10 max-w-2xl mx-auto">
         <SnapshotCard
-          ref={cardRef}
           name={name}
           action={action}
           aiIkigai={aiIkigai}
           isLoadingAi={isLoadingAi}
-          sessionId={session}
+          sessionId={sessionId ?? session}
+          intersections={intersections}
+          ikigai={ikigai}
+          actions={actions}
         />
       </div>
 
       {/* Action buttons */}
-      <div className="relative z-10 w-full max-w-[500px] flex flex-col sm:flex-row gap-3 animate-[fade-up_0.8s_ease_0.25s_both]">
+      <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row gap-3 animate-[fade-up_0.8s_ease_0.25s_both]">
         <button
           type="button"
-          onClick={handleDownload}
-          className="flex-1 py-3.5 px-5 rounded-2xl bg-matcha-dark text-white font-display text-sm font-medium flex items-center justify-center gap-2 hover:bg-matcha-accent transition-all shadow-lg shadow-matcha-dark/20 hover:shadow-matcha-accent/25 hover:-translate-y-0.5 active:translate-y-0"
+          onClick={handleDownloadPdf}
+          className="flex-1 py-3.5 px-5 rounded-xl bg-matcha-dark text-white font-display text-sm font-medium flex items-center justify-center gap-2 hover:bg-matcha-accent transition-all shadow-lg shadow-matcha-dark/20 hover:shadow-matcha-accent/25 hover:-translate-y-0.5 active:translate-y-0"
         >
-          <span aria-hidden>↓</span> Descargar imagen
+          <span aria-hidden>↓</span> Descargar PDF
         </button>
         <button
           type="button"
           onClick={handleCopyLink}
-          className="flex-1 py-3.5 px-5 rounded-2xl bg-white text-matcha-dark font-display text-sm font-medium border border-matcha-accent/25 flex items-center justify-center gap-2 hover:border-matcha-accent hover:text-matcha-accent transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
+          className="flex-1 py-3.5 px-5 rounded-xl bg-white text-matcha-dark font-display text-sm font-medium border-2 border-matcha-accent/30 flex items-center justify-center gap-2 hover:border-matcha-accent hover:text-matcha-accent transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
         >
           <span aria-hidden>🔗</span> Copiar enlace
         </button>
         <button
           type="button"
           onClick={handleBackToLobby}
-          className="flex-1 py-3.5 px-5 rounded-2xl bg-white text-matcha-muted font-display text-sm font-medium border border-matcha-accent/15 flex items-center justify-center gap-2 hover:border-matcha-accent/40 transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
+          className="flex-1 py-3.5 px-5 rounded-xl bg-white text-matcha-muted font-display text-sm font-medium border-2 border-matcha-accent/20 flex items-center justify-center gap-2 hover:border-matcha-accent/40 hover:text-matcha-dark transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
         >
           Volver al lobby
         </button>

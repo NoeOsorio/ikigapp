@@ -1,5 +1,5 @@
 import { useQueryState } from "nuqs";
-import { getCategory, getContinueLabel, SEASON_CLASSES } from "../constants/categories";
+import { getCategory, SEASON_CLASSES } from "../constants/categories";
 import CategoryInput from "../components/CategoryInput";
 import { useIkigaiForm } from "../context/ikigaiFormContextValue";
 import { stepParser, sessionParser, nameParser, type StepValue } from "../lib/nuqs";
@@ -37,7 +37,7 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
   const theme = SEASON_CLASSES[config.season];
   const nextStepNum = Number(step) + 1;
   const nextStep: StepValue =
-    nextStepNum <= 4 ? (String(nextStepNum) as "1" | "2" | "3" | "4") : "5";
+    nextStepNum <= 4 ? (String(nextStepNum) as "1" | "2" | "3" | "4") : "intersections";
   const prevStep: StepValue = step === "1" ? "lobby" : (String(Number(step) - 1) as "1" | "2" | "3" | "4");
 
   const handleContinue = () => {
@@ -101,7 +101,7 @@ export default function CategoryStep({ step }: { step: "1" | "2" | "3" | "4" }) 
           onItemsChange={setItems}
           minItems={4}
           onContinue={handleContinue}
-          continueLabel={getContinueLabel(step)}
+          continueLabel={`Continuar →`}
           season={config.season}
           onBack={handleBack}
           backLabel={step === "1" ? "Volver al lobby" : "Volver"}
