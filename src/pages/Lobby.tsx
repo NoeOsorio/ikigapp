@@ -3,12 +3,13 @@ import { useState } from "react";
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser } from "../lib/nuqs";
 import { sessionUrl, workshopUrl, analyticsSessionUrl } from "../lib/routes";
-import { getCategory } from "../constants/categories";
+import { getCategory, type Season } from "../constants/categories";
 import { useParticipants } from "../hooks/useParticipants";
 import { nameToParticipantId, participantDisplayName } from "../models/participant.model";
 import { getUserIdentity } from "../lib/userIdentity";
 import type { StepValue } from "../lib/nuqs";
 import QRCode from "../components/QRCode";
+import BreathingBackground from "../components/BreathingBackground";
 
 function stepLabel(step: StepValue): string {
   if (step === "lobby") return "En el lobby";
@@ -17,6 +18,58 @@ function stepLabel(step: StepValue): string {
   const cat = getCategory(step as "1" | "2" | "3" | "4");
   return cat ? `Paso ${step}: ${cat.shortName}` : `Paso ${step}`;
 }
+
+function getStepSeason(step: StepValue): Season | null {
+  const cat = getCategory(step as "1" | "2" | "3" | "4");
+  return cat?.season ?? null;
+}
+
+const SEASON_CARD_STYLES: Record<Season, { 
+  bg: string; 
+  border: string; 
+  ring: string;
+  avatar: string;
+  avatarBg: string;
+  button: string;
+  buttonHover: string;
+}> = {
+  spring: {
+    bg: "bg-spring-bg/70 backdrop-blur-sm",
+    border: "border-spring-accent/50",
+    ring: "ring-spring-accent/30",
+    avatar: "text-white bg-spring-accent",
+    avatarBg: "text-spring-accent bg-spring-accent/20",
+    button: "border-spring-accent/50 bg-spring-accent/10 text-spring-accent hover:bg-spring-accent/20 hover:border-spring-accent/70",
+    buttonHover: "hover:bg-spring-accent/15 hover:border-spring-accent/60"
+  },
+  summer: {
+    bg: "bg-summer-bg/70 backdrop-blur-sm",
+    border: "border-summer-accent/50",
+    ring: "ring-summer-accent/30",
+    avatar: "text-white bg-summer-accent",
+    avatarBg: "text-summer-accent bg-summer-accent/20",
+    button: "border-summer-accent/50 bg-summer-accent/10 text-summer-accent hover:bg-summer-accent/20 hover:border-summer-accent/70",
+    buttonHover: "hover:bg-summer-accent/15 hover:border-summer-accent/60"
+  },
+  autumn: {
+    bg: "bg-autumn-bg/70 backdrop-blur-sm",
+    border: "border-autumn-accent/50",
+    ring: "ring-autumn-accent/30",
+    avatar: "text-white bg-autumn-accent",
+    avatarBg: "text-autumn-accent bg-autumn-accent/20",
+    button: "border-autumn-accent/50 bg-autumn-accent/10 text-autumn-accent hover:bg-autumn-accent/20 hover:border-autumn-accent/70",
+    buttonHover: "hover:bg-autumn-accent/15 hover:border-autumn-accent/60"
+  },
+  winter: {
+    bg: "bg-winter-bg/70 backdrop-blur-sm",
+    border: "border-winter-accent/50",
+    ring: "ring-winter-accent/30",
+    avatar: "text-white bg-winter-accent",
+    avatarBg: "text-winter-accent bg-winter-accent/20",
+    button: "border-winter-accent/50 bg-winter-accent/10 text-winter-accent hover:bg-winter-accent/20 hover:border-winter-accent/70",
+    buttonHover: "hover:bg-winter-accent/15 hover:border-winter-accent/60"
+  }
+};
 
 export default function Lobby() {
   const [session] = useQueryState("session", sessionParser);
@@ -56,7 +109,9 @@ export default function Lobby() {
   const isSolo = participants.length <= 1;
 
   return (
-    <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-10 pt-4 pb-10">
+    <>
+      <BreathingBackground />
+      <div className="relative w-full max-w-[1100px] mx-auto px-4 sm:px-10 pt-4 pb-10" style={{ zIndex: 1 }}>
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-9 animate-fade-up">
         <div>
           <p className="text-xs text-spring-muted tracking-widest uppercase mb-1 font-medium">
@@ -68,7 +123,7 @@ export default function Lobby() {
           {session && (
             <Link
               to={analyticsSessionUrl(session)}
-              className="inline-flex items-center gap-2 py-2.5 px-5 rounded-xl border-[1.5px] border-spring-dark/20 bg-white text-spring-dark font-body text-sm hover:border-spring-accent hover:text-spring-accent transition-colors min-h-[44px]"
+              className="inline-flex items-center gap-2 py-2.5 px-5 rounded-xl border-[1.5px] border-spring-dark/20 bg-white/80 backdrop-blur-sm text-spring-dark font-body text-sm hover:border-spring-accent hover:text-spring-accent transition-colors min-h-[44px]"
             >
               Estadísticas de la sesión
             </Link>
@@ -87,30 +142,48 @@ export default function Lobby() {
           sortedParticipants.map((p) => {
             const isMe = p.id === myParticipantId;
             const hasCompleted = p.isFinished && p.shareLink;
+            const season = getStepSeason(p.step);
+            const seasonStyles = season ? SEASON_CARD_STYLES[season] : null;
+            
+            // For "my" card, always show spring color when in lobby
+            const effectiveStyles = seasonStyles || (isMe ? SEASON_CARD_STYLES.spring : null);
+            
             return (
               <div
                 key={p.id}
-                className={`rounded-2xl p-5 sm:p-6 border shadow-sm flex flex-col gap-3 animate-fade-up ${
-                  isMe
-                    ? "bg-white border-spring-accent/30 border-solid shadow-md ring-1 ring-spring-accent/20"
-                    : "bg-spring-bg/30 border-spring-accent/10 border-dashed"
+                className={`rounded-2xl p-5 sm:p-6 border shadow-sm flex flex-col gap-3 animate-fade-up transition-all duration-500 ${
+                  effectiveStyles
+                    ? `${effectiveStyles.bg} ${effectiveStyles.border} ${isMe ? 'border-solid shadow-md ring-1' : 'border-solid'} ${isMe ? effectiveStyles.ring : ''}`
+                    : "bg-white/50 border-gray-200 border-dashed"
                 }`}
               >
                 <div className="flex items-center gap-4">
                   <div
                     className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display text-lg ${
-                      isMe
-                        ? "text-white bg-spring-accent"
-                        : "text-spring-accent bg-spring-accent/15"
+                      effectiveStyles
+                        ? isMe
+                          ? effectiveStyles.avatar
+                          : effectiveStyles.avatarBg
+                        : "text-gray-500 bg-gray-100"
                     }`}
                   >
                     {p.firstName.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-display text-base text-spring-dark mb-0.5">
+                    <p className={`font-display text-base mb-0.5 ${
+                      effectiveStyles ? 'text-spring-dark' : 'text-gray-700'
+                    }`}>
                       {participantDisplayName(p)}
                     </p>
-                    <p className={`text-[0.7rem] tracking-wide ${isMe ? "text-spring-accent font-medium" : "text-spring-muted"}`}>
+                    <p className={`text-[0.7rem] tracking-wide ${
+                      isMe 
+                        ? effectiveStyles 
+                          ? "text-spring-accent font-medium"
+                          : "text-gray-500 font-medium" 
+                        : effectiveStyles
+                        ? "text-spring-muted"
+                        : "text-gray-400"
+                    }`}>
                       {isMe ? "Tú" : stepLabel(p.step)}
                     </p>
                     {isMe && (
@@ -126,9 +199,11 @@ export default function Lobby() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`w-full py-2 px-4 rounded-lg border text-xs font-medium transition-all duration-200 text-center ${
-                      isMe
-                        ? "border-spring-accent/40 bg-spring-accent/5 text-spring-accent hover:bg-spring-accent/15 hover:border-spring-accent/60"
-                        : "border-spring-accent/30 bg-white/60 text-spring-accent hover:bg-spring-accent/10 hover:border-spring-accent/50"
+                      effectiveStyles
+                        ? isMe
+                          ? effectiveStyles.button
+                          : `border ${effectiveStyles.border} bg-white/60 ${effectiveStyles.buttonHover}`
+                        : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
                     }`}
                   >
                     Ver {isMe ? "mi" : "su"} tarjeta →
@@ -153,7 +228,7 @@ export default function Lobby() {
 
       {isSolo ? (
         // SOLO: Grande y prominente para facilitar compartir
-        <div className="mt-8 bg-white rounded-3xl p-8 sm:p-10 border border-spring-accent/15 shadow-lg animate-[fade-up_0.8s_ease_0.2s_both] flex flex-col items-center text-center gap-6">
+        <div className="mt-8 bg-white/80 backdrop-blur-sm rounded-3xl p-8 sm:p-10 border border-spring-accent/15 shadow-lg animate-[fade-up_0.8s_ease_0.2s_both] flex flex-col items-center text-center gap-6">
           <button
             type="button"
             onClick={() => setIsQRModalOpen(true)}
@@ -186,7 +261,7 @@ export default function Lobby() {
         </div>
       ) : (
         // MULTIPLE: Colapsable y compacto
-        <div className="mt-8 bg-white rounded-2xl border border-spring-accent/15 shadow-md overflow-hidden transition-all duration-300 animate-[fade-up_0.8s_ease_0.2s_both]">
+        <div className="mt-8 bg-white/80 backdrop-blur-sm rounded-2xl border border-spring-accent/15 shadow-md overflow-hidden transition-all duration-300 animate-[fade-up_0.8s_ease_0.2s_both]">
           <button
             type="button"
             onClick={() => setIsShareExpanded(!isShareExpanded)}
@@ -237,11 +312,11 @@ export default function Lobby() {
       {/* QR Code Modal */}
       {isQRModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-spring-dark/60 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-fade-in"
           onClick={() => setIsQRModalOpen(false)}
         >
           <div
-            className="bg-white rounded-3xl p-8 sm:p-12 shadow-2xl max-w-md w-full animate-scale-in"
+            className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 sm:p-12 shadow-2xl max-w-md w-full animate-scale-in"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-start mb-6">
@@ -277,5 +352,6 @@ export default function Lobby() {
         </div>
       )}
     </div>
+    </>
   );
 }
