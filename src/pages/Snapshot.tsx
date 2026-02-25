@@ -1,5 +1,4 @@
-import { useRef, useCallback, useEffect } from "react";
-import html2canvas from "html2canvas";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryState } from "nuqs";
 import { sessionParser, nameParser } from "../lib/nuqs";
@@ -11,19 +10,16 @@ import { useParticipants } from "../hooks/useParticipants";
 import { Link } from "react-router-dom";
 import { workshopUrl } from "../lib/routes";
 import SnapshotCard from "../components/SnapshotCard";
+import { buildSnapshotPdf } from "../lib/snapshotPdf";
 import type { Intersections } from "../models/participant.model";
-
-// Matcha color palette used both for rendering and html2canvas cloning
-const MATCHA = {
-  dark: "#1e2a1a",
-  bg: "#e2ebe0",
-  accent: "#6b8c5e",
-  muted: "#4d6344",
-} as const;
 
 interface SnapshotProps {
   name: string;
   action: string;
+  c1?: string[];
+  c2?: string[];
+  c3?: string[];
+  c4?: string[];
   aiIkigai: string | null;
   isLoadingAi: boolean;
   intersections?: Intersections | null;
@@ -37,6 +33,10 @@ interface SnapshotProps {
 export default function Snapshot({
   name,
   action,
+  c1 = [],
+  c2 = [],
+  c3 = [],
+  c4 = [],
   aiIkigai,
   isLoadingAi,
   intersections,
@@ -50,7 +50,6 @@ export default function Snapshot({
   const [session] = useQueryState("session", sessionParser);
   const [rawName] = useQueryState("name", nameParser);
   const { data: participants = [] } = useParticipants(session);
-  const cardRef = useRef<HTMLDivElement>(null);
 
   const userIdentity = getUserIdentity();
   const myParticipantId = userIdentity?.participantId ?? (rawName ? nameToParticipantId(rawName) : null);
@@ -73,64 +72,25 @@ export default function Snapshot({
     }
   }, [session, rawName]);
 
-  const handleDownload = useCallback(async () => {
-    const el = cardRef.current;
-    if (!el) return;
-
+  const handleDownloadPdf = useCallback(() => {
     try {
-      const canvas = await html2canvas(el, {
-        useCORS: true,
-        scale: 2,
-        backgroundColor: "#ffffff",
-        logging: false,
-        allowTaint: false,
-        imageTimeout: 0,
-        onclone: (clonedDoc) => {
-          const card = clonedDoc.querySelector<HTMLElement>("[data-snapshot-card]");
-          if (!card) return;
-
-          // Force Tailwind CSS-variable-based colors to plain hex/rgba so
-          // html2canvas (which doesn't resolve CSS custom properties) renders correctly.
-          const bgMap: Record<string, string> = {
-            "bg-matcha-dark": MATCHA.dark,
-            "bg-matcha-bg": MATCHA.bg,
-            "bg-matcha-accent": MATCHA.accent,
-            "bg-white": "#ffffff",
-          };
-          const textMap: Record<string, string> = {
-            "text-matcha-dark": MATCHA.dark,
-            "text-matcha-accent": MATCHA.accent,
-            "text-matcha-muted": MATCHA.muted,
-            "text-white": "#ffffff",
-          };
-
-          const all = [card, ...Array.from(card.querySelectorAll<HTMLElement>("*"))];
-          for (const el of all) {
-            for (const cls of Array.from(el.classList)) {
-              if (cls in bgMap) el.style.backgroundColor = bgMap[cls];
-              if (cls in textMap) el.style.color = textMap[cls];
-              if (cls === "ring-black/5") el.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.05)";
-              // Opacity-based classes that use CSS vars
-              if (cls === "text-white/50") el.style.color = "rgba(255,255,255,0.5)";
-              if (cls === "text-white/30") el.style.color = "rgba(255,255,255,0.3)";
-              if (cls === "bg-matcha-accent/20") el.style.backgroundColor = "rgba(107,140,94,0.2)";
-            }
-          }
-        },
+      buildSnapshotPdf({
+        name,
+        action,
+        c1,
+        c2,
+        c3,
+        c4,
+        intersections,
+        ikigai,
+        actions,
+        sessionId: sessionId ?? session ?? undefined,
       });
-
-      const link = document.createElement("a");
-      const filename = name
-        ? `ikigai-${name.replace(/\s+/g, "-")}.png`
-        : "ikigai-snapshot.png";
-      link.download = filename;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
     } catch (e) {
-      console.error("Download error:", e);
-      alert("No se pudo descargar la imagen. Intenta de nuevo.");
+      console.error("Download PDF error:", e);
+      alert("No se pudo descargar el PDF. Intenta de nuevo.");
     }
-  }, [name]);
+  }, [name, action, c1, c2, c3, c4, intersections, ikigai, actions, sessionId, session]);
 
   const handleCopyLink = useCallback(() => {
     navigator.clipboard.writeText(window.location.href);
@@ -159,7 +119,6 @@ export default function Snapshot({
       {/* Card - full width on mobile, max width on desktop */}
       <div className="animate-fade-up relative z-10 max-w-2xl mx-auto">
         <SnapshotCard
-          ref={cardRef}
           name={name}
           action={action}
           aiIkigai={aiIkigai}
@@ -175,10 +134,10 @@ export default function Snapshot({
       <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row gap-3 animate-[fade-up_0.8s_ease_0.25s_both]">
         <button
           type="button"
-          onClick={handleDownload}
+          onClick={handleDownloadPdf}
           className="flex-1 py-3.5 px-5 rounded-xl bg-matcha-dark text-white font-display text-sm font-medium flex items-center justify-center gap-2 hover:bg-matcha-accent transition-all shadow-lg shadow-matcha-dark/20 hover:shadow-matcha-accent/25 hover:-translate-y-0.5 active:translate-y-0"
         >
-          <span aria-hidden>↓</span> Descargar imagen
+          <span aria-hidden>↓</span> Descargar PDF
         </button>
         <button
           type="button"

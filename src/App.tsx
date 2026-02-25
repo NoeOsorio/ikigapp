@@ -142,6 +142,10 @@ function ResultViewInner() {
       <Snapshot
         name={displayName}
         action={action}
+        c1={payload.c1}
+        c2={payload.c2}
+        c3={payload.c3}
+        c4={payload.c4}
         aiIkigai={aiIkigai}
         isLoadingAi={isLoadingAi}
         intersections={payload.intersections}
