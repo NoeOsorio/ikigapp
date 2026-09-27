@@ -1,61 +1,150 @@
+<div align="center">
+
+<!-- TODO: crear docs/banner-dark.png y docs/banner-light.png (1280x640) con la paleta de noeosorio.com (fondo #18181b, acento #bef264 → #10b981) y descomentar
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/banner-dark.png">
+  <img alt="Ikigapp: talleres de ikigai guiados, en vivo y con IA" src="docs/banner-light.png" width="600">
+</picture>
+-->
+
 # 🌸 Ikigapp
 
-**Tu ikigai, paso a paso.** Una app web que guía el proceso de autoexploración basado en el modelo de los cuatro círculos: lo que amas, en lo que eres bueno, lo que el mundo necesita y por lo que te pueden pagar.
+**Talleres de ikigai en vivo: cada participante explora sus cuatro círculos y sale con su propósito y una acción concreta.**
 
----
+![License](https://img.shields.io/badge/license-MIT-84cc16?style=for-the-badge&labelColor=18181b)
+![React](https://img.shields.io/badge/React-19-84cc16?style=for-the-badge&logo=react&logoColor=bef264&labelColor=18181b)
+![Firebase](https://img.shields.io/badge/Firebase-18181b?style=for-the-badge&logo=firebase&logoColor=bef264)
+![OpenAI](https://img.shields.io/badge/OpenAI-gpt--4o--mini-84cc16?style=for-the-badge&logo=openai&logoColor=bef264&labelColor=18181b)
 
-## ¿Qué es el Ikigai?
+[Quickstart](#-quickstart) · [Configuración](#️-configuración) · [Reportar bug](../../issues)
 
-*Ikigai* (生き甲斐) es un concepto japonés que suele representarse como la intersección de cuatro áreas. **No es una fórmula rápida**, sino un proceso de clarificación por pasos: exploras cada círculo, identificas intersecciones (pasión, misión, vocación, profesión) y luego formulas una frase de propósito y acciones concretas.
+</div>
 
-| Círculo | Pregunta |
-|--------|----------|
-| 🌸 **Lo que amas** | ¿En qué actividades pierdes la noción del tiempo? ¿De qué no te cansas de hablar? |
-| ☀️ **En lo que eres bueno** | Habilidades técnicas y personales en las que destacas (pide feedback si dudas). |
-| 🍂 **Lo que el mundo necesita** | Problemas o causas que te importan: educación, salud, medio ambiente, comunidad… |
-| ❄️ **Por lo que te pueden pagar** | Lo que ya te pagan o podría razonablemente pagarte: trabajo actual, asesorías, cursos, contenido. |
+*Ikigai* (生き甲斐) es la intersección de lo que amas, en lo que eres bueno, lo que el mundo necesita y por lo que te pueden pagar. Ikigapp convierte ese ejercicio en un flujo guiado para talleres: el facilitador crea una sesión, los participantes entran con un QR, responden paso a paso y la IA les propone sus intersecciones. Al final cada quien redacta su frase de ikigai, se compromete con acciones y descarga su resultado en PDF.
 
-Las **intersecciones** dan sentido a la búsqueda: **pasión** (amas + eres bueno), **misión** (amas + mundo necesita), **profesión** (eres bueno + te pagan), **vocación** (mundo necesita + te pagan). El ikigai se va refinando con el tiempo; la app te acompaña en esa primera versión y en el siguiente paso: **una acción concreta** para validarlo en la práctica.
+## ✨ Features
 
----
+| | Feature | Detalle |
+|---|---|---|
+| 🧑‍🤝‍🧑 | **Sesiones en vivo** | Crea o únete a una sesión; el lobby muestra un QR y la lista de participantes en tiempo real (Firestore `onSnapshot`). |
+| 🍂 | **Cuatro círculos por estación** | Cada categoría tiene su propia paleta: primavera, verano, otoño e invierno. |
+| 🤖 | **Intersecciones con IA** | `gpt-4o-mini` sugiere pasión, misión, profesión y vocación a partir de tus respuestas, y genera un resumen de tu ikigai. |
+| 🎯 | **Propósito + acciones** | Redactas tu frase de ikigai y al menos una acción concreta para validarlo. |
+| 📄 | **Resultado para compartir** | Vista `/result` con enlace copiable y descarga en PDF (jsPDF). |
+| 💾 | **Borradores que sobreviven** | Las respuestas se guardan en `localStorage` y en Firestore; puedes cerrar la pestaña y retomar. |
+| 📊 | **Analytics del taller** | `/analytics` muestra tasa de finalización y promedios por círculo, con detalle por sesión y archivado. |
 
-## Qué hace esta app
+## 🖼️ Demo
 
-- **Sin backend:** todo el estado vive en la URL (sesión, nombre, pasos, respuestas). Ideal para talleres o uso individual.
-- **Flujo guiado:** Join → Lobby (con QR para compartir sesión) → 4 pasos de categorías → Paso de acción → Snapshot para ver, descargar o compartir tu tarjeta de resultado.
-- **Estética minimalista:** paleta tipo washi, theming por estación (primavera, verano, otoño, invierno) y tipografía Noto Serif/Sans JP.
+<!-- TODO: agregar docs/demo.gif (Join → Lobby con QR → 4 círculos → Intersecciones → Resultado) -->
+Demo próximamente.
 
----
+## 🚀 Quickstart
 
-## Cómo correr el proyecto
+### Requisitos
+
+- Node.js 20.19+ o 22.12+ (lo que pide Vite 7) y npm
+- Un proyecto de Firebase con **Cloud Firestore** habilitado
+- Una API key de OpenAI (para las intersecciones y el resumen con IA)
 
 ```bash
-# Instalar dependencias
+git clone https://github.com/NoeOsorio/ikigapp.git
+cd ikigapp
 npm install
-
-# Desarrollo (Vite + HMR)
-npm run dev
+cp .env.example .env.local   # rellena tus valores de Firebase y OpenAI
+npm run dev                  # http://localhost:5173
 ```
 
-Abre la URL que muestre Vite (por ejemplo `http://localhost:5173`).
+| Script | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo de Vite con HMR |
+| `npm run build` | Chequeo de tipos (`tsc -b`) + build de producción |
+| `npm run preview` | Sirve el build localmente |
+| `npm run lint` | ESLint en todo el proyecto |
 
-```bash
-# Build de producción
-npm run build
+## ⚙️ Configuración
 
-# Vista previa del build
-npm run preview
+Copia [`.env.example`](.env.example) a `.env.local`. Los valores de Firebase están en *Firebase console → Project Settings → Your apps → SDK setup*.
 
-# Linter
-npm run lint
+| Variable | Para qué sirve |
+|---|---|
+| `VITE_FIREBASE_API_KEY` | Config web de Firebase |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Config web de Firebase |
+| `VITE_FIREBASE_PROJECT_ID` | Proyecto donde viven las colecciones `sessions` y sus participantes |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Config web de Firebase |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Config web de Firebase |
+| `VITE_FIREBASE_APP_ID` | Config web de Firebase |
+| `VITE_OPENAI_API_KEY` | Llamadas a OpenAI (`gpt-4o-mini`) para intersecciones y resumen |
+
+> [!WARNING]
+> Las variables `VITE_*` se incrustan en el bundle del navegador. La llamada a OpenAI se hace desde el cliente, así que **tu API key queda visible** para cualquiera que abra la app. Úsala solo en local o con una key restringida y con límite de gasto; en producción mueve la llamada a un servidor o Cloud Function.
+
+> [!IMPORTANT]
+> La app no tiene autenticación: la seguridad de los datos depende de las **reglas de Firestore** de tu proyecto. Configúralas antes de desplegar (por ejemplo, restringiendo la lectura global que usa `/analytics`).
+
+## 🏗️ Arquitectura
+
+SPA de React sin servidor propio: el estado de navegación vive en la URL (`nuqs`), los datos del taller en Firestore y la IA se llama directamente desde el navegador.
+
+```mermaid
+flowchart LR
+    U[Participante] -->|QR / enlace| J["/session<br/>Join"]
+    J --> L["/workshop?step=lobby<br/>Lobby + QR"]
+    L --> C["step=1…4<br/>Cuatro círculos"]
+    C --> I["step=intersections<br/>Intersecciones + ikigai + acciones"]
+    I --> R["/result<br/>Resultado + PDF"]
+    F[Facilitador] --> A["/analytics"]
+
+    subgraph Browser
+      J & L & C & I & R & A
+    end
+
+    L & C & I & R & A <-->|React Query| FS[(Cloud Firestore<br/>sessions / participants)]
+    I & R -->|fetch| OAI[OpenAI API<br/>gpt-4o-mini]
 ```
+
+<details>
+<summary>Stack completo</summary>
+
+React 19 · TypeScript 5.9 · Vite 7 · Tailwind CSS v4 · React Router 7 · nuqs (estado en query params) · TanStack Query 5 · Firebase 12 (Firestore) · framer-motion · lucide-react · qrcode.react · jsPDF · nanoid
+
+</details>
+
+## 📁 Estructura
+
+<details>
+<summary>Ver estructura</summary>
+
+```text
+src/
+├── App.tsx           # Rutas: /, /session, /workshop, /result, /analytics
+├── pages/            # Join, Lobby, CategoryStep, IntersectionsStep, Snapshot, Analytics, About
+├── components/       # Diagrama de Venn, QR, fondos animados, layout y nav
+├── services/         # Firestore (sessions, participants, analytics) y OpenAI
+├── hooks/            # React Query: useSession, useParticipant(s), useAiIkigai
+├── models/           # Tipos y converters de Firestore
+├── context/          # Estado del formulario del ikigai
+├── lib/              # nuqs, rutas, PDF, storage local
+├── constants/        # Las cuatro categorías y sus estaciones
+└── firebase/         # Inicialización de Firebase
+```
+
+</details>
+
+## 🤝 Contribuir
+
+Issues y pull requests son bienvenidos. Antes de abrir un PR, verifica que `npm run lint` y `npm run build` pasen.
+
+## 📄 Licencia
+
+Distribuido bajo licencia MIT. Ver [`LICENSE`](LICENSE).
 
 ---
 
-## Stack
+<div align="center">
 
-React 19, TypeScript, Vite, Tailwind CSS v4, **nuqs** (estado en query params), html2canvas (export de snapshot), qrcode.react, nanoid.
+*El ikigai no se "descubre" un día y ya; se refina con autoobservación y pequeños experimentos en la vida real.*
 
----
+Hecho con ☕ por [Noé Osorio](https://noeosorio.com) y colaboradores · [business@noeosorio.com](mailto:business@noeosorio.com)
 
-*El ikigai no se “descubre” un día y ya; se va refinando con autoobservación y pequeños experimentos en la vida real.*
+</div>
