@@ -23,8 +23,8 @@ Patterns it borrows, not looks:
   pair. ([GamesBeat](https://gamesbeat.com/florence-uses-clever-interactions-to-create-a-relatable-mobile-game-about-romance/))
 - **How We Feel: place it, don't describe it.** Choosing on a visual field is easier than writing
   a definition. ([Yale Medicine](https://medicine.yale.edu/news-article/the-how-we-feel-app-helping-emotions-work-for-us-not-against-us/))
-- **Spotify Wrapped: the result is a story about you.** The ending is a short vertical sequence of
-  cards that you may keep private or share. ([UX Collective](https://uxdesign.cc/why-is-spotify-wrapped-so-popular-5c503e79a3ee))
+- **Spotify Wrapped: the result tells who you are.** Personal data becomes a story people want to
+  keep; here it is one signed sheet, not a slideshow. ([UX Collective](https://uxdesign.cc/why-is-spotify-wrapped-so-popular-5c503e79a3ee))
 - **Jackbox and Mentimeter, only for workshops:** a short code to join, and a projected view of
   the room that never shows anyone's answers.
   ([Built In](https://builtin.com/articles/jackbox-games-design-party-pack),
@@ -43,11 +43,13 @@ in a well-made journal with a calm guide beside you.
   page.
 - **Variance:** 6 (Offset Asymmetric). Left-aligned editorial type, nothing centered by default.
 - **Motion:** 4 (Fluid CSS), calm; one rich moment at the end.
-- **The ownable idea: your hanko runs through the whole exercise.** A hanko is a personal seal used
-  in Japan to sign what is yours. At the start you make your seal (your initials, cut into a
-  vermilion stamp shape). Every pair you form is stamped with it; your finished ikigai carries the
-  full seal. The seal is the progress, the signature and the ending at once, with no numbers. No
-  cherry blossoms, lanterns, seasons, kanji decoration, mascots or pastel skies.
+- **The ownable idea: your hanko is carved by your own words.** A hanko is a personal seal used in
+  Japan to sign what is yours. In Ikigapp nobody else has yours: each circle you complete carves
+  one stroke into it, shaped by what you wrote there, so no two seals are alike. Each pair you form
+  deepens the carving where its two strokes meet. When your ikigai is done, the seal is complete
+  and is pressed onto your sheet, with the imperfect texture of real ink. The seal is the progress,
+  the signature and the keepsake at once, with no numbers. No cherry blossoms, lanterns, seasons,
+  kanji decoration, mascots or pastel skies.
 
 ## 2. Color Palette & Roles
 
@@ -70,17 +72,19 @@ The four circles are **not** color-coded. They are told apart by a plain symbol 
   ink traps and a slightly hand-cut warmth, so the questions and your own sentence feel written,
   not typeset by a template. Weight 400 to 500, tracking -0.02em at large sizes. Chosen over the
   common Instrument Serif plus warm-bone recipe, which reads as generic.
-- **Interface and body:** Geist — labels, buttons, lists, help. 16px minimum, line-height 1.5,
-  60ch max.
-- **Numbers:** Geist with tabular figures where counts update live (the workshop page).
+- **Interface and body:** a humanist sans with less common use than Geist; to be chosen by showing
+  Noe two candidates on real screens (for example Instrument Sans and Hanken Grotesk) next to
+  Fraunces. 16px minimum, line-height 1.5, 60ch max, tabular figures where counts update live.
 - **Banned:** Inter; generic serifs (Times New Roman, Georgia, Garamond); Japanese display fonts as
   decoration; all-caps paragraphs.
 
 ## 4. The experience, surface by surface
 
 - **Start:** one sentence about what you will get and how long it takes (about 30 to 45 minutes),
-  one button «Empezar». The first thing you do is make your seal: type your initials and the stamp
-  is cut in front of you. No account to start; the answers are saved and reachable from a private
+  one button «Empezar». You see your seal as an uncarved block that will take shape as you go.
+- **Coming back:** returning hours or days later opens «Donde lo dejaste»: your seal as it is, the
+  circle you were in, and one button to continue. «Pausar» is always one tap away. No streaks and no
+  nagging reminders; at most, one reminder the person asks for. No account to start; the answers are saved and reachable from a private
   link, with an optional sign-in to keep several ikigais across devices.
 - **The four circles, any order:** Lo que amas, Lo que haces bien, Lo que el mundo necesita, Por lo
   que te pagarían, each with a plain symbol, same size, same weight. You enter one, answer, come
@@ -96,9 +100,10 @@ The four circles are **not** color-coded. They are told apart by a plain symbol 
   you keep it, your seal stamps it. Opposite circles never pair.
 - **Your sentence and first steps:** a calm page to write your ikigai in one sentence and one to
   three concrete steps for the next weeks.
-- **The hanko result:** a vertical 9:16 sequence of cards (each pair, your sentence, your steps). The
-  last card receives your vermilion seal. Private by default; you choose to download, share as
-  images, or share a link.
+- **The signed sheet (result):** one sheet, made to be printed or framed: your sentence large in
+  Fraunces, your four pairs, your first steps, and your seal pressed at the bottom. Private by
+  default. Downloading a PDF, or a single image to share, are derived from the sheet, never
+  required.
 - **Mis ikigais:** if you return months later you can make a new one and see past versions side by
   side; built for many versions with search and dates, never a feed.
 - **Workshops (optional):** the projector view uses a dark theme (Ink background, Paper text) so it
@@ -138,11 +143,11 @@ Decided with Emil Kowalski's rules: fast for everyday UI, one rich moment.
   animation when adding with Enter.
 - **Joining:** the two chosen answers slide toward each other and the pair card settles with a
   soft spring (stiffness 100, damping 20), under 500ms.
-- **Making your seal:** the initials are cut into the stamp with a short reveal (clip-path from
-  the center, 400ms, ease-in-out); rare, once per ikigai.
-- **Hanko:** each kept pair is stamped once, 220ms scale from 1.15 to 1 with a slight rotation,
-  plus a short haptic on phones; the final card's full seal uses the same press, slightly slower
-  (320ms). Tappable to skip.
+- **Carving:** when a circle is completed, its stroke is carved into the seal with a short reveal
+  (clip-path along the stroke, 400ms, ease-in-out); when a pair is kept, the meeting point deepens
+  in 240ms. Rare moments, a handful per ikigai.
+- **Pressing the seal:** at the end the seal presses onto the sheet once, 320ms scale from 1.15 to
+  1 with a slight rotation, plus a short haptic on phones; tappable to skip.
 - **Projector (workshops):** finished counts update with a gentle number roll.
 - **Reduced motion:** opacity only; the seal appears without the press.
 - Only transform and opacity are animated. No perpetual animation on the personal exercise.
