@@ -54,6 +54,29 @@ Paper file «Ikigapp rediseño (NOE-560)», pages «Estaciones, participante» a
 - Progress through the circles is shown with the four season illustrations, not numbers.
 - The facilitator space uses the same warm dawn paper, the four-season mark and seasonal accents.
 
+## Core concept: your ikigai is a garden you tend (Noe 2026-11-14, supersedes seasons as steps)
+
+Noe noticed that four seasons in sequence contradict the ikigai: the four circles exist at the same
+time and none is more important than another. Paper page «Jardín, juntar respuestas».
+
+- **Four equal zones around a center**, each with a plain symbol anyone understands: Corazón (lo que
+  amas), Manos (lo que haces bien), Mundo (lo que el mundo necesita), Moneda (por lo que te
+  pagarían). Same size, no order, no «step one»; the person tends any zone in any order.
+- **Filling a zone** keeps the living help: one question at a time, «Si no se te ocurre,
+  pregúntate» prompts, tap-to-add ideas, voice, and garden life growing per answer (blossoms,
+  stones and moss, water and koi, harvest).
+- **Joining is the core gesture.** The person joins one of their own answers with one from an
+  adjacent zone; the pair forms with a proposed sentence they can edit, then is planted on the border
+  between both zones. Pairs follow everyday Spanish: Corazón + Manos = Pasión («hacer algo con el
+  corazón»), Corazón + Mundo = Misión, Manos + Moneda = Profesión («ganarse la vida con las manos»),
+  Mundo + Moneda = Vocación. Opposite zones never pair, as in the ikigai diagram.
+- **The ikigai is the stone lantern in the center**, lit when the four pairs exist; the final card
+  shows the lit garden and the person's sentence.
+- Seasons remain only as ambience (light, falling petals), never as steps.
+
+The earlier «living tree» section below stays valid for the help inside each zone; its season order
+is replaced by the garden.
+
 ## A living, cozy experience (Noe 2026-11-14)
 
 Noe: «super cozy, super fácil, que te anime a responder lo que no sabes que puedes responder, más allá
