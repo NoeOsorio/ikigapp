@@ -36,17 +36,25 @@ Evidence and screenshots live on NOE-560.
 
 ## Noe's decisions (2026-11-14)
 
-- **Audience:** live facilitated workshops and people alone, one flow with two entry points.
-- **Access:** facilitators sign in with Google; participants never create an account and get an
-  unguessable private link. Statistics are facilitator-only.
+- **Audience (revised by Noe, 2026-11-14):** a personal tool first. Anyone finds Ikigapp and does
+  their ikigai consciously on their own, at their own pace. Workshops are optional: a facilitator
+  hands out the same tool and each person uses it privately.
+- **Access (revised by Noe, 2026-11-14):** no account to start; a private link reopens your
+  ikigai, with optional sign-in to keep several across devices. Answers are private: nobody,
+  including a facilitator, sees them unless the person chooses to share their result. Facilitators
+  sign in with Google and see only how many joined and finished, plus anonymous themes.
 - **AI:** kept, called only from a server with a spending limit; the key never reaches the browser.
 - **Database:** recover the February project and its past workshops.
 
 ## Design direction
 
-Pending. Every design proposal from 2026-11-14 (flat, four seasons, living tree, garden) was rejected
-by Noe and deleted; no visual or interaction concept is decided. The next proposal starts from Noe's
-direction, not from these.
+Proposal in `DESIGN.md` at the repo root, pending Noe's approval. Earlier proposals from
+2026-11-14 (flat, four seasons, living tree, garden) were rejected and deleted.
+
+**Pending rework:** the user stories, acceptance bar, real cases and requirements below were
+written workshop-first. They must be re-prioritized personal-first (the person alone becomes P1,
+workshops become an optional story) and the facilitator's access to answers removed, before
+`/speckit-plan`.
 
 ## Acceptance bar (what a good result looks like)
 
