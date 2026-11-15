@@ -42,29 +42,28 @@ Evidence and screenshots live on NOE-560.
 - **AI:** kept, called only from a server with a spending limit; the key never reaches the browser.
 - **Database:** recover the February project and its past workshops.
 
-## Visual identity (kept and elevated, Noe 2026-11-14)
+## Visual identity (Noe 2026-11-14)
 
-The redesign keeps the app's Japanese four-seasons identity; a flat "botanical" proposal was rejected.
-Paper file «Ikigapp rediseño (NOE-560)», pages «Estaciones, participante» and «Estaciones, facilitador».
+Japanese, warm and alive, without seasons. A flat "botanical" proposal was rejected for dropping the
+Japanese identity; a later four-seasons structure was dropped because seasons are sequential and the
+ikigai circles are not (Noe: «quitarlas»).
 
-- Shippori Mincho for headings, DM Sans for text; the existing seasonal palettes (spring, summer,
-  autumn, winter) plus dawn (landing, join, intersections, sentence), matcha (card) as hubs.
-- Each circle is a full season: its background, its falling illustration (sakura, leaf, momiji,
-  snowflake, the existing SVGs) and its kanji (春 夏 秋 冬) placed where it never covers text.
-- Progress through the circles is shown with the four season illustrations, not numbers.
-- The facilitator space uses the same warm dawn paper, the four-season mark and seasonal accents.
+- Shippori Mincho for headings, DM Sans for text; warm dawn paper as the ground, matcha for the card.
+- Each zone keeps a soft color of its own (rose, green, blue, amber), used only to tell zones apart;
+  none is brighter or bigger than another.
+- Japanese elements that carry meaning: the garden, the stone lantern (the ikigai), sakura, ink.
+- No seasonal kanji, no season names, no season order anywhere in the interface.
 
-## Core concept: your ikigai is a garden you tend (Noe 2026-11-14, supersedes seasons as steps)
+## Core concept: your ikigai is a garden you tend (Noe 2026-11-14)
 
-Noe noticed that four seasons in sequence contradict the ikigai: the four circles exist at the same
-time and none is more important than another. Paper page «Jardín, juntar respuestas».
+The four circles exist at the same time and none is more important than another. Paper page «Jardín,
+juntar respuestas».
 
 - **Four equal zones around a center**, each with a plain symbol anyone understands: Corazón (lo que
   amas), Manos (lo que haces bien), Mundo (lo que el mundo necesita), Moneda (por lo que te
   pagarían). Same size, no order, no «step one»; the person tends any zone in any order.
-- **Filling a zone** keeps the living help: one question at a time, «Si no se te ocurre,
-  pregúntate» prompts, tap-to-add ideas, voice, and garden life growing per answer (blossoms,
-  stones and moss, water and koi, harvest).
+- **Garden life grows per answer** in each zone: blossoms (Corazón), stones and moss (Manos), water and
+  koi (Mundo), sprouts and harvest (Moneda).
 - **Joining is the core gesture.** The person joins one of their own answers with one from an
   adjacent zone; the pair forms with a proposed sentence they can edit, then is planted on the border
   between both zones. Pairs follow everyday Spanish: Corazón + Manos = Pasión («hacer algo con el
@@ -72,47 +71,32 @@ time and none is more important than another. Paper page «Jardín, juntar respu
   Mundo + Moneda = Vocación. Opposite zones never pair, as in the ikigai diagram.
 - **The ikigai is the stone lantern in the center**, lit when the four pairs exist; the final card
   shows the lit garden and the person's sentence.
-- Seasons remain only as ambience (light, falling petals), never as steps.
 
-The earlier «living tree» section below stays valid for the help inside each zone; its season order
-is replaced by the garden.
+## Help inside each zone (Noe: «super cozy, que te anime a responder, una app viva»)
 
-## A living, cozy experience (Noe 2026-11-14)
-
-Noe: «super cozy, super fácil, que te anime a responder lo que no sabes que puedes responder, más allá
-de un formulario, que se sienta una app viva». Paper page «Viva, tu árbol».
-
-- **Your tree grows.** Each answer becomes something alive on a branch: a sakura blossom (what you
-  love), a leaf (what you do well), a momiji (what the world needs), snow (what you'd be paid for).
-  The final card is your four-season tree.
-- **One question at a time, like a conversation**, with the answer field always at hand; adding an
-  answer makes the next blossom appear.
-- **«Si no se te ocurre, pregúntate»:** memory prompts per season (curated, written in Spanish; at
-  least eight per season) that unblock people who don't know what to write.
+- **One question at a time, like a conversation**, with the answer field always at hand.
+- **«Si no se te ocurre, pregúntate»:** curated memory prompts in Spanish, at least eight per zone,
+  that open the field with the start of an answer when tapped.
 - **Ideas you can tap:** suggestions based on what the person already wrote, added with one tap.
-- **Live connections:** when an idea appears in two seasons, a warm note points it out («Enseñar
-  florece en dos estaciones»), seeding the intersections before the AI step.
+- **Live connections:** when an idea shows up in two adjacent zones, a warm note points it out
+  («Enseñar aparece también en lo que amas. Ahí puede estar tu pasión»), inviting the join.
 - **Answer by voice:** a microphone next to the field; speech is transcribed in the cloud.
-- **A pause between seasons:** a short screen where your tree blooms before the next season.
-- **The workshop forest:** a projector view where every participant is a tree that grows as they
-  answer; no names or answers are shown.
+- **The workshop garden:** a projector view where each participant's garden grows as they answer; no
+  names or answers are shown.
 
-Decisions this adds for Noe: AI cost per participant for suggestions and live connections, and voice
-transcription cost (both cloud services with a spending limit).
+Decisions this adds for Noe: AI cost per participant for suggestions, live connections and proposed
+pair sentences, and voice transcription cost (both cloud services with a spending limit).
 
 ## Motion (decided with Emil Kowalski's design-engineering rules)
 
-- A new blossom, leaf, momiji or snowflake grows onto the branch when an answer is added: scale from
-  0.6 with opacity, about 320 ms on a soft spring, from its attachment point; this is the core
-  delight and plays once per answer.
-- The pause between seasons is a rare moment: the tree's new pieces settle one after another with a
-  60 ms stagger, under 1 s in total, then the button appears; skippable by tapping.
-- The forest view adds one tree piece at a time as participants answer, with the same growth motion.
-
-- Falling petals, leaves and snow: decorative, continuous, linear drift with gentle sway on a canvas,
-  paused when the tab is hidden; static scattered illustrations under `prefers-reduced-motion`.
-- Season change between circles: background color crossfade about 400 ms ease-in-out; the new
-  particles fade in, the old ones fade out; no layout movement.
+- A new blossom, stone, koi or sprout grows into its zone when an answer is added: scale from 0.6
+  with opacity, about 320 ms on a soft spring; plays once per answer.
+- Joining: the two chosen answers draw toward each other along a short thread, and the pair blooms on
+  the border with the same growth motion; under 600 ms.
+- The lantern lights with a warm glow that fades in over about 800 ms the first time all four pairs
+  exist; this rare moment may linger, and is skippable by tapping.
+- A few sakura petals drift across the garden: decorative, linear drift with gentle sway, paused when
+  the tab is hidden, static under `prefers-reduced-motion`; never over text.
 - Text and inputs are visible on first paint; no entrance animation may hide content (today it hides
   it for more than 3 s).
 - Answer chips enter with opacity and a 4 px rise, 180 ms, strong ease-out, interruptible transitions.
