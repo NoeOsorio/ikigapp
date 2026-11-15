@@ -42,68 +42,11 @@ Evidence and screenshots live on NOE-560.
 - **AI:** kept, called only from a server with a spending limit; the key never reaches the browser.
 - **Database:** recover the February project and its past workshops.
 
-## Visual identity (Noe 2026-11-14)
+## Design direction
 
-Japanese, warm and alive, without seasons. A flat "botanical" proposal was rejected for dropping the
-Japanese identity; a later four-seasons structure was dropped because seasons are sequential and the
-ikigai circles are not (Noe: «quitarlas»).
-
-- Shippori Mincho for headings, DM Sans for text, ink #2b2118 on warm paper #fbf6ee.
-- All four zones share one sand ground (#efe4d0), the same size and the same weight; they are told
-  apart only by their symbol and by what grows in them: red camellias (Corazón), stones and moss
-  (Manos), water and a koi (Mundo), rice sprouts and fruit (Moneda).
-- Japanese elements that carry meaning: the garden, the stone lantern (the ikigai), camellias, ink.
-- No season cues anywhere: no per-zone tints that map to seasons, no sakura, momiji, snow or cherry
-  branch, no seasonal kanji, names or order.
-
-## Core concept: your ikigai is a garden you tend (Noe 2026-11-14)
-
-The four circles exist at the same time and none is more important than another. Paper page «Jardín,
-juntar respuestas».
-
-- **Four equal zones around a center**, each with a plain symbol anyone understands: Corazón (lo que
-  amas), Manos (lo que haces bien), Mundo (lo que el mundo necesita), Moneda (por lo que te
-  pagarían). Same size, no order, no «step one»; the person tends any zone in any order.
-- **Garden life grows per answer** in each zone: blossoms (Corazón), stones and moss (Manos), water and
-  koi (Mundo), sprouts and harvest (Moneda).
-- **Joining is the core gesture.** The person joins one of their own answers with one from an
-  adjacent zone; the pair forms with a proposed sentence they can edit, then is planted on the border
-  between both zones. Pairs follow everyday Spanish: Corazón + Manos = Pasión («hacer algo con el
-  corazón»), Corazón + Mundo = Misión, Manos + Moneda = Profesión («ganarse la vida con las manos»),
-  Mundo + Moneda = Vocación. Opposite zones never pair, as in the ikigai diagram.
-- **The ikigai is the stone lantern in the center**, lit when the four pairs exist; the final card
-  shows the lit garden and the person's sentence.
-
-## Help inside each zone (Noe: «super cozy, que te anime a responder, una app viva»)
-
-- **One question at a time, like a conversation**, with the answer field always at hand.
-- **«Si no se te ocurre, pregúntate»:** curated memory prompts in Spanish, at least eight per zone,
-  that open the field with the start of an answer when tapped.
-- **Ideas you can tap:** suggestions based on what the person already wrote, added with one tap.
-- **Live connections:** when an idea shows up in two adjacent zones, a warm note points it out
-  («Enseñar aparece también en lo que amas. Ahí puede estar tu pasión»), inviting the join.
-- **Answer by voice:** a microphone next to the field; speech is transcribed in the cloud.
-- **The workshop garden:** a projector view where each participant's garden grows as they answer; no
-  names or answers are shown.
-
-Decisions this adds for Noe: AI cost per participant for suggestions, live connections and proposed
-pair sentences, and voice transcription cost (both cloud services with a spending limit).
-
-## Motion (decided with Emil Kowalski's design-engineering rules)
-
-- A new blossom, stone, koi or sprout grows into its zone when an answer is added: scale from 0.6
-  with opacity, about 320 ms on a soft spring; plays once per answer.
-- Joining: the two chosen answers draw toward each other along a short thread, and the pair blooms on
-  the border with the same growth motion; under 600 ms.
-- The lantern lights with a warm glow that fades in over about 800 ms the first time all four pairs
-  exist; this rare moment may linger, and is skippable by tapping.
-- A few sakura petals drift across the garden: decorative, linear drift with gentle sway, paused when
-  the tab is hidden, static under `prefers-reduced-motion`; never over text.
-- Text and inputs are visible on first paint; no entrance animation may hide content (today it hides
-  it for more than 3 s).
-- Answer chips enter with opacity and a 4 px rise, 180 ms, strong ease-out, interruptible transitions.
-- Buttons scale to 0.97 on press, 140 ms ease-out. Nothing animates from scale 0.
-- No animation on keyboard actions (adding an answer with Enter).
+Pending. Every design proposal from 2026-11-14 (flat, four seasons, living tree, garden) was rejected
+by Noe and deleted; no visual or interaction concept is decided. The next proposal starts from Noe's
+direction, not from these.
 
 ## Acceptance bar (what a good result looks like)
 
