@@ -54,7 +54,37 @@ Paper file «Ikigapp rediseño (NOE-560)», pages «Estaciones, participante» a
 - Progress through the circles is shown with the four season illustrations, not numbers.
 - The facilitator space uses the same warm dawn paper, the four-season mark and seasonal accents.
 
+## A living, cozy experience (Noe 2026-11-14)
+
+Noe: «super cozy, super fácil, que te anime a responder lo que no sabes que puedes responder, más allá
+de un formulario, que se sienta una app viva». Paper page «Viva, tu árbol».
+
+- **Your tree grows.** Each answer becomes something alive on a branch: a sakura blossom (what you
+  love), a leaf (what you do well), a momiji (what the world needs), snow (what you'd be paid for).
+  The final card is your four-season tree.
+- **One question at a time, like a conversation**, with the answer field always at hand; adding an
+  answer makes the next blossom appear.
+- **«Si no se te ocurre, pregúntate»:** memory prompts per season (curated, written in Spanish; at
+  least eight per season) that unblock people who don't know what to write.
+- **Ideas you can tap:** suggestions based on what the person already wrote, added with one tap.
+- **Live connections:** when an idea appears in two seasons, a warm note points it out («Enseñar
+  florece en dos estaciones»), seeding the intersections before the AI step.
+- **Answer by voice:** a microphone next to the field; speech is transcribed in the cloud.
+- **A pause between seasons:** a short screen where your tree blooms before the next season.
+- **The workshop forest:** a projector view where every participant is a tree that grows as they
+  answer; no names or answers are shown.
+
+Decisions this adds for Noe: AI cost per participant for suggestions and live connections, and voice
+transcription cost (both cloud services with a spending limit).
+
 ## Motion (decided with Emil Kowalski's design-engineering rules)
+
+- A new blossom, leaf, momiji or snowflake grows onto the branch when an answer is added: scale from
+  0.6 with opacity, about 320 ms on a soft spring, from its attachment point; this is the core
+  delight and plays once per answer.
+- The pause between seasons is a rare moment: the tree's new pieces settle one after another with a
+  60 ms stagger, under 1 s in total, then the button appears; skippable by tapping.
+- The forest view adds one tree piece at a time as participants answer, with the same growth motion.
 
 - Falling petals, leaves and snow: decorative, continuous, linear drift with gentle sway on a canvas,
   paused when the tab is hidden; static scattered illustrations under `prefers-reduced-motion`.
