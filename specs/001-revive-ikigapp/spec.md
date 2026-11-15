@@ -42,6 +42,30 @@ Evidence and screenshots live on NOE-560.
 - **AI:** kept, called only from a server with a spending limit; the key never reaches the browser.
 - **Database:** recover the February project and its past workshops.
 
+## Visual identity (kept and elevated, Noe 2026-11-14)
+
+The redesign keeps the app's Japanese four-seasons identity; a flat "botanical" proposal was rejected.
+Paper file «Ikigapp rediseño (NOE-560)», pages «Estaciones, participante» and «Estaciones, facilitador».
+
+- Shippori Mincho for headings, DM Sans for text; the existing seasonal palettes (spring, summer,
+  autumn, winter) plus dawn (landing, join, intersections, sentence), matcha (card) as hubs.
+- Each circle is a full season: its background, its falling illustration (sakura, leaf, momiji,
+  snowflake, the existing SVGs) and its kanji (春 夏 秋 冬) placed where it never covers text.
+- Progress through the circles is shown with the four season illustrations, not numbers.
+- The facilitator space uses the same warm dawn paper, the four-season mark and seasonal accents.
+
+## Motion (decided with Emil Kowalski's design-engineering rules)
+
+- Falling petals, leaves and snow: decorative, continuous, linear drift with gentle sway on a canvas,
+  paused when the tab is hidden; static scattered illustrations under `prefers-reduced-motion`.
+- Season change between circles: background color crossfade about 400 ms ease-in-out; the new
+  particles fade in, the old ones fade out; no layout movement.
+- Text and inputs are visible on first paint; no entrance animation may hide content (today it hides
+  it for more than 3 s).
+- Answer chips enter with opacity and a 4 px rise, 180 ms, strong ease-out, interruptible transitions.
+- Buttons scale to 0.97 on press, 140 ms ease-out. Nothing animates from scale 0.
+- No animation on keyboard actions (adding an answer with Enter).
+
 ## Acceptance bar (what a good result looks like)
 
 On a phone, a participant scans the facilitator's QR, types their name, and within a minute is
