@@ -43,7 +43,11 @@ Evidence and screenshots live on NOE-560.
   ikigai, with optional sign-in to keep several across devices. Answers are private: nobody,
   including a facilitator, sees them unless the person chooses to share their result. Facilitators
   sign in with Google and see only how many joined and finished, plus anonymous themes.
-- **AI:** kept, called only from a server with a spending limit; the key never reaches the browser.
+- **AI (revised by Noe, 2026-11-14):** only to ask follow-up questions built from the person's own
+  words, never to suggest answers, pairs or sentences (constitution principle X). Called only from a
+  server with a spending limit; the key never reaches the browser.
+- **Feeling (Noe, 2026-11-14):** a calm, meditative moment of introspection; the app breathes with
+  the person (see DESIGN.md).
 - **Database:** recover the February project and its past workshops.
 
 ## Design direction

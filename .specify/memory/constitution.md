@@ -63,6 +63,14 @@ Before building, compare with the simplest alternative and only build what beats
 (a participant, a session, the four circles, the step order) has one source of truth; everything
 else is derived from it.
 
+### X. Questions, Never Answers
+
+Ikigapp MUST NOT give a person answers about themselves: no suggested items to add, no proposed
+pairs or ikigai sentences, no interpretations, scores, labels or personality types. Its work is
+asking the right question at the right moment, often with the person's own words. Any generated
+text MUST be a question built from what the person wrote and MUST NOT contain a suggested answer.
+Rationale: answers from an app influence people, and that is wrong (Noe, 2026-11-14).
+
 ## Stack and Constraints
 
 - React 19, TypeScript, Vite and Tailwind CSS 4 single-page app; Spanish UI.
@@ -88,4 +96,4 @@ a new standing rule appears, approved by Noe, and versioned: MAJOR for removing 
 principle, MINOR for adding one, PATCH for wording. `/speckit-analyze` checks every plan against it;
 a violation blocks implementation until the plan changes or the constitution is amended.
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14
+**Version**: 1.1.0 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14
