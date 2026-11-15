@@ -1,50 +1,91 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Ikigapp Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Done Is What People See
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Every spec carries an acceptance bar written from the screens a participant and a facilitator
+actually use, at phone width first and then desktop. A feature is done only when it has been run
+end to end the way they will use it (a real session, a real phone), graded by a reviewer who did
+not build it, with screenshots attached to the Linear ticket. Builds and lint are the floor, not
+the proof. No new unit tests are written.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Root Cause, Not Patches
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+Every plan names the root cause it removes. Regexes, post-filters, retries that hide an error, or
+special cases that mask a symptom are rejected. When a class of failure can recur, the fix makes it
+impossible or loudly visible.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Plan Before Code
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+Nothing is built from a chat message. Spec Kit runs end to end (specify, clarify, plan, tasks,
+analyze, implement). Noe approves the spec and plan before any code. Opus writes the plan and
+reviews every diff; Sonnet subagents implement the approved tasks.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. No Silent Failure, No Mock Data
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+The app MUST NOT pretend something worked. If an answer was not saved, a session could not be
+joined, or the AI could not respond, the person sees it in plain Spanish with a way to retry, and
+the technical detail goes to logs. There is no fallback to placeholder, sample or mock data on any
+path a real button can reach. Loading states always end, in content or in an error.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Private by Default
+
+A participant's answers are visible only to that participant and to the facilitator of their
+session. Identity is never derived from a typed name: participants get an unguessable private
+link, facilitators sign in. Statistics and archiving are facilitator-only. Database security rules
+live in the repo, are deployed from it, and are reviewed in every plan that touches data.
+
+### VI. Keys Never in Text, AI Only From a Server
+
+Keys live in the macOS Keychain on the Mac and in host variables in the cloud; never in a `.env`,
+commit, chat, log, screenshot or command argument. No secret is ever shipped to the browser: every
+AI call runs on a server function with a spending limit. `docs/LLAVES.md` is kept current.
+
+### VII. Noe Approves Money, Exposure and Production Data
+
+Spending money, publishing anything to the internet, creating accounts or projects, changing
+production security rules, and writing or migrating production data each need Noe's explicit yes,
+named in the plan.
+
+### VIII. Calm, Honest Interface
+
+The interface follows Noe's global design rules: no «·» separators, no numbering for its own sake,
+no left accent bars, no nested boxes, no hairline dividers as default structure, no repeated
+information, shortcuts only in tooltips, one clear primary action per screen, and less text.
+The interface never names the vendors it is built with. Content appears immediately; motion never
+hides text for more than a moment and respects reduced-motion settings. Every list (sessions,
+participants, answers) is designed for 1000 items: search, a dense view and scrolling that holds.
+
+### IX. Simplest Thing, One Source of Truth
+
+Before building, compare with the simplest alternative and only build what beats it. Each concept
+(a participant, a session, the four circles, the step order) has one source of truth; everything
+else is derived from it.
+
+## Stack and Constraints
+
+- React 19, TypeScript, Vite and Tailwind CSS 4 single-page app; Spanish UI.
+- Firestore (the existing project from February 2026, recovered) for sessions and participants;
+  Firebase Authentication with Google for facilitators only.
+- AI calls run in a server function on Vercel, with a spending limit; the browser never holds a key.
+- Participants never need an account. The flow works for a live facilitated session and for one
+  person alone, with the same steps.
+- Firestore rules (`firestore.rules`) and indexes are versioned in the repo.
+
+## Development Workflow
+
+- Every change starts with a Linear ticket in project Ikigapp; every commit message carries its ID.
+- Work happens in a worktree from `origin/main`; branches are pushed after every commit and merged
+  to `main` as soon as a slice is verified.
+- Files are staged by name, never with `git add -A`.
+- Each slice ends with before and after screenshots on its Linear ticket.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution overrides other practices in this repo. Amendments are proposed in the same turn
+a new standing rule appears, approved by Noe, and versioned: MAJOR for removing or redefining a
+principle, MINOR for adding one, PATCH for wording. `/speckit-analyze` checks every plan against it;
+a violation blocks implementation until the plan changes or the constitution is amended.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14
