@@ -4,7 +4,7 @@
 
 ### I. Done Is What People See
 
-Every spec carries an acceptance bar written from the screens a participant and a facilitator
+Every spec carries an acceptance bar written from the screens a person (and, in workshops, a facilitator)
 actually use, at phone width first and then desktop. A feature is done only when it has been run
 end to end the way they will use it (a real session, a real phone), graded by a reviewer who did
 not build it, with screenshots attached to the Linear ticket. Builds and lint are the floor, not
@@ -62,7 +62,7 @@ participants, answers) is designed for 1000 items: search, a dense view and scro
 ### IX. Simplest Thing, One Source of Truth
 
 Before building, compare with the simplest alternative and only build what beats it. Each concept
-(a participant, a session, the four circles, the step order) has one source of truth; everything
+(an ikigai, a workshop, the four circles, the pairs) has one source of truth; everything
 else is derived from it.
 
 ### X. Questions, Never Answers
