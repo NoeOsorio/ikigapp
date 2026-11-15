@@ -31,10 +31,12 @@ path a real button can reach. Loading states always end, in content or in an err
 
 ### V. Private by Default
 
-A participant's answers are visible only to that participant and to the facilitator of their
-session. Identity is never derived from a typed name: participants get an unguessable private
-link, facilitators sign in. Statistics and archiving are facilitator-only. Database security rules
-live in the repo, are deployed from it, and are reviewed in every plan that touches data.
+A person's answers are visible only to that person, through their unguessable private link or
+their optional account. Nobody else sees them, a workshop facilitator included, unless the person
+chooses to share their sheet; every share is revocable and every ikigai can be deleted. Identity is
+never derived from a typed name. Facilitators see only joined and finished counts and the sheets
+shared with them; no aggregated content of anyone's answers is shown. Database security rules live
+in the repo, are deployed from it, and are reviewed in every plan that touches data.
 
 ### VI. Keys Never in Text, AI Only From a Server
 
@@ -74,11 +76,12 @@ Rationale: answers from an app influence people, and that is wrong (Noe, 2026-11
 ## Stack and Constraints
 
 - React 19, TypeScript, Vite and Tailwind CSS 4 single-page app; Spanish UI.
-- Firestore (the existing project from February 2026, recovered) for sessions and participants;
-  Firebase Authentication with Google for facilitators only.
+- Firestore (the existing project from February 2026, recovered) for ikigais, workshops and
+  optional accounts; Firebase Authentication with Google for facilitators and for people who choose
+  to keep their ikigais in an account.
 - AI calls run in a server function on Vercel, with a spending limit; the browser never holds a key.
-- Participants never need an account. The flow works for a live facilitated session and for one
-  person alone, with the same steps.
+- A person never needs an account to do their ikigai. It is a personal tool first; a workshop only
+  hands out the same private exercise.
 - Firestore rules (`firestore.rules`) and indexes are versioned in the repo.
 
 ## Development Workflow
@@ -96,4 +99,4 @@ a new standing rule appears, approved by Noe, and versioned: MAJOR for removing 
 principle, MINOR for adding one, PATCH for wording. `/speckit-analyze` checks every plan against it;
 a violation blocks implementation until the plan changes or the constitution is amended.
 
-**Version**: 1.1.0 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14
+**Version**: 2.0.0 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14

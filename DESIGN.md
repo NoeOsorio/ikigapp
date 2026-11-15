@@ -136,8 +136,9 @@ The projector view inverts to Ink background and Paper text.
 - **Mis ikigais:** past versions side by side with their seals, so you can see how you changed;
   search and dates, never a feed.
 - **Workshops (optional):** the facilitator creates a workshop and gets a link and a QR. Each person
-  does the same private exercise. The facilitator sees how many joined and finished; answers are
-  visible only if a person chooses to share their sheet. The projector view is dark (Ink background,
+  does the same private exercise. The facilitator sees how many joined and finished; a person's sheet is
+  visible only if that person shares it with the workshop, and they can revoke it. No aggregated
+  themes. The projector view is dark (Ink background,
   Paper text, nothing below 28px) and can show one large breathing seal to open the session with the
   whole room breathing together.
 

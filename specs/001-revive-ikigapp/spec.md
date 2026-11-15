@@ -4,10 +4,9 @@
 
 **Created**: 2026-11-14
 
-**Status**: Draft
+**Status**: Draft (personal-first rewrite, 2026-11-14)
 
-**Input**: User description: "Revive Ikigapp (github.com/NoeOsorio/ikigapp) until real people can use it: live
-ikigai workshops and people doing it alone." Linear: NOE-560.
+**Input**: User description: "Revive Ikigapp (github.com/NoeOsorio/ikigapp) until real people can use it: a personal tool to do your ikigai consciously, which workshops can hand out." Linear: NOE-560.
 
 ## What exists today (diagnosis, 2026-11-14)
 
@@ -36,263 +35,290 @@ Evidence and screenshots live on NOE-560.
 
 ## Noe's decisions (2026-11-14)
 
-- **Audience (revised by Noe, 2026-11-14):** a personal tool first. Anyone finds Ikigapp and does
-  their ikigai consciously on their own, at their own pace. Workshops are optional: a facilitator
-  hands out the same tool and each person uses it privately.
-- **Access (revised by Noe, 2026-11-14):** no account to start; a private link reopens your
-  ikigai, with optional sign-in to keep several across devices. Answers are private: nobody,
-  including a facilitator, sees them unless the person chooses to share their result. Facilitators
-  sign in with Google and see only how many joined and finished, plus anonymous themes.
-- **AI (revised by Noe, 2026-11-14):** only to ask follow-up questions built from the person's own
-  words, never to suggest answers, pairs or sentences (constitution principle X). Called only from a
-  server with a spending limit; the key never reaches the browser.
-- **Feeling (Noe, 2026-11-14):** a calm, meditative moment of introspection; the app breathes with
-  the person (see DESIGN.md).
-- **Database:** recover the February project and its past workshops.
+- **Audience:** a personal tool first. Anyone finds Ikigapp and does their ikigai consciously on
+  their own, at their own pace. Workshops are optional: a facilitator hands out the same tool and
+  each person uses it privately.
+- **Where answers live:** on the server, reachable only through the person's unguessable private
+  link; no account needed to start, optional sign-in to keep several ikigais across devices.
+- **Privacy:** nobody, including a facilitator, sees a person's answers unless that person chooses
+  to share their result. Facilitators sign in with Google and see only how many joined and finished;
+  there are no aggregated themes, because in a small group they could identify someone.
+- **AI:** only to ask follow-up questions built from the person's own words, never to suggest
+  answers, pairs or sentences (constitution principle X). Called only from a server with a spending
+  limit; the key never reaches the browser.
+- **Feeling:** a calm, meditative moment of introspection where the person talks with themselves;
+  the app breathes with them.
+- **Database:** recover the February project.
 
 ## Design direction
 
-Proposal in `DESIGN.md` at the repo root, pending Noe's approval. Earlier proposals from
-2026-11-14 (flat, four seasons, living tree, garden) were rejected and deleted.
-
-**Pending rework:** the user stories, acceptance bar, real cases and requirements below were
-written workshop-first. They must be re-prioritized personal-first (the person alone becomes P1,
-workshops become an optional story) and the facilitator's access to answers removed, before
-`/speckit-plan`.
+`DESIGN.md` at the repo root (proposal, pending Noe's approval of screens): a breathing hanko seal
+carved by the person's own words, questions never answers, one signed sheet at the end. Earlier
+visual proposals were rejected and deleted.
 
 ## Acceptance bar (what a good result looks like)
 
-On a phone, a participant scans the facilitator's QR, types their name, and within a minute is
-answering the first circle. Every answer is saved where the facilitator can see it, or the person is
-told plainly that it was not. After the fourth circle they see four intersections written for them,
-write their own ikigai sentence and at least one action, and leave with a card they can download and
-reopen later from their private link on any device. The facilitator sees who joined, who is on which
-step and who finished, live, and the session's statistics, all from their own account.
+On a phone or a laptop, a person opens Ikigapp, breathes three times with the seal, and is answering
+the first question within a minute. They move through the four circles in any order, one question
+at a time, getting deeper questions when they are stuck and never a suggested answer. They join
+answers from neighboring circles and write each pair in their own words, then their sentence and
+first steps. They can pause and come back days later on another device through their private link
+and land exactly where they were. They end with one signed sheet, entirely in their own words, with
+their unique seal. Every answer is saved, or they are told plainly that it was not.
 
-It must NOT contain: any screen that looks saved when it is not; any spinner that never ends;
-another person's answers reachable by guessing a name or link; English error text; vendor names;
-the «·» separator; numbered steps for their own sake; text hidden behind an animation for more
-than a moment.
+It must NOT contain: any text generated by the app that suggests an answer, a pair, a sentence or an
+interpretation of the person; praise, scores, streaks or timers; any screen that looks saved when it
+is not; any spinner that never ends; another person's answers reachable by anyone; English error
+text; vendor names; the «·» separator; numbered steps for their own sake; text hidden behind an
+animation for more than a moment.
 
 ### Real cases (end-to-end checks)
 
-1. **A 30-person workshop.** Facilitator signs in, creates a session, projects the QR. 30 phones
-   join within two minutes, including two people both named «Ana López». Each sees only their own
-   answers; the facilitator's lobby shows 30 distinct people with their step.
-2. **A person alone at night.** Someone opens the landing, taps the solo entry, completes all four
-   circles, closes the tab at the third, reopens their private link the next day on another device,
-   and continues where they stopped.
-3. **AI unavailable.** The AI service is down or the spending limit is reached during a workshop.
-   Participants see a calm message, can write their intersections themselves, and still finish
-   with a complete card.
-4. **The facilitator after 50 workshops.** Their workshop list holds 50 sessions and 1,000
-   participants; they find last Tuesday's session by name or date in seconds and open its statistics.
-5. **A curious participant.** A participant edits the URL to another person's name or id, or opens
-   the statistics address. They see nothing of anyone else.
+1. **Alone at night, over two days.** Someone opens Ikigapp on their phone, breathes with the seal,
+   fills two circles, pauses. The next day they open their private link on a laptop, land on «Donde
+   lo dejaste», finish, and keep their signed sheet.
+2. **Stuck on one circle.** In «Lo que el mundo necesita» the person writes nothing for a while,
+   opens «Si no se te ocurre», answers two of those questions, and adds three items, without the app
+   ever proposing an item.
+3. **Questions from their own words.** After writing «enseñar» in «Lo que amas», the next question
+   uses that word and goes deeper; reviewing 50 generated questions finds none that contains a
+   suggested answer.
+4. **AI unavailable.** The AI service is down or the spending limit is reached. The person keeps
+   getting curated questions with no visible difference in calm, and finishes with a complete sheet.
+5. **A 30-person workshop.** A facilitator signs in, creates a workshop, shows the QR. 30 people do
+   their ikigai on their phones. The facilitator sees 30 joined and how many finished, never anyone's
+   answers; one person chooses to share their sheet and only that one becomes visible.
+6. **A curious person.** Someone edits a URL, guesses a link, or opens the facilitator page without
+   being that facilitator. They see nothing of anyone else.
+7. **Six months later.** A person who signed in returns, makes a second ikigai, and sees both seals
+   side by side.
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - A participant completes their ikigai in a live workshop (Priority: P1)
+### User Story 1 - A person does their ikigai alone, calmly (Priority: P1)
 
-A participant joins from the facilitator's QR or link with just a name, fills the four circles,
-receives four intersections, writes an ikigai sentence and actions, and gets a result card with
-download, all saved and reachable later from their private link.
+A person opens Ikigapp without an account, breathes with the seal, answers the four circles in any
+order one question at a time, joins neighboring answers into four pairs written in their own words,
+writes their sentence and first steps, and ends with a signed sheet. Their seal is carved as they go.
 
 **Why this priority**: This is the product. Today nobody can get past the first screen.
 
-**Independent Test**: With one facilitator-created session, complete the whole flow on a phone,
-reload at each step, reopen the private link on a second device, and confirm the answers are there
-and the facilitator can see them.
+**Independent Test**: On a phone, complete the whole exercise with no account; reload at every step;
+check that every text on screen that the app generated is a question.
 
 **Acceptance Scenarios**:
 
-1. **Given** an open session, **When** a person enters a name and joins, **Then** they reach the
-   first circle and the facilitator's lobby lists them within 5 seconds.
-2. **Given** two participants type the same name, **When** both join, **Then** they are two
-   separate people whose answers never mix.
-3. **Given** a participant mid-flow, **When** they reload or reopen their private link elsewhere,
-   **Then** they resume at the same step with all answers.
-4. **Given** the database rejects a save, **When** the participant continues, **Then** they see a
-   plain Spanish message and a retry, and the app never shows the answer as saved.
-5. **Given** four filled circles, **When** the intersections step opens, **Then** four
-   personal intersections appear, or a clear message plus the option to write them by hand.
-6. **Given** a finished participant, **When** they open their card, **Then** they see their
-   answers, intersections, ikigai sentence and actions, and can download it as a PDF.
+1. **Given** the landing page, **When** the person taps «Empezar», **Then** the arrival breath
+   plays with «Saltar» visible from the first instant; the first question is on screen within 35
+   seconds, or within 1 second of tapping «Saltar».
+2. **Given** any circle, **When** the person adds an answer, **Then** it is saved and confirmed
+   before it shows as saved, and the next question appears.
+3. **Given** two neighboring circles with answers, **When** the person picks one of each, **Then**
+   the app asks one question at their meeting point and the person writes the pair; the app never
+   writes it.
+4. **Given** the four pairs, **When** the person writes their sentence and at least one step,
+   **Then** the seal presses onto a signed sheet in their own words, downloadable as a PDF.
+5. **Given** a save fails, **When** the person continues, **Then** they see a plain Spanish message
+   with «Reintentar» and nothing looks saved until it is.
 
 ---
 
-### User Story 2 - A facilitator runs and reviews workshops (Priority: P1)
+### User Story 2 - Pause and come back anywhere, privately (Priority: P1)
 
-A facilitator signs in with Google, creates a session, shows the QR, watches participants join and
-progress live, and afterwards reviews each session's statistics and each participant's card from
-their own workshop list.
+A person pauses at any moment and returns hours or days later, on the same or another device,
+through their private link, landing exactly where they were. Nobody else can reach their answers.
 
-**Why this priority**: Without a protected facilitator space, the privacy problems remain and no
-workshop can be run responsibly.
+**Why this priority**: A conscious ikigai rarely happens in one sitting, and trust is the
+precondition for honest answers.
 
-**Independent Test**: Sign in, create a session, join it from two phones, watch the lobby update,
-finish one participant, open the statistics; then sign in as a different Google account and confirm
-none of that is visible.
+**Independent Test**: Start on a phone, pause, open the private link on a laptop, continue; then try
+to reach the same answers by editing URLs or guessing links from a third browser.
 
 **Acceptance Scenarios**:
 
-1. **Given** a signed-in facilitator, **When** they create a session, **Then** they get a QR and a
-   short link they can project, and the session appears in their list.
-2. **Given** a running session, **When** participants join and advance, **Then** the facilitator
-   sees each person and their current step live.
-3. **Given** a facilitator with many sessions, **When** they search by name or date, **Then** the
-   list narrows instantly and holds up with 1000 sessions.
-4. **Given** someone who is not that session's facilitator, **When** they open its statistics or
-   archive address, **Then** they see nothing and can do nothing.
+1. **Given** a person mid-exercise, **When** they tap «Pausar», **Then** the breathing pause screen
+   appears and everything entered is saved.
+2. **Given** a private link, **When** it is opened on another device, **Then** «Donde lo dejaste»
+   shows the seal as it is, the circle in progress and the current question; text typed but not yet
+   sent is kept on the device where it was typed.
+3. **Given** any URL that is not the person's private link, **When** it is opened, **Then** none of
+   their answers are shown.
+4. **Given** an old link in the `?session&name` format, **When** it is opened, **Then** it shows
+   nobody's answers and leads to the start.
 
 ---
 
-### User Story 3 - A person does their ikigai alone (Priority: P2)
+### User Story 3 - Deeper questions from your own words (Priority: P2)
 
-From the landing page, a person starts on their own without a facilitator or session code and gets
-the same flow, saved under their private link.
+When the person adds an answer or is stuck, Ikigapp asks a deeper question, often using the person's
+own words, generated on a server; when that is unavailable, curated questions take its place.
 
-**Why this priority**: Noe chose both audiences; the solo path reuses the same flow, so it is cheap
-once Story 1 works.
+**Why this priority**: Asking the right question is the craft of the product, but the exercise must
+work without it.
 
-**Independent Test**: From the landing, start alone, finish the flow, and reopen the private link
-on another device.
+**Independent Test**: Run the exercise with generation on and off; review the generated questions
+against principle X.
 
 **Acceptance Scenarios**:
 
-1. **Given** the landing page, **When** a person chooses to start alone, **Then** they enter their
-   name and reach the first circle without a session code.
-2. **Given** a solo person, **When** they finish, **Then** their card is the same as a workshop
-   participant's, without facilitator or lobby elements.
+1. **Given** a new answer, **When** a follow-up is generated, **Then** it is a single question in
+   Spanish, uses the person's words where natural, and contains no suggested answer.
+2. **Given** generation fails or the spending limit is reached, **When** the person continues,
+   **Then** a curated question appears with no error shown to them.
+3. **Given** «Si no se te ocurre», **When** it opens, **Then** it offers questions only (memory and
+   object prompts), never items to add.
 
 ---
 
-### User Story 4 - AI intersections and summary that work and cost little (Priority: P2)
+### User Story 4 - Hand it out in a workshop (Priority: P2)
 
-The four intersections and the ikigai summary are generated on a server, in Spanish, specific to
-the person, once per participant, within a spending limit; when unavailable, the person writes
-them with guiding questions.
+A facilitator signs in, creates a workshop, and shares a link and QR. Each participant does the same
+private exercise. The facilitator sees how many joined and finished, and only the sheets that participants chose to
+share; a dark projector view can
+open the session with a large breathing seal.
 
-**Why this priority**: The AI is what makes the session feel personal, but the flow must never
-depend on it.
+**Why this priority**: Noe runs workshops, but the tool must not depend on them.
 
-**Independent Test**: Run the flow with the AI available and with it disabled; both end in a
-complete card. Check that no key appears in the browser's downloaded files.
+**Independent Test**: Create a workshop, join from several phones, finish some, share one sheet;
+check the facilitator sees counts and that one sheet only.
 
 **Acceptance Scenarios**:
 
-1. **Given** four filled circles, **When** intersections are requested, **Then** they arrive in
-   under 10 seconds, each one naming something the person actually wrote.
-2. **Given** a participant whose intersections were already generated, **When** they reload,
-   **Then** no new AI request is made.
-3. **Given** the AI service fails or the limit is reached, **When** the step opens, **Then** the
-   person sees a calm Spanish message and fields to write each intersection themselves.
+1. **Given** a signed-in facilitator, **When** they create a workshop, **Then** they get a link, a
+   QR and a projector view.
+2. **Given** participants joining, **When** the facilitator watches, **Then** they see joined and
+   finished counts update, never answers.
+3. **Given** a participant shares their sheet with the workshop, **When** the facilitator looks,
+   **Then** that sheet, and only that one, is visible; if the participant revokes it, it disappears.
+4. **Given** a facilitator with many workshops, **When** they search, **Then** the list holds up at
+   1000 workshops.
 
 ---
 
-### User Story 5 - Recover the February workshops (Priority: P3)
+### User Story 5 - Keep several ikigais over time (Priority: P3)
 
-Past sessions and participants in the recovered database remain readable under the new rules and
-data shape, assigned to Noe's facilitator account.
+A person who chooses to sign in keeps their ikigais across devices and can compare past versions
+and their seals.
 
-**Why this priority**: They are the fixed exam for AI quality and Noe's history, but new workshops
-matter more.
+**Why this priority**: Valuable for people who return, but not needed for the first ikigai.
 
-**Independent Test**: After migration, Noe's workshop list shows the February sessions with their
-participants and cards.
+**Independent Test**: Sign in, finish one ikigai, start a second, compare them.
 
 **Acceptance Scenarios**:
 
-1. **Given** sessions created before accounts existed, **When** Noe signs in, **Then** they appear
-   in his list with their participants.
-2. **Given** an old participant without intersections, **When** their card opens, **Then** it shows
-   what they did answer, without errors.
+1. **Given** a finished ikigai made without an account, **When** the person signs in, **Then** they
+   are asked whether to keep it under their account, and it is kept only if they say yes.
+2. **Given** several ikigais, **When** the person opens «Mis ikigais», **Then** they see them with
+   their seals and dates, with search.
+
+---
+
+### User Story 6 - Recover the February data safely (Priority: P3)
+
+The February sessions and participants are preserved under the new rules without exposing anyone's
+answers.
+
+**Why this priority**: History matters to Noe, but new people come first.
+
+**Acceptance Scenarios**:
+
+1. **Given** the recovered database, **When** the new rules are deployed, **Then** no February answer
+   is readable by anyone through the app; counts per workshop are available to Noe only through an
+   operator export, outside the app.
 
 ---
 
 ### Edge Cases
 
-- A participant loses connection mid-circle: answers queue and the person sees they are not saved
-  yet; nothing is shown as saved until it is.
-- A session code that does not exist or was archived: a plain message, not a blank screen.
-- A facilitator closes their laptop during the workshop: participants keep working.
-- 150 participants in one session: the lobby stays readable (dense list, search) and live.
-- Very long answers or 30 items in one circle: layout and PDF hold.
-- Reduced-motion setting: no entrance animations; content visible at once.
-- A participant opens an old link in the `?name=` format: they are sent to join, not shown anyone's data.
+- The person loses connection mid-answer: the answer waits and shows as not saved yet.
+- Very long answers or 30 items in one circle: layout, seal and PDF hold.
+- Reduced motion: the seal does not move; «Inhala» and «Exhala» alternate as text.
+- A workshop code that does not exist or was closed: a plain message, not a blank screen.
+- A participant leaves a workshop halfway: their ikigai stays theirs through their private link.
+- Two people with the same name in a workshop: names are not identities; nothing mixes.
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: Participants MUST join a session with only a display name, no account.
-- **FR-002**: Each participant MUST receive a unique, unguessable private link that reopens their
-  progress on any device; identity MUST NOT be derived from the typed name.
-- **FR-003**: Facilitators MUST sign in with Google to create sessions, see their lobby, statistics,
-  participants' cards, and archive sessions.
-- **FR-004**: A participant's answers MUST be readable only by that participant (via their link) and
-  by the session's facilitator; statistics and archiving MUST be facilitator-only.
-- **FR-005**: Every save MUST be confirmed by the database before the interface shows it as saved;
-  failures MUST show a plain Spanish message with a retry.
-- **FR-006**: Every loading state MUST end in content or in an error within 15 seconds.
-- **FR-007**: The facilitator's lobby MUST show participants and their current step live.
-- **FR-008**: People MUST be able to complete the flow alone, without a session.
-- **FR-009**: Intersections and the ikigai summary MUST be generated on a server, once per
-  participant, in Spanish, with a spending limit; no secret MUST ever reach the browser.
-- **FR-010**: When AI is unavailable, participants MUST be able to write intersections themselves
-  and still finish.
-- **FR-011**: The result card MUST show answers, intersections, ikigai sentence and actions, and
-  download as a PDF.
-- **FR-012**: Facilitator lists (sessions, participants) MUST offer search and a dense view and
-  remain usable at 1000 items; statistics MUST be computed per session, not by downloading all
-  participants of all sessions.
-- **FR-013**: Database security rules MUST be versioned in the repo and deployed from it.
-- **FR-014**: The February sessions and participants MUST remain readable and be assigned to Noe's
-  facilitator account.
-- **FR-015**: The interface MUST follow the constitution's design rules (no «·», no vendor names,
-  no hidden text behind animations, reduced motion respected) at 375 px and desktop widths.
+- **FR-001**: People MUST be able to start and finish an ikigai without an account.
+- **FR-002**: Each ikigai MUST have a unique, unguessable private link that reopens it on any device;
+  identity MUST NOT be derived from a typed name.
+- **FR-003**: Answers MUST be readable only through the person's own link or account, and by a
+  facilitator only for sheets the person chose to share.
+- **FR-004**: Every save MUST be confirmed before the interface shows it as saved; failures MUST show
+  a plain Spanish message with a retry.
+- **FR-005**: Every loading state MUST end in content or an error within 15 seconds.
+- **FR-006**: The four circles MUST be answerable in any order, one question at a time, with pause and
+  resume at any point.
+- **FR-007**: Pairs MUST only be formed from neighboring circles and MUST be written by the person;
+  the app asks one question at the meeting point.
+- **FR-008**: Generated text MUST be a single question built from the person's words and MUST NOT
+  contain suggested answers, pairs, sentences, interpretations or scores (principle X).
+- **FR-009**: Question generation MUST run on a server with a spending limit; no secret MUST reach the
+  browser; when unavailable, curated questions MUST take its place silently.
+- **FR-010**: The arrival breath, the breathing seal and the pause screen MUST follow DESIGN.md and
+  respect reduced motion; «Saltar» MUST be visible from the first instant of the arrival breath; a
+  question MUST never take more than 400 ms to appear once due.
+- **FR-011**: The result MUST be one signed sheet in the person's words with their seal, downloadable
+  as a PDF.
+- **FR-012**: Facilitators MUST sign in with Google to create workshops and see joined and finished
+  counts and only the sheets participants shared; sharing MUST be per workshop and revocable.
+- **FR-013**: Lists (workshops, «Mis ikigais», answers in a circle) MUST offer search and stay usable
+  at 1000 items; counts MUST be computed per workshop, not by downloading all participants.
+- **FR-014**: Database security rules MUST be versioned in the repo and deployed from it.
+- **FR-015**: The interface MUST follow the constitution's design rules at 375 px and desktop widths.
 - **FR-016**: Old links (`/workshop?session&name`, `/result?session&name`) MUST NOT reveal anyone's
-  answers; they lead to joining or to the participant's own link.
+  answers.
+- **FR-017**: A person MUST be able to delete an ikigai, delete their account, and revoke any share;
+  deletion removes the answers from the database within 30 days, including backups.
+- **FR-018**: When an ikigai is created, the person MUST see their private link with a way to copy it
+  or send it to themselves, and be told plainly that without an account a lost link cannot be
+  recovered. Private pages MUST NOT be indexable and the link MUST NOT appear on any projector view.
+- **FR-019**: Only the answers of the circle in progress MUST be sent to generate a question, from
+  the server, without names; a short note MUST tell the person that questions are generated in the
+  cloud, without naming the provider.
+- **FR-020**: Creating ikigais and generating questions MUST be rate limited per link and per network
+  address to prevent abuse and runaway cost.
 
 ### Key Entities
 
-- **Facilitator**: a signed-in person; owns sessions.
-- **Session**: a workshop with a short code, a name, a date, its facilitator, and an archived flag.
-  Solo runs have no session.
-- **Participant**: a display name, a private secret link, the current step, and their answers;
-  belongs to at most one session.
-- **Answers**: the four circles (lists of items), four intersections (generated or self-written),
-  the ikigai sentence, one or more actions, and the AI summary.
+- **Ikigai**: one exercise by one person: private link, seal state, the four circles (lists of
+  answers), four pairs (written by the person), sentence, first steps, status, optional workshop.
+- **Person account** (optional): a signed-in person who keeps several ikigais.
+- **Facilitator**: a signed-in person who owns workshops.
+- **Workshop**: a name, a date, a short code, its facilitator, counts, and the sheets shared with it
+  (each share revocable by its owner).
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001**: In a rehearsal with at least 10 phones, every participant reaches the first circle
-  within 60 seconds of scanning the QR.
-- **SC-002**: Zero answers are shown as saved without being stored (checked by cutting the
-  connection mid-flow in the rehearsal).
-- **SC-003**: Zero cases where one participant can see another's answers, across all five real
-  cases above.
-- **SC-004**: 100% of participants who reach the intersections step end with a complete card, with
-  AI on and with AI off.
-- **SC-005**: Intersections appear in under 10 seconds in 9 of 10 runs; AI cost per participant
-  stays under US$0.01.
-- **SC-006**: Landing and join show readable content within 1 second on a phone.
-- **SC-007**: A facilitator finds a given session among 1000 in under 10 seconds.
-- **SC-008**: Independent reviewers (usefulness, clarity, design) score each main screen at least
-  4 of 5.
+- **SC-001**: On a mid-range phone over 4G, the landing text and each question are rendered within
+  1 second of navigation.
+- **SC-002**: A first-time person is answering the first question within 60 seconds of opening.
+- **SC-003**: Zero answers shown as saved without being stored (checked by cutting the connection).
+- **SC-004**: Zero cases where anyone reaches another person's answers across the real cases.
+- **SC-005**: An independent reviewer checks 50 generated questions against principle X with a
+  written checklist; zero contain a suggested answer, pair, sentence or interpretation.
+- **SC-006**: 100% of people who start the last step end with a signed sheet, with generation on and
+  off.
+- **SC-007**: Follow-up questions appear in under 3 seconds in 9 of 10 cases; generation cost per
+  ikigai stays under US$0.01.
+- **SC-008**: Over 30 seconds of breathing on a mid-range Android phone, no frame takes longer than
+  50 ms.
+- **SC-009**: Three independent reviewers, one lens each (calm, clarity, design), score each main
+  screen 1 to 5 with a written rubric; every score is at least 4.
 
 ## Assumptions
 
-- The February Firebase project can be recovered by Noe; if not, a new project is created with the
-  same rules and the history is lost (his call at that time).
-- Hosting the app and the AI function on Vercel's free tier is enough for workshops of up to a
-  few hundred people; Noe approves the deploy and the AI spending limit.
-- The AI vendor stays the current one unless the plan shows a cheaper or better option; the
-  interface never names it.
-- Content is four guiding questions plus a short help text per circle, taken from the existing
-  landing page's step descriptions; no external dataset is needed.
+- The February Firebase project can be recovered by Noe; if not, a new project starts clean.
+- Hosting the app and the question function on Vercel's free tier is enough at first; Noe approves
+  the deploy and the spending limit.
+- Curated questions are written in Spanish for each circle (at least eight per circle) before launch.
+- Ikigais are kept until the person deletes them; whether to expire long-abandoned anonymous ikigais
+  is left for Noe to decide in the plan.
+- The question provider's data retention is checked in the plan; if it keeps prompts, the plan must
+  choose an option that does not.
 - Spanish only for this revival.
-- Out of scope: participant accounts and history across workshops, payments, other languages,
-  native apps, email delivery of cards.
+- Out of scope: payments, other languages, native apps, email delivery, daily-companion features.
