@@ -48,11 +48,13 @@ Japanese, warm and alive, without seasons. A flat "botanical" proposal was rejec
 Japanese identity; a later four-seasons structure was dropped because seasons are sequential and the
 ikigai circles are not (Noe: «quitarlas»).
 
-- Shippori Mincho for headings, DM Sans for text; warm dawn paper as the ground, matcha for the card.
-- Each zone keeps a soft color of its own (rose, green, blue, amber), used only to tell zones apart;
-  none is brighter or bigger than another.
-- Japanese elements that carry meaning: the garden, the stone lantern (the ikigai), sakura, ink.
-- No seasonal kanji, no season names, no season order anywhere in the interface.
+- Shippori Mincho for headings, DM Sans for text, ink #2b2118 on warm paper #fbf6ee.
+- All four zones share one sand ground (#efe4d0), the same size and the same weight; they are told
+  apart only by their symbol and by what grows in them: red camellias (Corazón), stones and moss
+  (Manos), water and a koi (Mundo), rice sprouts and fruit (Moneda).
+- Japanese elements that carry meaning: the garden, the stone lantern (the ikigai), camellias, ink.
+- No season cues anywhere: no per-zone tints that map to seasons, no sakura, momiji, snow or cherry
+  branch, no seasonal kanji, names or order.
 
 ## Core concept: your ikigai is a garden you tend (Noe 2026-11-14)
 
